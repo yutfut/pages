@@ -5,6 +5,9 @@ export const Pareto: React.FC = () => {
         <div>
             <h2>Проверка парето-оптимальности вариантов</h2>
 
+            <label htmlFor="customRange1" className="form-label">Example range</label>
+            <input type="range" className="form-range" min="0" max="5" step="0.5" id="customRange3"/>
+
             <h3>таблица для ввода значений критериев</h3>
             {printmatrix(critsVars)}
             <h3>таблица со сравнением вариантов между собой</h3>

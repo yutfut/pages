@@ -1,19 +1,18 @@
-import React, {Fragment} from "react";
-import {NavLink} from "react-router-dom";
+import React from "react";
 
 export const Navbar = () => (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-light">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                     <li className="nav-item">
-                        <a className="nav-link active" aria-current="page" href="/">Главная</a>
+                        <a className="nav-link " aria-current="page" href="/">Главная</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link disabled" href={"/Theory"}>Теория</a>
+                        <a className="nav-link " href={"/Theory"}>Теория</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link disabled" href={"/About"}>О приложении</a>
+                        <a className="nav-link " href={"/About"}>О приложении</a>
                     </li>
                 </ul>
             </div>
