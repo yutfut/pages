@@ -18,8 +18,13 @@ export const About = () => {
             </div>
             <div className="text-center">
                 <a className="navbar-brand">
-                    <img src={bauman_big} alt="" width="300" height="341"/>
+                    <img src={bauman_big} alt="" width="400" height="450"/>
                 </a>
+            </div>
+            <div className = "text-center">
+                <p className="lead" >
+                    Москва, 2022 г.
+                </p>
             </div>
         </div>
     )

@@ -6,25 +6,27 @@ export const Pareto: React.FC = () => {
     return(
         <div>
             <h2>Проверка парето-оптимальности вариантов</h2>
-
-            <label htmlFor="customRange1" className="form-label">Example range</label>
-            <input type="range" className="form-range" min="0" max="5" step="0.5" id="customRange3"/>
-
-            <h3>таблица для ввода значений критериев</h3>
+            <div style={{backgroundColor: "lightblue" }}>
+                <label htmlFor="customRange" className="form-label p-2">Показать шаги:</label>
+                <input type="range" className="form-range"  min="1" max="3" step="1"
+                         id="customRange"/>
+            </div>
+            <h3>Значения критериев для вариантов:</h3>
 
             {printmatrix(critsVars)}
             <div className={"text-center"} style={{ width: 500 }}>
                 <DataGrid columns={critsVarsCols} rows={critsVarsRows} />
+                {MyGrid()}
             </div>
 
-            <h3>таблица со сравнением вариантов между собой</h3>
+            <h3>Матрица сравнения вариантов:</h3>
 
             {printmatrix(compareVars(critsVars))}
             <div className={"text-center"} style={{ width: 500 }}>
-                <DataGrid columns={compareCols} rows={compareRows} />
+                <DataGrid columns={critsVarsCols} rows={createRows(compareVars(critsVars), "Вариант")} />
             </div>
 
-            <h3>вывод об оптимальности или неоптимальности вариантов</h3>
+            <h3>Вывод об оптимальности вариантов:</h3>
             {printBoolArray(paretoCheck(compareVars(critsVars)))}
             {paretoCheckPrint(paretoCheck(compareVars(critsVars)))}
 
@@ -32,10 +34,12 @@ export const Pareto: React.FC = () => {
     )
 }
 
+let ShowSteps = document.getElementById("customRange");
+
 let critsVars: Array<Array<number>> = [[1, 3, 2], [3, 3, 3], [2, 1, 3]];
 
 const critsVarsCols = [
-    { key: 'Crits', name: 'Критерии' },
+    { key: 'Crits', name: '' },
     { key: 'Var1', name: 'Вариант 1' },
     { key: 'Var2', name: 'Вариант 2' },
     { key: 'Var3', name: 'Вариант 3' }
@@ -43,23 +47,16 @@ const critsVarsCols = [
 
 const critsVarsRows = [
     { Crits: 'Критерий 1', Var1: critsVars[0][0], Var2: critsVars[1][0], Var3: critsVars[2][0]},
-    { Crits: 'Критерий 1', Var1: critsVars[0][1], Var2: critsVars[1][1], Var3: critsVars[2][1]},
-    { Crits: 'Критерий 1', Var1: critsVars[0][2], Var2: critsVars[1][2], Var3: critsVars[2][2]},
+    { Crits: 'Критерий 2', Var1: critsVars[0][1], Var2: critsVars[1][1], Var3: critsVars[2][1]},
+    { Crits: 'Критерий 3', Var1: critsVars[0][2], Var2: critsVars[1][2], Var3: critsVars[2][2]},
 ];
 
+function MyGrid() {
+    const [rows, setRows] = useState(critsVarsRows);
 
-const compareCols = [
-    { key: 'Crits', name: 'Критерии' },
-    { key: 'Var1', name: 'Вариант 1' },
-    { key: 'Var2', name: 'Вариант 2' },
-    { key: 'Var3', name: 'Вариант 3' }
-];
+    return <DataGrid columns={critsVarsCols} rows={rows} onRowsChange={setRows} />;
+}
 
-const compareRows = [
-    { Crits: 'Вариант 1', Var1: compareVars(critsVars)[0][0], Var2: compareVars(critsVars)[1][0], Var3: compareVars(critsVars)[2][0]},
-    { Crits: 'Вариант 1', Var1: compareVars(critsVars)[0][1], Var2: compareVars(critsVars)[1][1], Var3: compareVars(critsVars)[2][1]},
-    { Crits: 'Вариант 1', Var1: compareVars(critsVars)[0][2], Var2: compareVars(critsVars)[1][2], Var3: compareVars(critsVars)[2][2]},
-];
 
 
 function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
@@ -162,3 +159,13 @@ function paretoCheckPrint (result: Array<boolean>)
 
 
 
+function createRows(matrix: Array<Array<number>>, rowName: String){
+
+    const critsVarsRows = [
+        { Crits: rowName + ' 1', Var1: matrix[0][0], Var2: matrix[1][0], Var3: matrix[2][0]},
+        { Crits: rowName + ' 2', Var1: matrix[0][1], Var2: matrix[1][1], Var3: matrix[2][1]},
+        { Crits: rowName + ' 3', Var1: matrix[0][2], Var2: matrix[1][2], Var3: matrix[2][2]},
+    ];
+
+    return critsVarsRows;
+}
