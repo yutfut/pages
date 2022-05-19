@@ -10,7 +10,9 @@
     "@types/node": "^16.11.35",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
+    "bootstrap": "^4.6.0",
     "react": "^18.1.0",
+    "react-data-grid": "^7.0.0-beta.13",
     "react-dom": "^18.1.0",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
@@ -40,8 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "bootstrap": "^5.1.3"
   }
 }

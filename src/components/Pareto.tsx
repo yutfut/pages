@@ -1,4 +1,6 @@
 import React from "react";
+import DataGrid from 'react-data-grid';
+import { useState } from 'react';
 
 export const Pareto: React.FC = () => {
     return(
@@ -9,17 +11,55 @@ export const Pareto: React.FC = () => {
             <input type="range" className="form-range" min="0" max="5" step="0.5" id="customRange3"/>
 
             <h3>таблица для ввода значений критериев</h3>
+
             {printmatrix(critsVars)}
+            <div className={"text-center"} style={{ width: 500 }}>
+                <DataGrid columns={critsVarsCols} rows={critsVarsRows} />
+            </div>
+
             <h3>таблица со сравнением вариантов между собой</h3>
+
             {printmatrix(compareVars(critsVars))}
+            <div className={"text-center"} style={{ width: 500 }}>
+                <DataGrid columns={compareCols} rows={compareRows} />
+            </div>
+
             <h3>вывод об оптимальности или неоптимальности вариантов</h3>
             {printBoolArray(paretoCheck(compareVars(critsVars)))}
             {paretoCheckPrint(paretoCheck(compareVars(critsVars)))}
+
         </div>
     )
 }
 
 let critsVars: Array<Array<number>> = [[1, 3, 2], [3, 3, 3], [2, 1, 3]];
+
+const critsVarsCols = [
+    { key: 'Crits', name: 'Критерии' },
+    { key: 'Var1', name: 'Вариант 1' },
+    { key: 'Var2', name: 'Вариант 2' },
+    { key: 'Var3', name: 'Вариант 3' }
+];
+
+const critsVarsRows = [
+    { Crits: 'Критерий 1', Var1: critsVars[0][0], Var2: critsVars[1][0], Var3: critsVars[2][0]},
+    { Crits: 'Критерий 1', Var1: critsVars[0][1], Var2: critsVars[1][1], Var3: critsVars[2][1]},
+    { Crits: 'Критерий 1', Var1: critsVars[0][2], Var2: critsVars[1][2], Var3: critsVars[2][2]},
+];
+
+
+const compareCols = [
+    { key: 'Crits', name: 'Критерии' },
+    { key: 'Var1', name: 'Вариант 1' },
+    { key: 'Var2', name: 'Вариант 2' },
+    { key: 'Var3', name: 'Вариант 3' }
+];
+
+const compareRows = [
+    { Crits: 'Вариант 1', Var1: compareVars(critsVars)[0][0], Var2: compareVars(critsVars)[1][0], Var3: compareVars(critsVars)[2][0]},
+    { Crits: 'Вариант 1', Var1: compareVars(critsVars)[0][1], Var2: compareVars(critsVars)[1][1], Var3: compareVars(critsVars)[2][1]},
+    { Crits: 'Вариант 1', Var1: compareVars(critsVars)[0][2], Var2: compareVars(critsVars)[1][2], Var3: compareVars(critsVars)[2][2]},
+];
 
 
 function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
@@ -119,3 +159,6 @@ function paretoCheckPrint (result: Array<boolean>)
 
     return resultPrint;
 }
+
+
+
