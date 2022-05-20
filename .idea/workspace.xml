@@ -6,14 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="919f0a39-fcb3-4df5-8cfd-67b969427d36" name="Changes" comment="Initialize project using Create React App">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/BaseCriteria.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BaseCriteria.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Borda.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Borda.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Nanson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Nanson.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PairComparisonCriterias.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PairComparisonCriterias.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Pareto.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Pareto.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PointScore.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PointScore.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/WeightedSum.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WeightedSum.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Home.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Theory.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Theory.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -102,7 +96,7 @@
       <workItem from="1652963923407" duration="8870000" />
       <workItem from="1652973583619" duration="10435000" />
       <workItem from="1652990386146" duration="12515000" />
-      <workItem from="1653037381287" duration="8484000" />
+      <workItem from="1653037381287" duration="12406000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize project using Create React App">
       <created>1652739336016</created>
@@ -153,19 +147,18 @@
       <option name="project" value="LOCAL" />
       <updated>1653040585907</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Initialize project using Create React App">
+      <created>1653050632363</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1653050632363</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-    <option name="exactExcludedFiles">
-      <list>
-        <option value="$PROJECT_DIR$/src/reportWebVitals.js" />
-        <option value="$PROJECT_DIR$/src/setupTests.js" />
-        <option value="$PROJECT_DIR$/src/index.js" />
-        <option value="$PROJECT_DIR$/src/App.js" />
-      </list>
-    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">

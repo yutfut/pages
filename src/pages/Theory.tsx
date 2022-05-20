@@ -7,7 +7,15 @@ import ReactDOM from 'react-dom';
 
 export const Theory = () => {
 
-    const [isOpen, setIsOpen] = useState(0);
+    const [selected, setSelected] = useState(null);
+
+    const toggle = (i: any) =>
+    {
+            if (selected === i) {
+                return setSelected(null)
+            }
+            setSelected(i)
+    }
 
     return (
         <div>
@@ -20,25 +28,23 @@ export const Theory = () => {
             <div className="accordion" id="accordionExample">
                 <div className="accordion-item">
                     <h2 className="accordion-header" id="headingOne">
-                        <button className={ (isOpen == 1) ? "accordion-button open" : "accordion-button collapsed" }
-                                onClick={   ()=>   { if (isOpen == 1)
-                                    setIsOpen(0)
-                                    else setIsOpen(1)
-                                                    }
-                                        }
+                        <button className={ (selected === 1) ? "accordion-button open" : "accordion-button collapsed" }
+                                onClick={()=>  toggle((1)) }
                                 type="button" aria-expanded="true" aria-controls="collapseOne">
                             Проверка на Парето-оптимальность
                         </button>
                     </h2>
 
                     <div id="collapseOne"
-                         className={ (isOpen == 1) ? "accordion-collapse show" : "accordion-collapse collapse" }
-                         aria-expanded={ (isOpen == 1) }
-                         aria-labelledby="headingOne"
-                         style={(isOpen == 1) ? {
-                             height: "auto"} : {height: "0px"}
+                         className={ (selected === 1) ? "accordion-collapse" : "accordion-collapse" }
+                         style = {(selected === 1) ?
+                             {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+                             :
+                             {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
                          }
-                         >
+                         aria-expanded={ (selected === 1) }
+                         aria-labelledby="headingOne"
+                    >
                         <div className="accordion-body">
                             Проверка парето-оптимальности предназначена для поиска заведомо неудачных
                             вариантов. Варианты сравнивают попарно между собой, и если обнаруживается,
@@ -52,19 +58,20 @@ export const Theory = () => {
                 <div className="accordion" id="accordionExample">
                     <div className="accordion-item">
                         <h2 className="accordion-header" id="headingOne">
-                            <button className={ (isOpen == 2) ? "accordion-button open" : "accordion-button collapsed" }
-                                    onClick={   ()=>   { if (isOpen == 2)
-                                        setIsOpen(0)
-                                    else setIsOpen(2)
-                                    }
-                                    }
+                            <button className={ (selected === 2) ? "accordion-button open" : "accordion-button collapsed" }
+                                    onClick={()=>  toggle((2)) }
                                     type="button" aria-expanded="true" aria-controls="collapseOne">
                                 Определение весовых коэффициентов методом базового критерия
                             </button>
                         </h2>
                         <div id="collapseOne"
-                             className={ (isOpen == 2) ? "accordion-collapse show" : "accordion-collapse collapse" }
-                             aria-expanded={ (isOpen == 2) }
+                             className={ (selected === 2) ? "accordion-collapse" : "accordion-collapse" }
+                             style = {(selected === 2) ?
+                                 {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+                                 :
+                                 {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+                             }
+                             aria-expanded={ (selected === 2) }
                              aria-labelledby="headingOne"
                         >
                             <div className="accordion-body">
@@ -81,19 +88,20 @@ export const Theory = () => {
                 <div className="accordion" id="accordionExample">
                     <div className="accordion-item">
                         <h2 className="accordion-header" id="headingOne">
-                            <button className={ (isOpen == 3) ? "accordion-button open" : "accordion-button collapsed" }
-                                    onClick={   ()=>   { if (isOpen == 3)
-                                        setIsOpen(0)
-                                    else setIsOpen(3)
-                                    }
-                                    }
+                            <button className={ (selected === 3) ? "accordion-button open" : "accordion-button collapsed" }
+                                    onClick={()=>  toggle((3)) }
                                     type="button" aria-expanded="true" aria-controls="collapseOne">
                                 Определение весовых коэффициентов методом бальной оценки
                             </button>
                         </h2>
                         <div id="collapseOne"
-                             className={ (isOpen == 3) ? "accordion-collapse show" : "accordion-collapse collapse" }
-                             aria-expanded={ (isOpen == 3) }
+                             className={ (selected === 3) ? "accordion-collapse" : "accordion-collapse" }
+                             style = {(selected === 3) ?
+                                 {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+                                 :
+                                 {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+                             }
+                             aria-expanded={ (selected === 3) }
                              aria-labelledby="headingOne"
                         >
                             <div className="accordion-body">
@@ -106,19 +114,20 @@ export const Theory = () => {
                 <div className="accordion" id="accordionExample">
                     <div className="accordion-item">
                         <h2 className="accordion-header" id="headingOne">
-                            <button className={ (isOpen == 4) ? "accordion-button open" : "accordion-button collapsed" }
-                                    onClick={   ()=>   { if (isOpen == 4)
-                                        setIsOpen(0)
-                                    else setIsOpen(4)
-                                    }
-                                    }
+                            <button className={ (selected === 4) ? "accordion-button open" : "accordion-button collapsed" }
+                                    onClick={   ()=>   toggle(4)     }
                                     type="button" aria-expanded="true" aria-controls="collapseOne">
                                 Определение весовых коэффициентов методом парного сравнения критериев
                             </button>
                         </h2>
                         <div id="collapseOne"
-                             className={ (isOpen == 4) ? "accordion-collapse show" : "accordion-collapse collapse" }
-                             aria-expanded={ (isOpen == 4) }
+                             className={ (selected === 4) ? "accordion" : "accordion-collapse" }
+                             style = {(selected === 4) ?
+                                 {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+                                 :
+                                 {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+                             }
+                             aria-expanded={ (selected === 4) }
                              aria-labelledby="headingOne"
                         >
                             <div className="accordion-body">
@@ -131,19 +140,20 @@ export const Theory = () => {
                 <div className="accordion" id="accordionExample">
                     <div className="accordion-item">
                         <h2 className="accordion-header" id="headingOne">
-                            <button className={ (isOpen == 5) ? "accordion-button open" : "accordion-button collapsed" }
-                                    onClick={   ()=>   { if (isOpen == 5)
-                                        setIsOpen(0)
-                                    else setIsOpen(5)
-                                    }
-                                    }
+                            <button className={ (selected === 5) ? "accordion-button open" : "accordion-button collapsed" }
+                                    onClick={()=>  toggle((5)) }
                                     type="button" aria-expanded="true" aria-controls="collapseOne">
                                 Прямой метод принятия решений процедурой Борда
                             </button>
                         </h2>
                         <div id="collapseOne"
-                             className={ (isOpen == 5) ? "accordion-collapse show" : "accordion-collapse collapse" }
-                             aria-expanded={ (isOpen == 5) }
+                             className={ (selected === 5) ? "accordion-collapse" : "accordion-collapse" }
+                             style = {(selected === 5) ?
+                                 {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+                                 :
+                                 {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+                        }
+                             aria-expanded={ (selected === 5) }
                              aria-labelledby="headingOne"
                         >
                             <div className="accordion-body">
@@ -156,19 +166,20 @@ export const Theory = () => {
                 <div className="accordion" id="accordionExample">
                     <div className="accordion-item">
                         <h2 className="accordion-header" id="headingOne">
-                            <button className={ (isOpen == 6) ? "accordion-button open" : "accordion-button collapsed" }
-                                    onClick={   ()=>   { if (isOpen == 6)
-                                        setIsOpen(0)
-                                    else setIsOpen(6)
-                                    }
-                                    }
+                            <button className={ (selected === 6) ? "accordion-button open" : "accordion-button collapsed" }
+                                    onClick={()=>  toggle((6)) }
                                     type="button" aria-expanded="true" aria-controls="collapseOne">
                                 Прямой метод принятия решений процедурой Нансона
                             </button>
                         </h2>
                         <div id="collapseOne"
-                             className={ (isOpen == 6) ? "accordion-collapse show" : "accordion-collapse collapse" }
-                             aria-expanded={ (isOpen == 6) }
+                             className={ (selected === 6) ? "accordion-collapse" : "accordion-collapse" }
+                             style = {(selected === 6) ?
+                                 {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+                                 :
+                                 {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+                             }
+                             aria-expanded={ (selected === 6) }
                              aria-labelledby="headingOne"
                         >
                             <div className="accordion-body">
@@ -181,19 +192,20 @@ export const Theory = () => {
                 <div className="accordion" id="accordionExample">
                     <div className="accordion-item">
                         <h2 className="accordion-header" id="headingOne">
-                            <button className={ (isOpen == 7) ? "accordion-button open" : "accordion-button collapsed" }
-                                    onClick={   ()=>   { if (isOpen == 7)
-                                        setIsOpen(0)
-                                    else setIsOpen(7)
-                                    }
-                                    }
+                            <button className={ (selected === 7) ? "accordion-button open" : "accordion-button collapsed" }
+                                    onClick={()=>  toggle((7)) }
                                     type="button" aria-expanded="true" aria-controls="collapseOne">
                                 Принятие решений с использованием интегрального критерия взвешенной суммы показателей сравнения
                             </button>
                         </h2>
                         <div id="collapseOne"
-                             className={ (isOpen == 7) ? "accordion-collapse show" : "accordion-collapse collapse" }
-                             aria-expanded={ (isOpen == 7) }
+                             className={ (selected === 7) ? "accordion-collapse" : "accordion-collapse" }
+                             style = {(selected === 7) ?
+                                 {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+                                 :
+                                 {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+                             }
+                             aria-expanded={ (selected === 7) }
                              aria-labelledby="headingOne"
                         >
                             <div className="accordion-body">

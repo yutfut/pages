@@ -73,7 +73,11 @@ const critsVarsRows = [
 function MyGrid() {
     const [rows, setRows] = useState(critsVarsRows);
 
-    return <DataGrid columns={critsVarsCols} rows={rows} onRowsChange={setRows} />;
+    return <DataGrid
+        columns={critsVarsCols}
+        rows={rows}
+        onRowDoubleClick={(row, column) => column.editor}
+        onRowsChange={setRows} />;
 }
 
 function rowsToMatrix(rows: any){
