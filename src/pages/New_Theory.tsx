@@ -1,51 +1,70 @@
 import React from "react";
 import { useState } from 'react';
-import ReactDOM from 'react-dom';
+import Collapsible from "../components/Collapsible";
+import {BordaDescription} from "../methodDescriptions/BordaDescription";
 
 export const New_Theory = () => {
-    const [count, setCount] = useState(0);
-    const [collapse, changeCollapse] = useState(0)
+
+    const [isOpen, setIsOpen] = useState(false);
+
     return (
         <div>
-            <a href="" data-toggle="collapse" aria-controls="multiCollapse1"
-               role="button" aria-expanded="false" className="btn btn-secondary">Кнопка обновляющая страницу</a>
-            <button className="btn btn-secondary" onClick={() => changeCollapse(count + 1)} type="button"
-                    formTarget="#multiCollapse2" aria-expanded="false"
-                    aria-controls="multiCollapse2" data-toggle="#collapse"> Кнопка 2</button>
-            <button className="btn btn-secondary" type="button" formTarget="#multiCollapse" aria-expanded="false"
-                    aria-controls="multiCollapse1 multiCollapse2" data-toggle="#collapse"> Кнопка 3</button>
+            <h2>Теория</h2>
 
-            <button className="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample"
-                    aria-expanded="false" aria-controls="collapseExample">
-                Button with data-target
-            </button>
+            <p className="lead" >
+                На данной странице содержатся теоретические сведения о различных методах
+                принятия решения, которые доступны для интерактивного изучения на главной
+                странице веб-приложения
+            </p>
 
-            <div className="collapse" id="collapseExample">
-                <div className="card card-body">
-                    Some placeholder content for the collapse component. This panel is hidden by default but revealed
-                    when the user activates the relevant trigger.
-                </div>
-            </div>
+            <ul className="list-group">
 
-            <div className="collapse show" id="multiCollapse1">
-                fsdfsdfsdf
-            </div>
-            <div className="collapse show" id="multiCollapse2">
-                adfsdasda
-            </div>
-            <div className="collapse show" id="multiCollapse1">
-                fsdfsdfsdf
-            </div>
-            <div className="collapse show" id="multiCollapse2">
-                fsdfsdfsdf
-            </div>
+                <li className="list-group-item ">
+                    <Collapsible label = "Парето-оптимальность">
+                        <p> Проверка парето-оптимальности предназначена для поиска заведомо неудачных
+                            вариантов. Варианты сравнивают попарно между собой, и если обнаруживается,
+                            что в паре один вариант уступает другому по всем критериям, то этот вариант
+                            считается неоптимальным, и его рекомендуется не рассматривать при принятии решения.
+                        </p>
+                    </Collapsible>
+                </li>
+                <li className="list-group-item ">
+                    <Collapsible label = "Базовый критерий">
+                        <p>Один или несколько критериев определяются как базовые - с весом, равным единице,
+                            а вес остальных назначаются в зависимости от того, во сколько раз они важнее
+                            базового. После чего вычисляется сумма весов. Итоговое значение базовых критериев
+                            будет равно единице, деленной на полученную сумму, остальные же получат значение,
+                            большее значения базового в то количество раз, которое было определено на прошлом этапе
+                        </p>
+                    </Collapsible>
+                </li>
+                <li className="list-group-item ">
+                    <Collapsible label = "Балльный критерий">
+                        <p>ssssssss</p>
+                    </Collapsible>
+                </li>
+                <li className="list-group-item ">
+                    <Collapsible label = "Парное сравнение">
+                        <h1>This is content</h1>
+                    </Collapsible>
+                </li>
+                <li className="list-group-item ">
+                    <Collapsible label = "Нансон">
+                        <p>ssssssss</p>
+                    </Collapsible>
+                </li>
+                <li className="list-group-item ">
+                    <Collapsible label = "Борда">
+                        <p>aa</p>
+                    </Collapsible>
+                </li>
+                <li className="list-group-item ">
+                    <Collapsible label = "Взвешенная сумма">
+                        <p>ssssssss</p>
+                    </Collapsible>
+                </li>
 
-            <div>
-                <p>Вы кликнули {count} раз</p>
-                <button onClick={() => setCount(count + 1)}>
-                    Нажми на меня
-                </button>
-            </div>
+            </ul>
 
         </div>
     )

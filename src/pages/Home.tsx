@@ -1,4 +1,5 @@
 import React from "react";
+
 import {Pareto} from "../components/Pareto";
 import {BaseCriteria} from "../components/BaseCriteria";
 import {PointScore} from "../components/PointScore";
@@ -7,24 +8,14 @@ import {Borda} from "../components/Borda";
 import {Nanson} from "../components/Nanson";
 import {WeightedSum} from "../components/WeightedSum";
 
+import {Hub} from "../components/Hub";
+
 export const Home = () => {
     return (
         <div>
-            <h1>Текущие варианты:</h1>
+            <h2>Методы поддержки принятия решений</h2>
+            <Hub/>
 
-            <h4>Парето-оптимальность</h4>
-            <Pareto/>
-            <h4>Базовый критерий</h4>
-
-            <h4>Балльный критерий</h4>
-
-            <h4>Парное сравнение критериев</h4>
-
-            <h4>Борда</h4>
-
-            <h4>Нансон</h4>
-
-            <h4>Взвешенная сумма</h4>
 
         </div>
     )

@@ -3,13 +3,31 @@ import DataGrid from 'react-data-grid';
 import { useState } from 'react';
 
 export const Pareto: React.FC = () => {
+
+    const [range, setRange] = useState('1')
+    const [isOpenFirst, setIsOpenFirst] = useState(false)
+    const [isOpenSecond, setIsOpenSecond] = useState(false)
+
     return(
         <div>
             <h2>Проверка парето-оптимальности вариантов</h2>
-            <div style={{backgroundColor: "lightblue" }}>
-                <label htmlFor="customRange" className="form-label p-2">Показать шаги:</label>
-                <input type="range" className="form-range"  min="1" max="3" step="1"
-                         id="customRange"/>
+
+            <div className="border-danger">
+                <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
+                <input type="range" className="form-range p-3"
+                       style={{width: 150, verticalAlign: "middle" }}
+                       min="1" max="3" step="1"
+                       onChange={(e) =>
+                                       {
+                                           setRange(e.target.value);
+                                           if (e.target.value === "1"){ setIsOpenFirst(false); setIsOpenSecond(false) };
+                                           if (e.target.value === "2"){ setIsOpenFirst(true); setIsOpenSecond(false) };
+                                           if (e.target.value === "3"){ setIsOpenFirst(true); setIsOpenSecond(true) };
+                                       }
+                                }
+                       value = {range}
+                       id="customRange"/>
+                {range}
             </div>
             <h3>Значения критериев для вариантов:</h3>
 
@@ -19,22 +37,28 @@ export const Pareto: React.FC = () => {
                 {MyGrid()}
             </div>
 
-            <h3>Матрица сравнения вариантов:</h3>
+            {isOpenFirst &&
+                <div>
+                    <h3>Матрица сравнения вариантов:</h3>
+                    {printmatrix(compareVars(critsVars))}
+                    <div className={"text-center"} style={{ width: 500 }}>
+                        <DataGrid columns={critsVarsCols} rows={createRows(compareVars(critsVars), "Вариант")} />
+                    </div>
+                </div>
+            }
 
-            {printmatrix(compareVars(critsVars))}
-            <div className={"text-center"} style={{ width: 500 }}>
-                <DataGrid columns={critsVarsCols} rows={createRows(compareVars(critsVars), "Вариант")} />
-            </div>
-
-            <h3>Вывод об оптимальности вариантов:</h3>
-            {printBoolArray(paretoCheck(compareVars(critsVars)))}
-            {paretoCheckPrint(paretoCheck(compareVars(critsVars)))}
+            {isOpenSecond &&
+                <div>
+                    <h3>Вывод об оптимальности вариантов:</h3>
+                    {printBoolArray(paretoCheck(compareVars(critsVars)))}
+                    {paretoCheckPrint(paretoCheck(compareVars(critsVars)))}
+                </div>
+            }
 
         </div>
     )
 }
 
-let ShowSteps = document.getElementById("customRange");
 
 let critsVars: Array<Array<number>> = [[1, 3, 2], [3, 3, 3], [2, 1, 3]];
 

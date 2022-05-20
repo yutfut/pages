@@ -1,9 +1,32 @@
-import React from "react";
+import React, {useState} from "react";
 
 export const PointScore: React.FC = () => {
+
+    const [range, setRange] = useState('1');
+    const [isOpenFirst, setIsOpenFirst] = useState(false);
+    const [isOpenSecond, setIsOpenSecond] = useState(false);
+
     return(
         <div>
             <h1>Определение весовых коэффициентов методом бальной оценки</h1>
+
+            <div className="border-danger">
+                <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
+                <input type="range" className="form-range p-3"
+                       style={{width: 150, verticalAlign: "middle" }}
+                       min="1" max="3" step="1"
+                       onChange={(e) =>
+                       {
+                           setRange(e.target.value);
+                           if (e.target.value === "1"){ setIsOpenFirst(false); setIsOpenSecond(false) };
+                           if (e.target.value === "2"){ setIsOpenFirst(true); setIsOpenSecond(false) };
+                           if (e.target.value === "3"){ setIsOpenFirst(true); setIsOpenSecond(true) };
+                       }
+                       }
+                       value = {range}
+                       id="customRange"/>
+                {range}
+            </div>
 
             <h3>таблица для ввода значений критериев</h3>
             {printNumArray(criteriasPoints)}
