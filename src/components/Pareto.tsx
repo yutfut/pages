@@ -4,63 +4,58 @@ import { useState } from 'react';
 
 export const Pareto: React.FC = () => {
 
-    const [range, setRange] = useState('1')
-    const [isOpenFirst, setIsOpenFirst] = useState(false)
-    const [isOpenSecond, setIsOpenSecond] = useState(false)
+    const [range, setRange] = useState('1');
 
     return(
         <div>
             <h2>Проверка парето-оптимальности вариантов</h2>
 
-            <div className="border-danger">
-                <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
+            <div className="accordion-body show">
+                <label htmlFor="customRange" className="form-label p-3" ><strong>Показать шаги:</strong></label>
                 <input type="range" className="form-range p-3"
                        style={{width: 150, verticalAlign: "middle" }}
                        min="1" max="3" step="1"
                        onChange={(e) =>
                                        {
                                            setRange(e.target.value);
-                                           if (e.target.value === "1"){ setIsOpenFirst(false); setIsOpenSecond(false) };
-                                           if (e.target.value === "2"){ setIsOpenFirst(true); setIsOpenSecond(false) };
-                                           if (e.target.value === "3"){ setIsOpenFirst(true); setIsOpenSecond(true) };
                                        }
                                 }
                        value = {range}
                        id="customRange"/>
                 {range}
             </div>
-            <h3>Значения критериев для вариантов:</h3>
 
-            {printmatrix(critsVars)}
-            <div className={"text-center"} style={{ width: 500 }}>
-                <DataGrid columns={critsVarsCols} rows={critsVarsRows} />
-                {MyGrid()}
+            <div className=" accordion-body show" >
+                <h3>Значения критериев для вариантов:</h3>
+
+                {printmatrix(critsVars)}
+                <div className={"text-center"} style={{ width: 500 }}>
+                    <DataGrid columns={critsVarsCols} rows={critsVarsRows} />
+                    {MyGrid()}
+                    {printmatrix(rowsToMatrix(critsVarsRows))}
+                </div>
             </div>
 
-            {isOpenFirst &&
-                <div>
-                    <h3>Матрица сравнения вариантов:</h3>
-                    {printmatrix(compareVars(critsVars))}
-                    <div className={"text-center"} style={{ width: 500 }}>
-                        <DataGrid columns={critsVarsCols} rows={createRows(compareVars(critsVars), "Вариант")} />
-                    </div>
+            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+                <h3>Матрица сравнения вариантов:</h3>
+                {printmatrix(compareVars(critsVars))}
+                <div className={"text-center"} style={{ width: 500 }}>
+                    <DataGrid columns={critsVarsCols} rows={createRows(compareVars(rowsToMatrix(critsVarsRows)), "Вариант")} />
                 </div>
-            }
+            </div>
 
-            {isOpenSecond &&
-                <div>
-                    <h3>Вывод об оптимальности вариантов:</h3>
-                    {printBoolArray(paretoCheck(compareVars(critsVars)))}
-                    {paretoCheckPrint(paretoCheck(compareVars(critsVars)))}
-                </div>
-            }
+            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"} >
+               <h3>Вывод об оптимальности вариантов:</h3>
+               {printBoolArray(paretoCheck(compareVars(critsVars)))}
+               {paretoCheckPrint(paretoCheck(compareVars(critsVars)))}
+            </div>
 
         </div>
     )
 }
 
 
-let critsVars: Array<Array<number>> = [[1, 3, 2], [3, 3, 3], [2, 1, 3]];
+let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
 
 const critsVarsCols = [
     { key: 'Crits', name: '' },
@@ -81,7 +76,22 @@ function MyGrid() {
     return <DataGrid columns={critsVarsCols} rows={rows} onRowsChange={setRows} />;
 }
 
+function rowsToMatrix(rows: any){
+    let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+    matrix[0][0] = rows[0].Var1;
+    matrix[0][1] = rows[1].Var1;
+    matrix[0][2] = rows[2].Var1;
 
+    matrix[1][0] = rows[0].Var2;
+    matrix[1][1] = rows[1].Var2;
+    matrix[1][2] = rows[2].Var2;
+
+    matrix[2][0] = rows[0].Var3;
+    matrix[2][1] = rows[1].Var3;
+    matrix[2][2] = rows[2].Var3;
+
+    return matrix;
+}
 
 function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
 {

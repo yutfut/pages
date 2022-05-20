@@ -3,8 +3,6 @@ import React, {useState} from "react";
 export const Borda: React.FC = () => {
 
     const [range, setRange] = useState('1')
-    const [isOpenFirst, setIsOpenFirst] = useState(false)
-    const [isOpenSecond, setIsOpenSecond] = useState(false)
 
     return(
         <div>
@@ -14,13 +12,10 @@ export const Borda: React.FC = () => {
                 <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
                 <input type="range" className="form-range p-3"
                        style={{width: 150, verticalAlign: "middle" }}
-                       min="1" max="3" step="1"
+                       min="1" max="4" step="1"
                        onChange={(e) =>
                        {
                            setRange(e.target.value);
-                           if (e.target.value === "1"){ setIsOpenFirst(false); setIsOpenSecond(false) };
-                           if (e.target.value === "2"){ setIsOpenFirst(true); setIsOpenSecond(false) };
-                           if (e.target.value === "3"){ setIsOpenFirst(true); setIsOpenSecond(true) };
                        }
                        }
                        value = {range}
@@ -30,12 +25,21 @@ export const Borda: React.FC = () => {
 
             <h3>Таблица для подсчёта мнений экспертов</h3>
             { printExperts(expsVars, vars) }
+
+            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Матрица парного сравнения вариантов</h3>
             {printmatrix(bordaPairComparison(vars, expsVars))}
+            </div>
+
+            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Таблица со значение подсчётов Yj (баллов для каждого варианта)</h3>
             {printNumArray(countBordaPoints(expsVars, vars))}
+            </div>
+
+            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вывод номера лучшего варианта</h3>
             {findBestOption(countBordaPoints(expsVars, vars))}
+            </div>
         </div>
     )
 }

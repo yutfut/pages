@@ -4,8 +4,6 @@ import {useState} from "react";
 export const WeightedSum: React.FC = () => {
 
     const [range, setRange] = useState('1');
-    const [isOpenFirst, setIsOpenFirst] = useState(false);
-    const [isOpenSecond, setIsOpenSecond] = useState(false);
 
     return(
         <div>
@@ -15,15 +13,8 @@ export const WeightedSum: React.FC = () => {
                 <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
                 <input type="range" className="form-range p-3"
                        style={{width: 150, verticalAlign: "middle" }}
-                       min="1" max="3" step="1"
-                       onChange={(e) =>
-                       {
-                           setRange(e.target.value);
-                           if (e.target.value === "1"){ setIsOpenFirst(false); setIsOpenSecond(false) };
-                           if (e.target.value === "2"){ setIsOpenFirst(true); setIsOpenSecond(false) };
-                           if (e.target.value === "3"){ setIsOpenFirst(true); setIsOpenSecond(true) };
-                       }
-                       }
+                       min="1" max="4" step="1"
+                       onChange={(e) =>setRange(e.target.value) }
                        value = {range}
                        id="customRange"/>
                 {range}
@@ -33,12 +24,22 @@ export const WeightedSum: React.FC = () => {
             {printNumArray(criteriasWeight)}
             <h3>Таблица для ввода значений критериев</h3>
             {printmatrix(critVars)}
+
+            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Таблица с нормированными значениями</h3>
             {printmatrix(NormingCrits(critVars))}
+            </div>
+
+            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Одномерная таблица с подсчитанной взвешенной суммой для каждого варианта</h3>
             {printNumArray(countWeight(NormingCrits(critVars),criteriasWeight))}
+                </div>
+
+            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вывод номера лучшего варианта</h3>
             {findBestOption(countWeight(NormingCrits(critVars),criteriasWeight))}
+            </div>
+
         </div>
     )
 }

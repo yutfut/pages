@@ -3,8 +3,6 @@ import React, {useState} from "react";
 export const PairComparisonCriterias: React.FC = () => {
 
     const [range, setRange] = useState('1');
-    const [isOpenFirst, setIsOpenFirst] = useState(false);
-    const [isOpenSecond, setIsOpenSecond] = useState(false);
 
     return(
         <div>
@@ -14,13 +12,10 @@ export const PairComparisonCriterias: React.FC = () => {
                 <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
                 <input type="range" className="form-range p-3"
                        style={{width: 150, verticalAlign: "middle" }}
-                       min="1" max="3" step="1"
+                       min="1" max="5" step="1"
                        onChange={(e) =>
                        {
                            setRange(e.target.value);
-                           if (e.target.value === "1"){ setIsOpenFirst(false); setIsOpenSecond(false) };
-                           if (e.target.value === "2"){ setIsOpenFirst(true); setIsOpenSecond(false) };
-                           if (e.target.value === "3"){ setIsOpenFirst(true); setIsOpenSecond(true) };
                        }
                        }
                        value = {range}
@@ -31,18 +26,25 @@ export const PairComparisonCriterias: React.FC = () => {
             <h3>таблица с матрицей сравнения</h3>
             {printmatrix(criteriasComparison)}
 
+            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вывод баллов каждого критерия</h3>
             {countCriteriasPoints(criteriasComparison).toString()}
+            </div>
 
+            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Сумма баллов всех критериев</h3>
             {countSumPoints(countCriteriasPoints(criteriasComparison))}
+            </div>
 
+            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вес одного балла</h3>
             {getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison)))}
+            </div>
 
+            <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Итоговое значение критериев</h3>
             {countFinalPoints(countCriteriasPoints(criteriasComparison),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison))))}
-
+            </div>
         </div>
     )
 }
