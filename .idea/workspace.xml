@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="919f0a39-fcb3-4df5-8cfd-67b969427d36" name="Changes" comment="Initialize project using Create React App">
+      <change afterPath="$PROJECT_DIR$/src/components/Pareto_new.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Table.jsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/exportUtils.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Hub.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hub.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Pareto.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Pareto.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Home.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Theory.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Theory.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +104,10 @@
       <workItem from="1652963923407" duration="8870000" />
       <workItem from="1652973583619" duration="10435000" />
       <workItem from="1652990386146" duration="12515000" />
-      <workItem from="1653037381287" duration="12406000" />
+      <workItem from="1653037381287" duration="13156000" />
+      <workItem from="1653121214941" duration="3848000" />
+      <workItem from="1653142081371" duration="6415000" />
+      <workItem from="1653156708435" duration="9722000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize project using Create React App">
       <created>1652739336016</created>
@@ -154,7 +165,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653050632363</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="Initialize project using Create React App">
+      <created>1653055341356</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1653055341356</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

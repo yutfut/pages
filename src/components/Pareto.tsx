@@ -1,19 +1,44 @@
 import React from "react";
 import DataGrid from 'react-data-grid';
+import ReactDOM from "react-dom";
+import { exportToCsv } from './exportUtils';
+//import {  exportToXlsx, exportToPdf } from './exportUtils';
 import { useState } from 'react';
+import {Hub} from "./Hub";
+
 
 export const Pareto: React.FC = () => {
 
     const [range, setRange] = useState('1');
+    const [selectedRows, setSelectedRows] = useState<ReadonlySet<number>>(() => new Set());
+
+    function MyGrid() {
+        const [rows, setRows] = useState(critsVarsRows);
+
+        return <DataGrid columns={critsVarsCols}
+                         rows={rows}
+            //rowKeyGetter={rowKeyGetter}
+                         onSelectedRowsChange={setSelectedRows}
+                         onRowsChange={setRows}
+        />;
+    }
 
     return(
-        <div>
+        <div className="container">
+
+            <div className="row">
+            <div className="col col-3">
+                <h2>Навигация</h2>
+                <Hub/>
+            </div>
+
+            <div className="col">
             <h2>Проверка парето-оптимальности вариантов</h2>
 
-            <div className="accordion-body show">
-                <label htmlFor="customRange" className="form-label p-3" ><strong>Показать шаги:</strong></label>
-                <input type="range" className="form-range p-3"
-                       style={{width: 150, verticalAlign: "middle" }}
+            <div className="alert alert-dark " >
+                <label htmlFor="customRange" className="form-label p-1" ><strong>Показать шаги:</strong></label>
+                <input type="range" className="form-range p-4 "
+                       style={{width: 150, verticalAlign: "middle"}}
                        min="1" max="3" step="1"
                        onChange={(e) =>
                                        {
@@ -22,10 +47,10 @@ export const Pareto: React.FC = () => {
                                 }
                        value = {range}
                        id="customRange"/>
-                {range}
+                <strong>{range}</strong>
             </div>
 
-            <div className=" accordion-body show" >
+            <div className="show" >
                 <h3>Значения критериев для вариантов:</h3>
 
                 {printmatrix(critsVars)}
@@ -36,7 +61,7 @@ export const Pareto: React.FC = () => {
                 </div>
             </div>
 
-            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+            <div className={(range >= "2") ? " show" : " collapse"}>
                 <h3>Матрица сравнения вариантов:</h3>
                 {printmatrix(compareVars(critsVars))}
                 <div className={"text-center"} style={{ width: 500 }}>
@@ -44,24 +69,41 @@ export const Pareto: React.FC = () => {
                 </div>
             </div>
 
-            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"} >
+            <div className={(range >= "3") ? " show" : " collapse"} >
                <h3>Вывод об оптимальности вариантов:</h3>
                {printBoolArray(paretoCheck(compareVars(critsVars)))}
                {paretoCheckPrint(paretoCheck(compareVars(critsVars)))}
             </div>
 
+
+            <ExportButton onExport={() => exportToCsv(MyGrid(), 'CommonFeatures.csv')}>
+                Export to CSV
+            </ExportButton>
+
+            </div>
+            </div>
         </div>
     )
 }
+/*
+<ExportButton onExport={() => exportToXlsx(MyGrid(), 'CommonFeatures.xlsx')}>
+    Экспортировать в XSLX
+</ExportButton>
+<ExportButton onExport={() => exportToPdf(MyGrid(), 'CommonFeatures.pdf')}>
+    Экспортировать в PDF
+</ExportButton>
+ */
+
+
 
 
 let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
 
 const critsVarsCols = [
     { key: 'Crits', name: '' },
-    { key: 'Var1', name: 'Вариант 1' },
-    { key: 'Var2', name: 'Вариант 2' },
-    { key: 'Var3', name: 'Вариант 3' }
+    { key: 'Var1', name: 'Вариант 1', editable: true},
+    { key: 'Var2', name: 'Вариант 2', editable: true},
+    { key: 'Var3', name: 'Вариант 3', editable: true}
 ];
 
 const critsVarsRows = [
@@ -70,15 +112,17 @@ const critsVarsRows = [
     { Crits: 'Критерий 3', Var1: critsVars[0][2], Var2: critsVars[1][2], Var3: critsVars[2][2]},
 ];
 
-function MyGrid() {
-    const [rows, setRows] = useState(critsVarsRows);
-
-    return <DataGrid
-        columns={critsVarsCols}
-        rows={rows}
-        onRowDoubleClick={(row, column) => column.editor}
-        onRowsChange={setRows} />;
+interface Row {
+    crits: string;
+    Var1: number;
+    Var2: number;
+    Var3: number;
 }
+
+function rowKeyGetter(row: Row) {
+    return row.crits;
+}
+
 
 function rowsToMatrix(rows: any){
     let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
@@ -157,7 +201,6 @@ function compareVars (matrix: Array<Array<number>>) {
 }
 
 
-
 function paretoCheck (matrix: Array<Array<number>>)
 {
     let result: Array<boolean> = [true,true,true]; //по умолчанию - все оптимальны
@@ -195,8 +238,6 @@ function paretoCheckPrint (result: Array<boolean>)
     return resultPrint;
 }
 
-
-
 function createRows(matrix: Array<Array<number>>, rowName: String){
 
     const critsVarsRows = [
@@ -207,3 +248,28 @@ function createRows(matrix: Array<Array<number>>, rowName: String){
 
     return critsVarsRows;
 }
+
+function ExportButton({
+                          onExport,
+                          children
+                      }: {
+    onExport: () => Promise<unknown>;
+    children: React.ReactChild;
+}) {
+    const [exporting, setExporting] = useState(false);
+    return (
+        <button
+            disabled={exporting}
+            onClick={async () => {
+                setExporting(true);
+                await onExport();
+                setExporting(false);
+            }}
+        >
+            {exporting ? 'Exporting' : children}
+        </button>
+    );
+}
+
+const rootElement = document.getElementById("root");
+//ReactDOM.render(<Pareto />, rootElement);

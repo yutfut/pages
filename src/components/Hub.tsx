@@ -1,8 +1,9 @@
-import React, {useState} from "react";
+import React from "react";
+import { NavLink } from 'react-router-dom';
 
+export const Hub = ( ) => (
 
-export const Hub = () => (
-        <ul className="nav flex-column">
+    <ul className="nav flex-column alert alert-primary" style={{maxWidth: "38rem"}}>
         <li className="nav-item">
             <a className="nav-link active" aria-current="page" href="/pareto">Парето</a>
         </li>
@@ -25,4 +26,37 @@ export const Hub = () => (
             <a className="nav-link" href="/weightedSum">Взвешенная сумма</a>
         </li>
     </ul>
+
+
+
 )
+
+/*
+
+export const Hub = ( ) => (
+            <ul className="nav flex-column">
+            <NavLink to="/pareto" end >
+                Парето
+            </NavLink>
+            <NavLink to="/baseCriteria" end >
+                Базовый критерий
+            </NavLink>
+            <NavLink to="/pointScore" end >
+                Балльный критерий
+            </NavLink>
+            <NavLink to="/pointScore" end >
+                Балльный критерий
+            </NavLink>
+            <NavLink to="/pointScore" end >
+                Балльный критерий
+            </NavLink>
+            <NavLink to="/pointScore" end >
+                Балльный критерий
+            </NavLink>
+            <NavLink to="/pointScore" end >
+                Балльный критерий
+            </NavLink>
+            </ul>
+)
+
+ */

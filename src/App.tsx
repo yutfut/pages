@@ -1,17 +1,20 @@
 import React from 'react';
 import {Navbar} from "./components/Navbar";
-import {Route, Router, Routes, Link, BrowserRouter} from "react-router-dom";
+import {Route, Routes, BrowserRouter} from "react-router-dom";
+
 import {Theory} from "./pages/Theory";
 import {New_Theory} from "./pages/New_Theory";
 import {Home} from "./pages/Home";
 import {About} from "./pages/About";
 import {Pareto} from "./components/Pareto";
+import {Pareto_New} from "./components/Pareto_new";
 import {BaseCriteria} from "./components/BaseCriteria";
 import {PointScore} from "./components/PointScore";
 import {Borda} from "./components/Borda";
 import {Nanson} from "./components/Nanson";
 import {WeightedSum} from "./components/WeightedSum";
 import {PairComparisonCriterias} from "./components/PairComparisonCriterias";
+
 
 function App() {
   return (
