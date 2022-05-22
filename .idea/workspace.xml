@@ -5,17 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="919f0a39-fcb3-4df5-8cfd-67b969427d36" name="Changes" comment="Initialize project using Create React App">
-      <change afterPath="$PROJECT_DIR$/src/components/Pareto_new.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/Table.jsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/exportUtils.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/Pareto/Step1.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Hub.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Hub.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Pareto.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Pareto.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/BaseCriteria.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BaseCriteria.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Borda.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Borda.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Collapsible.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Collapsible.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Nanson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Nanson.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PairComparisonCriterias.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PairComparisonCriterias.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Pareto.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Pareto/Pareto.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Pareto_new.jsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/PointScore.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PointScore.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/Table.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Table.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/WeightedSum.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WeightedSum.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/exportUtils.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/exportUtils.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/pages/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Home.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/Theory.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/Theory.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/New_Theory.tsx" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,6 +78,7 @@
       <recent name="C:\Users\Мария\WebstormProjects\diploma\src\components" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Мария\WebstormProjects\diploma\src\components\Pareto" />
       <recent name="C:\Users\Мария\WebstormProjects\diploma\public" />
     </key>
   </component>
@@ -107,7 +116,8 @@
       <workItem from="1653037381287" duration="13156000" />
       <workItem from="1653121214941" duration="3848000" />
       <workItem from="1653142081371" duration="6415000" />
-      <workItem from="1653156708435" duration="9722000" />
+      <workItem from="1653156708435" duration="13732000" />
+      <workItem from="1653218668899" duration="7048000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize project using Create React App">
       <created>1652739336016</created>
@@ -172,7 +182,14 @@
       <option name="project" value="LOCAL" />
       <updated>1653055341356</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Initialize project using Create React App">
+      <created>1653166907984</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1653166907984</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import ReactDataGrid from "react-data-grid";
 import {useState} from "@types/react";
 
@@ -15,7 +14,7 @@ const rows = [
     { id: 2, title: "Task 3", complete: 60 }
 ];
 
-class Example extends React.Component {
+export class Example extends React.Component {
     state = { rows };
 
     onGridRowsUpdated = ({ fromRow, toRow, updated }) => {
@@ -40,5 +39,3 @@ class Example extends React.Component {
     }
 }
 
-const rootElement = document.getElementById("root");
-ReactDOM.render(<Example />, rootElement);

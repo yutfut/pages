@@ -2,7 +2,6 @@ import { cloneElement } from 'react';
 import type { ReactElement } from 'react';
 import type { DataGridProps } from 'react-data-grid';
 
-
 export async function exportToCsv<R, SR>(
     gridElement: ReactElement<DataGridProps<R, SR>>,
     fileName: string

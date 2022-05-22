@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {Hub} from "./Hub";
 
 export const Nanson: React.FC = () => {
 
@@ -6,8 +7,16 @@ export const Nanson: React.FC = () => {
 
 
     return(
-        <div>
-            <h1>Прямой метод принятия решений процедурой Нансона</h1>
+        <div className="container">
+
+            <div className="row">
+                <div className="col col-3">
+                    <h2>Навигация</h2>
+                    <Hub/>
+                </div>
+
+                <div className="col">
+            <h2>Прямой метод принятия решений процедурой Нансона</h2>
 
             <div className="border-danger">
                 <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
@@ -60,6 +69,8 @@ export const Nanson: React.FC = () => {
             <div className={(range >= "8") ? "accordion-body show" : "accordion-body collapse"}>
                 <h3>Вывод лучшего варианта</h3>
                 {"Тот который остался"}
+            </div>
+            </div>
             </div>
         </div>
     )

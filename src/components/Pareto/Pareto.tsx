@@ -1,10 +1,13 @@
 import React from "react";
 import DataGrid from 'react-data-grid';
-import ReactDOM from "react-dom";
-import { exportToCsv } from './exportUtils';
+import { exportToCsv } from '../exportUtils';
 //import {  exportToXlsx, exportToPdf } from './exportUtils';
 import { useState } from 'react';
-import {Hub} from "./Hub";
+import {Hub} from "../Hub";
+import {Step1, getRows} from "./Step1"
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
 
 
 export const Pareto: React.FC = () => {
@@ -56,11 +59,11 @@ export const Pareto: React.FC = () => {
                 {printmatrix(critsVars)}
                 <div className={"text-center"} style={{ width: 500 }}>
                     <DataGrid columns={critsVarsCols} rows={critsVarsRows} />
-                    {MyGrid()}
                     {printmatrix(rowsToMatrix(critsVarsRows))}
+
                 </div>
             </div>
-
+                <Step1/>
             <div className={(range >= "2") ? " show" : " collapse"}>
                 <h3>Матрица сравнения вариантов:</h3>
                 {printmatrix(compareVars(critsVars))}
@@ -85,6 +88,7 @@ export const Pareto: React.FC = () => {
         </div>
     )
 }
+
 /*
 <ExportButton onExport={() => exportToXlsx(MyGrid(), 'CommonFeatures.xlsx')}>
     Экспортировать в XSLX
@@ -93,8 +97,6 @@ export const Pareto: React.FC = () => {
     Экспортировать в PDF
 </ExportButton>
  */
-
-
 
 
 let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
@@ -112,20 +114,22 @@ const critsVarsRows = [
     { Crits: 'Критерий 3', Var1: critsVars[0][2], Var2: critsVars[1][2], Var3: critsVars[2][2]},
 ];
 
-interface Row {
-    crits: string;
-    Var1: number;
-    Var2: number;
-    Var3: number;
-}
 
-function rowKeyGetter(row: Row) {
-    return row.crits;
-}
 
+function getMatrixFromRows() {
+    let matrix1: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+
+    for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+            matrix1[i][j] = Number(getRows()[i][j]);
+        }
+    }
+    return matrix1;
+}
 
 function rowsToMatrix(rows: any){
     let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+
     matrix[0][0] = rows[0].Var1;
     matrix[0][1] = rows[1].Var1;
     matrix[0][2] = rows[2].Var1;

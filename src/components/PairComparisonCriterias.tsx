@@ -1,11 +1,20 @@
 import React, {useState} from "react";
+import {Hub} from "./Hub";
 
 export const PairComparisonCriterias: React.FC = () => {
 
     const [range, setRange] = useState('1');
 
     return(
-        <div>
+        <div className="container">
+
+            <div className="row">
+                <div className="col col-3">
+                    <h2>Навигация</h2>
+                    <Hub/>
+                </div>
+
+                <div className="col">
             <h2>Определение весовых коэффициентов методом парного сравнения критериев</h2>
 
             <div className="border-danger">
@@ -44,6 +53,8 @@ export const PairComparisonCriterias: React.FC = () => {
             <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Итоговое значение критериев</h3>
             {countFinalPoints(countCriteriasPoints(criteriasComparison),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison))))}
+            </div>
+            </div>
             </div>
         </div>
     )

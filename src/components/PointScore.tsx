@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {Hub} from "./Hub";
 
 export const PointScore: React.FC = () => {
 
@@ -6,8 +7,16 @@ export const PointScore: React.FC = () => {
 
 
     return(
-        <div>
-            <h1>Определение весовых коэффициентов методом бальной оценки</h1>
+        <div className="container">
+
+            <div className="row">
+                <div className="col col-3">
+                    <h2>Навигация</h2>
+                    <Hub/>
+                </div>
+
+                <div className="col">
+            <h2>Определение весовых коэффициентов методом бальной оценки</h2>
 
             <div className="border-danger">
                 <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
@@ -36,6 +45,8 @@ export const PointScore: React.FC = () => {
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод значений веса всех критериев</h3>
             {printNumArray(countFinalPoints(criteriasPoints))}
+            </div>
+        </div>
             </div>
         </div>
     )

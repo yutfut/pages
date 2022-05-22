@@ -1,7 +1,7 @@
 import React from "react";
 
 import {Route, Router, Routes, BrowserRouter} from "react-router-dom";
-import {Pareto} from "../components/Pareto";
+import {Pareto} from "../components/Pareto/Pareto";
 import {BaseCriteria} from "../components/BaseCriteria";
 import {PointScore} from "../components/PointScore";
 import {PairComparisonCriterias} from "../components/PairComparisonCriterias";
