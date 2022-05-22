@@ -15,16 +15,6 @@ export const Borda: React.FC = () => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
 
-
-    const [rowData, setRowData] = useState<any[]>(
-        [   {"count": 29, "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
-            {"count": 0, "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
-            {"count": 6, "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
-            {"count": 17, "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
-            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
-            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
-    );
-
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { field: 'count', headerName: "Кол-во экспертов", editable: true, width: 240 },
         { field: 'place1', headerName: "1 место" },
@@ -38,6 +28,33 @@ export const Borda: React.FC = () => {
         };
     }, []);
 
+    const [rowData, setRowData] = useState<any[]>(
+        [   {"count": 29, "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
+            {"count": 0, "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
+            {"count": 6, "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
+            {"count": 17, "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
+            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
+            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
+    );
+
+    let variants: number = 3; //количество вариантов
+
+
+
+    let vars: Array<Array<number>> = [[3, 2, 1], [3, 1, 2],[2, 3, 1], [1, 3, 2], [2,1,3], [1,2,3]]; //все возможные варианты расстановки мест
+
+
+    function expsVars(){
+        let expertsTypes: number = 6; //факториал от количества вариантов
+
+        let expsVars: Array<number> = [29, 0, 6, 17, 14, 14]; //длина массива - expertsTypes, т.е. факториал от кол-ва вариантов
+
+        for (let i = 0; i< expertsTypes; i++){
+
+            expsVars[i]= rowData[i].count;
+        }
+            return expsVars;
+    }
 
     return(
         <div className="container">
@@ -67,7 +84,7 @@ export const Borda: React.FC = () => {
             </div>
 
             <h3>Таблица для подсчёта мнений экспертов</h3>
-            { printExperts(expsVars, vars) }
+            { printExperts(expsVars(), vars) }
 
                     <div style={containerStyle}>
 
@@ -91,17 +108,17 @@ export const Borda: React.FC = () => {
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Матрица парного сравнения вариантов</h3>
-            {printmatrix(bordaPairComparison(vars, expsVars))}
+            {printmatrix(bordaPairComparison(vars, expsVars()))}
             </div>
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Таблица со значение подсчётов Yj (баллов для каждого варианта)</h3>
-            {printNumArray(countBordaPoints(expsVars, vars))}
+            {printNumArray(countBordaPoints(expsVars(), vars))}
             </div>
 
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вывод номера лучшего варианта</h3>
-            {findBestOption(countBordaPoints(expsVars, vars))}
+            {findBestOption(countBordaPoints(expsVars(), vars))}
             </div>
             </div>
             </div>
@@ -109,13 +126,7 @@ export const Borda: React.FC = () => {
     )
 }
 
-let variants: number = 3; //количество вариантов
 
-let expertsTypes: number = 6; //факториал от количества вариантов
-
-let vars: Array<Array<number>> = [[3, 2, 1], [3, 1, 2],[2, 3, 1], [1, 3, 2], [2,1,3], [1,2,3]]; //все возможные варианты расстановки мест
-
-let expsVars: Array<number> = [29, 0, 6, 17, 14, 14]; //длина массива - expertsTypes, т.е. факториал от кол-ва вариантов
 
 
 function printExperts(expsVars: Array<number>, vars: Array<Array<number>>)
@@ -194,5 +205,5 @@ function findBestOption(pointArray: Array<number>) {
         }
     }
 
-    return bestOption;
+    return ("Лучший вариант: " + (bestOption + 1));
 }

@@ -15,13 +15,6 @@ export const BaseCriteria: React.FC = () => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
 
-
-    const [rowData, setRowData] = useState<any[]>(
-        [   {"crit1": 1, "crit2": 1,"crit3": 1,
-            "crit4": 1,"crit5": 1,"crit6": 1,"crit7": 1,
-            "crit8": 1,"crit9": 1,"crit10": 1,} ]
-    );
-
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { field: 'crit1', headerName: "Критерий 1" },
         { field: 'crit2', headerName: "Критерий 2" },
@@ -42,6 +35,33 @@ export const BaseCriteria: React.FC = () => {
         };
     }, []);
 
+    const [rowData, setRowData] = useState<any[]>(
+        [   {"crit1": false, "crit2": false,"crit3": true,
+            "crit4": false,"crit5": true,"crit6": false,"crit7": false,
+            "crit8": false,"crit9": true,"crit10": true} ]
+    );
+
+
+    let criteriasNum: number = 10;
+
+    function criteriasBase() {
+        let criteriasBase: Array<boolean> = [false, false, true, false, true ,false, false , false, true, true];
+
+            criteriasBase[0] = rowData[0].crit1;
+        criteriasBase[1] = rowData[0].crit2;
+        criteriasBase[2] = rowData[0].crit3;
+        criteriasBase[3] = rowData[0].crit4;
+        criteriasBase[4] = rowData[0].crit5;
+        criteriasBase[5] = rowData[0].crit6;
+        criteriasBase[6] = rowData[0].crit7;
+        criteriasBase[7] = rowData[0].crit8;
+        criteriasBase[8] = rowData[0].crit9;
+        criteriasBase[9] = rowData[0].crit10;
+
+        return criteriasBase;
+    }
+
+    let pointWeight: number = 1/countSumPoints(fillPointsArray(criteriasBase()));
 
 
     return(
@@ -67,9 +87,9 @@ export const BaseCriteria: React.FC = () => {
                 {range}
             </div>
             <h3>заполняемая таблица с флажками, отмечающая базовые критерии</h3>
-            {announceBase(criteriasBase)}
+            {announceBase(criteriasBase())}
             <h3>таблица, показывающая, сколько баллов весят небазовые критерии</h3>
-            {printNumArray(fillPointsArray(criteriasBase))}
+            {printNumArray(fillPointsArray(criteriasBase()))}
 
                     <div style={containerStyle}>
 
@@ -93,7 +113,7 @@ export const BaseCriteria: React.FC = () => {
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод суммы всех баллов</h3>
-            {countSumPoints(fillPointsArray(criteriasBase)).toString()}
+            {countSumPoints(fillPointsArray(criteriasBase())).toString()}
             </div>
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
@@ -103,7 +123,7 @@ export const BaseCriteria: React.FC = () => {
 
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод значений веса всех критериев</h3>
-            {printNumArray(countFinalPoints(fillPointsArray(criteriasBase), pointWeight))}
+            {printNumArray(countFinalPoints(fillPointsArray(criteriasBase()), pointWeight))}
             </div>
         </div>
             </div>
@@ -111,13 +131,6 @@ export const BaseCriteria: React.FC = () => {
 
     )
 }
-
-
-//base criteria
-
-let criteriasNum: number = 10;
-
-let criteriasBase: Array<boolean> = [false, false, true, false, true ,false, false , false, true, true];
 
 
 function fillPointsArray(criteriasBase: Array<boolean>) {
@@ -168,7 +181,7 @@ function countSumPoints(points: Array<number>) {
     return sumPoints;
 }
 
-let pointWeight: number = 1/countSumPoints(fillPointsArray(criteriasBase));
+
 
 function countFinalPoints(criteriasPoints: Array<number>, pointWeight: number) {
     let criteriasFinalPoints: Array<number> = criteriasPoints;
