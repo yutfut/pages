@@ -24,8 +24,48 @@ import {
 
 export const Pareto: React.FC = () => {
 
+    const gridRef = useRef<AgGridReact>(null);
+    const containerStyle = useMemo(() => ({ width: '85%', height: '60%' }), []);
+    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+
+    const onBtExport = useCallback(() => {
+        gridRef.current!.api.exportDataAsCsv();
+    }, []);
+
+
+    const [rowData, setRowData] = useState<any[]>(
+        [  {"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
+            {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
+            {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]
+    );
+
+    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+        { field: 'crits', headerName: "Критерии" },
+        { field: 'var1', headerName: "Вариант 1" },
+        { field: 'var2', headerName: "Вариант 2" },
+        { field: 'var3', headerName: "Вариант 3" },
+    ]);
+
+    const defaultColDef = useMemo<ColDef>(() => {
+        return {
+            editable: true,
+        };
+    }, []);
+
+    function getRows(){
+
+        let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+
+        for (let i = 0; i<3; i++) {
+            matrix[0][i] = rowData[i].var1;
+            matrix[1][i] = rowData[i].var2;
+            matrix[2][i] = rowData[i].var3;
+        }
+
+        return matrix;
+    }
+
     const [range, setRange] = useState('1');
-    const [selectedRows, setSelectedRows] = useState<ReadonlySet<number>>(() => new Set());
 
     function MyGrid() {
         const [rows, setRows] = useState(critsVarsRows);
@@ -33,7 +73,6 @@ export const Pareto: React.FC = () => {
         return <DataGrid columns={critsVarsCols}
                          rows={rows}
             //rowKeyGetter={rowKeyGetter}
-                         onSelectedRowsChange={setSelectedRows}
                          onRowsChange={setRows}
         />;
     }
@@ -68,31 +107,49 @@ export const Pareto: React.FC = () => {
             <div className="show" >
                 <h3>Значения критериев для вариантов:</h3>
 
-                {printmatrix(critsVars)}
+
                 <div className={"text-center"} style={{ width: 500 }}>
-                    <DataGrid columns={critsVarsCols} rows={critsVarsRows} />
-                    {printmatrix(rowsToMatrix(critsVarsRows))}
-                    {printmatrix(rowsToMatrix(critsVarsRows))}
+                    {printmatrix(critsVars)}
                 </div>
             </div>
 
-                <Step1/>
+                <div style={containerStyle}>
+
+                    <div style={gridStyle} className="ag-theme-alpine">
+                        <AgGridReact
+                            ref={gridRef}
+                            rowData={rowData}
+                            columnDefs={columnDefs}
+                            defaultColDef={defaultColDef}
+                        ></AgGridReact>
+                    </div>
+                    <button className="btn btn-primary p-1"
+                            onClick={onBtExport}
+                    >
+                        Export to Excel
+                    </button>
+
+                </div>
+
+                <div className="p-5">
+                    {printmatrix(getRows())}
+                </div>
 
             <div className={(range >= "2") ? " show" : " collapse"}>
                 <h3>Матрица сравнения вариантов:</h3>
-                {printmatrix(compareVars(critsVars))}
+                {printmatrix(compareVars(getRows()))}
                 <div className={"text-center"} style={{ width: 500 }}>
                     <DataGrid
                         columns={critsVarsCols}
-                        rows={createRows(compareVars(rowsToMatrix(critsVarsRows)), "Вариант")}
+                        rows={createRows(compareVars(getRows()), "Вариант")}
                     />
                 </div>
             </div>
 
             <div className={(range >= "3") ? " show" : " collapse"} >
                <h3>Вывод об оптимальности вариантов:</h3>
-               {printBoolArray(paretoCheck(compareVars(critsVars)))}
-               {paretoCheckPrint(paretoCheck(compareVars(critsVars)))}
+               {printBoolArray(paretoCheck(compareVars(getRows())))}
+               {paretoCheckPrint(paretoCheck(compareVars(getRows())))}
             </div>
 
 
@@ -103,8 +160,6 @@ export const Pareto: React.FC = () => {
         </div>
     )
 }
-
-
 
 let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
 
@@ -120,26 +175,6 @@ const critsVarsRows = [
     { Crits: 'Критерий 2', Var1: critsVars[0][1], Var2: critsVars[1][1], Var3: critsVars[2][1]},
     { Crits: 'Критерий 3', Var1: critsVars[0][2], Var2: critsVars[1][2], Var3: critsVars[2][2]},
 ];
-
-
-
-function getMatrixFromRows() {
-    let matrix1: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-
-    matrix1[0][0] = Step1().props.rowData[0].var1;
-    matrix1[0][1] = Step1().props.rowData[1].var1;
-    matrix1[0][2] = Step1().props.rowData[2].var1;
-
-    matrix1[1][0] = Step1().props.rowData[0].var2;
-    matrix1[1][1] = Step1().props.rowData[1].var2;
-    matrix1[1][2] = Step1().props.rowData[2].var3;
-
-    matrix1[2][0] = Step1().props.rowData[0].var3;
-    matrix1[2][1] = Step1().props.rowData[1].var3;
-    matrix1[2][2] = Step1().props.rowData[2].var3;
-
-    return matrix1;
-}
 
 function rowsToMatrix(rows: any){
     let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
@@ -265,93 +300,4 @@ function createRows(matrix: Array<Array<number>>, rowName: String){
     ];
 
     return newRows;
-}
-
-export const Step1 = () => {
-    const gridRef = useRef<AgGridReact>(null);
-    const containerStyle = useMemo(() => ({ width: '85%', height: '40%' }), []);
-    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
-
-    const onBtExport = useCallback(() => {
-        gridRef.current!.api.exportDataAsCsv();
-    }, []);
-
-
-    const [rowData, setRowData] = useState<any[]>(
-        [  {"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
-                    {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
-                    {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]
-    );
-
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
-        { field: 'crits', headerName: "Критерии" },
-        { field: 'var1', headerName: "Вариант 1" },
-        { field: 'var2', headerName: "Вариант 2" },
-        { field: 'var3', headerName: "Вариант 3" },
-    ]);
-
-    const defaultColDef = useMemo<ColDef>(() => {
-        return {
-            editable: true,
-        };
-    }, []);
-
-    function getRows(){
-        let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
-
-        matrix[0][0] = Step1().props.rowData[0].var1;
-        matrix[0][1] = Step1().props.rowData[1].var1;
-        matrix[0][2] = Step1().props.rowData[2].var1;
-
-        matrix[1][0] = Step1().props.rowData[0].var2;
-        matrix[1][1] = Step1().props.rowData[1].var2;
-        matrix[1][2] = Step1().props.rowData[2].var3;
-
-        matrix[2][0] = Step1().props.rowData[0].var3;
-        matrix[2][1] = Step1().props.rowData[1].var3;
-        matrix[2][2] = Step1().props.rowData[2].var3;
-
-            /*
-        matrix[0][0] = rowData[0].var1;
-        matrix[0][1] = rowData[1].var1;
-        matrix[0][2] = rowData[2].var1;
-
-        matrix[1][0] = rowData[0].var2;
-        matrix[1][1] = rowData[1].var2;
-        matrix[1][2] = rowData[2].var2;
-
-        matrix[2][0] = rowData[0].var3;
-        matrix[2][1] = rowData[1].var3;
-        matrix[2][2] = rowData[2].var3;
-             */
-        return matrix;
-    }
-
-    return (
-        <div style={containerStyle}>
-
-            <div style={gridStyle} className="ag-theme-alpine">
-                <AgGridReact
-                    ref={gridRef}
-                    rowData={rowData}
-                    columnDefs={columnDefs}
-                    defaultColDef={defaultColDef}
-                ></AgGridReact>
-            </div>
-            <button className="btn btn-primary p-1"
-                onClick={onBtExport}
-            >
-                Export to Excel
-            </button>
-
-        </div>
-    );
-};
-
-
-export function getRows()
-{
-    let matrix: Array<Array<String>> = Step1().props.getRows();
-
-    return matrix;
 }
