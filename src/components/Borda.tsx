@@ -1,5 +1,7 @@
-import React, {useState} from "react";
+import React, {useCallback, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
+import {AgGridReact} from "ag-grid-react";
+import {ColDef} from "ag-grid-community";
 
 export const Borda: React.FC = () => {
 
@@ -34,6 +36,9 @@ export const Borda: React.FC = () => {
 
             <h3>Таблица для подсчёта мнений экспертов</h3>
             { printExperts(expsVars, vars) }
+
+                    <Step1/>
+                    <div className="p-3"></div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Матрица парного сравнения вариантов</h3>
@@ -141,4 +146,58 @@ function findBestOption(pointArray: Array<number>) {
     }
 
     return bestOption;
+}
+
+export const Step1 = () => {
+    const gridRef = useRef<AgGridReact>(null);
+    const containerStyle = useMemo(() => ({ width: '92%', height: '85%' }), []);
+    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+
+    const onBtExport = useCallback(() => {
+        gridRef.current!.api.exportDataAsCsv();
+    }, []);
+
+
+    const [rowData, setRowData] = useState<any[]>(
+        [   {"count": 29, "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
+            {"count": 0, "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
+            {"count": 6, "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
+            {"count": 17, "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
+            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
+            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
+    );
+
+    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+        { field: 'count', headerName: "Кол-во экспертов", editable: true, width: 240 },
+        { field: 'place1', headerName: "1 место" },
+        { field: 'place2', headerName: "2 место" },
+        { field: 'place3', headerName: "3 место" },
+    ]);
+
+    const defaultColDef = useMemo<ColDef>(() => {
+        return {
+            width: 200,
+        };
+    }, []);
+
+
+    return (
+        <div style={containerStyle}>
+
+            <div style={gridStyle} className="ag-theme-alpine">
+                <AgGridReact
+                    ref={gridRef}
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    defaultColDef={defaultColDef}
+                ></AgGridReact>
+            </div>
+            <button className="btn btn-primary p-1"
+                    onClick={onBtExport}
+            >
+                Export to Excel
+            </button>
+
+        </div>
+    );
 }

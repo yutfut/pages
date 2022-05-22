@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useCallback, useMemo, useRef} from "react";
 import {useState} from "react";
 import {Hub} from "./Hub";
+import {AgGridReact} from "ag-grid-react";
+import {ColDef} from "ag-grid-community";
 
 export const WeightedSum: React.FC = () => {
 
@@ -33,6 +35,9 @@ export const WeightedSum: React.FC = () => {
             {printNumArray(criteriasWeight)}
             <h3>Таблица для ввода значений критериев</h3>
             {printmatrix(critVars)}
+
+                    <Step1/>
+                    <div className="p-3"></div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Таблица с нормированными значениями</h3>
@@ -144,3 +149,64 @@ function findBestOption(pointArray: Array<number>) {
 
     return bestOption;
 }
+
+export const Step1 = () => {
+    const gridRef = useRef<AgGridReact>(null);
+    const containerStyle = useMemo(() => ({ width: '78%', height: '130%'}), []);
+    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+
+    const onBtExport = useCallback(() => {
+        gridRef.current!.api.exportDataAsCsv();
+    }, []);
+
+
+    const [rowData, setRowData] = useState<any[]>(
+        [
+                    {"crits":"Критерий 1", "weights": 0.157, "var1": 1,"var2": 0.89, "var3": 0.83},
+                    {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 1, "var3": 0.75},
+                    {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+                    {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+                    {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+                    {"crits":"Критерий 2", "weights": 0.05,  "var1": 0.5,"var2": 1, "var3": 1},
+                    {"crits":"Критерий 2", "weights": 0.157, "var1": 0.67,"var2": 0.83, "var3": 1},
+                    {"crits":"Критерий 2", "weights": 0.157, "var1": 0.667,"var2": 0.833, "var3": 0},
+                    {"crits":"Критерий 2", "weights": 0.05,  "var1": 1,"var2": 0.8, "var3": 0.9},
+                    {"crits":"Критерий 3", "weights": 0.05,  "var1": 1,"var2": 0.9, "var3": 0.9}]
+    );
+
+    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+        { field: 'crits', headerName: "Критерий" },
+        { field: 'weights', headerName: "Вес критерия" },
+        { field: 'var1', headerName: "Вариант 1" },
+        { field: 'var2', headerName: "Вариант 2" },
+        { field: 'var3', headerName: "Вариант 3" },
+    ]);
+
+    const defaultColDef = useMemo<ColDef>(() => {
+        return {
+            editable: true,
+            width: 140
+        };
+    }, []);
+
+
+    return (
+        <div style={containerStyle}>
+
+            <div style={gridStyle} className="ag-theme-alpine">
+                <AgGridReact
+                    ref={gridRef}
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    defaultColDef={defaultColDef}
+                ></AgGridReact>
+            </div>
+            <button className="btn btn-primary p-1"
+                    onClick={onBtExport}
+            >
+                Export to Excel
+            </button>
+
+        </div>
+    );
+};

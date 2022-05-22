@@ -1,12 +1,24 @@
-import React from "react";
+'use strict';
+
+import React, { useState, useCallback, useMemo, useRef} from "react";
 import DataGrid from 'react-data-grid';
-import { exportToCsv } from '../exportUtils';
-//import {  exportToXlsx, exportToPdf } from './exportUtils';
-import { useState } from 'react';
-import {Hub} from "../Hub";
-import {Step1, getRows} from "./Step1"
+import {Hub} from "./Hub";
+//import {Step1, getRows} from "./Step1"
+import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
+
+import {
+    ColDef,
+    ColGroupDef,
+    Grid,
+    GridOptions,
+    GridReadyEvent,
+    ValueGetterParams
+} from 'ag-grid-community';
 
 
 
@@ -60,15 +72,20 @@ export const Pareto: React.FC = () => {
                 <div className={"text-center"} style={{ width: 500 }}>
                     <DataGrid columns={critsVarsCols} rows={critsVarsRows} />
                     {printmatrix(rowsToMatrix(critsVarsRows))}
-
+                    {printmatrix(rowsToMatrix(critsVarsRows))}
                 </div>
             </div>
+
                 <Step1/>
+
             <div className={(range >= "2") ? " show" : " collapse"}>
                 <h3>Матрица сравнения вариантов:</h3>
                 {printmatrix(compareVars(critsVars))}
                 <div className={"text-center"} style={{ width: 500 }}>
-                    <DataGrid columns={critsVarsCols} rows={createRows(compareVars(rowsToMatrix(critsVarsRows)), "Вариант")} />
+                    <DataGrid
+                        columns={critsVarsCols}
+                        rows={createRows(compareVars(rowsToMatrix(critsVarsRows)), "Вариант")}
+                    />
                 </div>
             </div>
 
@@ -79,9 +96,7 @@ export const Pareto: React.FC = () => {
             </div>
 
 
-            <ExportButton onExport={() => exportToCsv(MyGrid(), 'CommonFeatures.csv')}>
-                Export to CSV
-            </ExportButton>
+
 
             </div>
             </div>
@@ -89,14 +104,6 @@ export const Pareto: React.FC = () => {
     )
 }
 
-/*
-<ExportButton onExport={() => exportToXlsx(MyGrid(), 'CommonFeatures.xlsx')}>
-    Экспортировать в XSLX
-</ExportButton>
-<ExportButton onExport={() => exportToPdf(MyGrid(), 'CommonFeatures.pdf')}>
-    Экспортировать в PDF
-</ExportButton>
- */
 
 
 let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
@@ -119,11 +126,18 @@ const critsVarsRows = [
 function getMatrixFromRows() {
     let matrix1: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
-    for (let i = 0; i < 3; i++) {
-        for (let j = 0; j < 3; j++) {
-            matrix1[i][j] = Number(getRows()[i][j]);
-        }
-    }
+    matrix1[0][0] = Step1().props.rowData[0].var1;
+    matrix1[0][1] = Step1().props.rowData[1].var1;
+    matrix1[0][2] = Step1().props.rowData[2].var1;
+
+    matrix1[1][0] = Step1().props.rowData[0].var2;
+    matrix1[1][1] = Step1().props.rowData[1].var2;
+    matrix1[1][2] = Step1().props.rowData[2].var3;
+
+    matrix1[2][0] = Step1().props.rowData[0].var3;
+    matrix1[2][1] = Step1().props.rowData[1].var3;
+    matrix1[2][2] = Step1().props.rowData[2].var3;
+
     return matrix1;
 }
 
@@ -213,7 +227,7 @@ function paretoCheck (matrix: Array<Array<number>>)
     {
         for (let j = 0; j < 3; j++)
         {
-            if (matrix[i][j] == 1) //если в матрице хотя бы один элемент столбца равен единице
+            if (matrix[i][j] === 1) //если в матрице хотя бы один элемент столбца равен единице
             {
                 result[i] = false; // то столбец (вариант) неоптимален
             }
@@ -244,36 +258,100 @@ function paretoCheckPrint (result: Array<boolean>)
 
 function createRows(matrix: Array<Array<number>>, rowName: String){
 
-    const critsVarsRows = [
+    const newRows = [
         { Crits: rowName + ' 1', Var1: matrix[0][0], Var2: matrix[1][0], Var3: matrix[2][0]},
         { Crits: rowName + ' 2', Var1: matrix[0][1], Var2: matrix[1][1], Var3: matrix[2][1]},
         { Crits: rowName + ' 3', Var1: matrix[0][2], Var2: matrix[1][2], Var3: matrix[2][2]},
     ];
 
-    return critsVarsRows;
+    return newRows;
 }
 
-function ExportButton({
-                          onExport,
-                          children
-                      }: {
-    onExport: () => Promise<unknown>;
-    children: React.ReactChild;
-}) {
-    const [exporting, setExporting] = useState(false);
-    return (
-        <button
-            disabled={exporting}
-            onClick={async () => {
-                setExporting(true);
-                await onExport();
-                setExporting(false);
-            }}
-        >
-            {exporting ? 'Exporting' : children}
-        </button>
+export const Step1 = () => {
+    const gridRef = useRef<AgGridReact>(null);
+    const containerStyle = useMemo(() => ({ width: '85%', height: '40%' }), []);
+    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+
+    const onBtExport = useCallback(() => {
+        gridRef.current!.api.exportDataAsCsv();
+    }, []);
+
+
+    const [rowData, setRowData] = useState<any[]>(
+        [  {"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
+                    {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
+                    {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]
     );
-}
 
-const rootElement = document.getElementById("root");
-//ReactDOM.render(<Pareto />, rootElement);
+    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+        { field: 'crits', headerName: "Критерии" },
+        { field: 'var1', headerName: "Вариант 1" },
+        { field: 'var2', headerName: "Вариант 2" },
+        { field: 'var3', headerName: "Вариант 3" },
+    ]);
+
+    const defaultColDef = useMemo<ColDef>(() => {
+        return {
+            editable: true,
+        };
+    }, []);
+
+    function getRows(){
+        let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+
+        matrix[0][0] = Step1().props.rowData[0].var1;
+        matrix[0][1] = Step1().props.rowData[1].var1;
+        matrix[0][2] = Step1().props.rowData[2].var1;
+
+        matrix[1][0] = Step1().props.rowData[0].var2;
+        matrix[1][1] = Step1().props.rowData[1].var2;
+        matrix[1][2] = Step1().props.rowData[2].var3;
+
+        matrix[2][0] = Step1().props.rowData[0].var3;
+        matrix[2][1] = Step1().props.rowData[1].var3;
+        matrix[2][2] = Step1().props.rowData[2].var3;
+
+            /*
+        matrix[0][0] = rowData[0].var1;
+        matrix[0][1] = rowData[1].var1;
+        matrix[0][2] = rowData[2].var1;
+
+        matrix[1][0] = rowData[0].var2;
+        matrix[1][1] = rowData[1].var2;
+        matrix[1][2] = rowData[2].var2;
+
+        matrix[2][0] = rowData[0].var3;
+        matrix[2][1] = rowData[1].var3;
+        matrix[2][2] = rowData[2].var3;
+             */
+        return matrix;
+    }
+
+    return (
+        <div style={containerStyle}>
+
+            <div style={gridStyle} className="ag-theme-alpine">
+                <AgGridReact
+                    ref={gridRef}
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    defaultColDef={defaultColDef}
+                ></AgGridReact>
+            </div>
+            <button className="btn btn-primary p-1"
+                onClick={onBtExport}
+            >
+                Export to Excel
+            </button>
+
+        </div>
+    );
+};
+
+
+export function getRows()
+{
+    let matrix: Array<Array<String>> = Step1().props.getRows();
+
+    return matrix;
+}
