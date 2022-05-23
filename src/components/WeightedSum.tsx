@@ -3,6 +3,7 @@ import {useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
+import DataGrid from "react-data-grid";
 
 export const WeightedSum: React.FC = () => {
 
@@ -80,6 +81,39 @@ export const WeightedSum: React.FC = () => {
         }
         return critVars;
     }
+
+    const columns = [
+        { key: 'crits', name: "Критерии" },
+        { key: 'var1', name: "Вариант 1" },
+        { key: 'var2', name: "Вариант 2" },
+        { key: 'var3', name: "Вариант 3" }];
+
+    const rows = [
+        { 'crits' : "Критерий 1", 'var1' :  NormingCrits(critVars())[0][0], 'var2' :  NormingCrits(critVars())[0][1],  'var3' : NormingCrits(critVars())[0][2]},
+        { 'crits' : "Критерий 2", 'var1' :  NormingCrits(critVars())[1][0], 'var2' :  NormingCrits(critVars())[1][1],  'var3' : NormingCrits(critVars())[1][2]},
+        { 'crits' : "Критерий 3", 'var1' :  NormingCrits(critVars())[2][0], 'var2' :  NormingCrits(critVars())[2][1],  'var3' : NormingCrits(critVars())[2][2]},
+        { 'crits' : "Критерий 4", 'var1' :  NormingCrits(critVars())[3][0], 'var2' :  NormingCrits(critVars())[3][1],  'var3' : NormingCrits(critVars())[3][2]},
+        { 'crits' : "Критерий 5", 'var1' :  NormingCrits(critVars())[4][0], 'var2' :  NormingCrits(critVars())[4][1],  'var3' : NormingCrits(critVars())[4][2]},
+        { 'crits' : "Критерий 6", 'var1' :  NormingCrits(critVars())[5][0], 'var2' :  NormingCrits(critVars())[5][1],  'var3' : NormingCrits(critVars())[5][2]},
+        { 'crits' : "Критерий 7", 'var1' :  NormingCrits(critVars())[6][0], 'var2' :  NormingCrits(critVars())[6][1],  'var3' : NormingCrits(critVars())[6][2]},
+        { 'crits' : "Критерий 8", 'var1' :  NormingCrits(critVars())[7][0], 'var2' :  NormingCrits(critVars())[7][1],  'var3' : NormingCrits(critVars())[7][2]},
+        { 'crits' : "Критерий 9", 'var1' :  NormingCrits(critVars())[8][0], 'var2' :  NormingCrits(critVars())[8][1],  'var3' : NormingCrits(critVars())[8][2]},
+        { 'crits' : "Критерий 10", 'var1' :  NormingCrits(critVars())[9][0], 'var2' :  NormingCrits(critVars())[9][1],  'var3' : NormingCrits(critVars())[9][2]}
+    ]
+
+    const columns2 = [
+        { key: 'crit1', name: "Вариант 1" },
+        { key: 'crit2', name: "Вариант 2" },
+        { key: 'crit3', name: "Вариант 3" },
+    ];
+
+    const rows2 = [
+        { 'crit1': countWeight(NormingCrits(critVars()),criteriasWeight() )[0],
+            'crit2': countWeight(NormingCrits(critVars()),criteriasWeight() )[1],
+            'crit3': countWeight(NormingCrits(critVars()),criteriasWeight() )[2]}
+    ];
+
+
     return(
         <div className="container">
 
@@ -103,11 +137,7 @@ export const WeightedSum: React.FC = () => {
                 {range}
             </div>
 
-            <h3>Одномерная таблица для весовых коэффициентов</h3>
-            {printNumArray(criteriasWeight() )}
             <h3>Таблица для ввода значений критериев</h3>
-            {printmatrix(critVars())}
-
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -131,12 +161,18 @@ export const WeightedSum: React.FC = () => {
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Таблица с нормированными значениями</h3>
-            {printmatrix(NormingCrits(critVars()))}
+                <DataGrid
+                    columns={columns}
+                    rows={rows}
+                />
             </div>
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Одномерная таблица с подсчитанной взвешенной суммой для каждого варианта</h3>
-            {printNumArray(countWeight(NormingCrits(critVars()),criteriasWeight() ))}
+                <DataGrid
+                    columns={columns2}
+                    rows={rows2}
+                />
                 </div>
 
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
@@ -147,6 +183,7 @@ export const WeightedSum: React.FC = () => {
             </div>
         </div>
     )
+
 }
 
 

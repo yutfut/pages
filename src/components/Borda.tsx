@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
+import DataGrid from "react-data-grid";
 
 export const Borda: React.FC = () => {
 
@@ -40,8 +41,21 @@ export const Borda: React.FC = () => {
     let variants: number = 3; //количество вариантов
 
 
-
     let vars: Array<Array<number>> = [[3, 2, 1], [3, 1, 2],[2, 3, 1], [1, 3, 2], [2,1,3], [1,2,3]]; //все возможные варианты расстановки мест
+
+    const columns = [
+        { key: 'crit1', name: "Вариант 1" },
+        { key: 'crit2', name: "Вариант 2" },
+        { key: 'crit3', name: "Вариант 3" },
+];
+
+    const rows = [
+        { 'crit1': countBordaPoints(expsVars(), vars)[0],
+            'crit2': countBordaPoints(expsVars(), vars)[1],
+            'crit3': countBordaPoints(expsVars(), vars)[2]}
+    ];
+
+
 
 
     function expsVars(){
@@ -72,7 +86,7 @@ export const Borda: React.FC = () => {
                 <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
                 <input type="range" className="form-range p-3"
                        style={{width: 150, verticalAlign: "middle" }}
-                       min="1" max="4" step="1"
+                       min="1" max="3" step="1"
                        onChange={(e) =>
                        {
                            setRange(e.target.value);
@@ -84,8 +98,6 @@ export const Borda: React.FC = () => {
             </div>
 
             <h3>Таблица для подсчёта мнений экспертов</h3>
-            { printExperts(expsVars(), vars) }
-
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -106,17 +118,16 @@ export const Borda: React.FC = () => {
 
                     <div className="p-3"></div>
 
+
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Матрица парного сравнения вариантов</h3>
-            {printmatrix(bordaPairComparison(vars, expsVars()))}
+            <h3>Таблица со значение подсчётов Yj (баллов для каждого варианта)</h3>
+                <DataGrid
+                    columns={columns}
+                    rows={rows}
+                />
             </div>
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Таблица со значение подсчётов Yj (баллов для каждого варианта)</h3>
-            {printNumArray(countBordaPoints(expsVars(), vars))}
-            </div>
-
-            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вывод номера лучшего варианта</h3>
             {findBestOption(countBordaPoints(expsVars(), vars))}
             </div>

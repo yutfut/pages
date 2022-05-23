@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
+import DataGrid from 'react-data-grid';
 
 export const BaseCriteria: React.FC = () => {
 
@@ -63,6 +64,31 @@ export const BaseCriteria: React.FC = () => {
 
     let pointWeight: number = 1/countSumPoints(fillPointsArray(criteriasBase()));
 
+    const columns = [
+        { key: 'crit1', name: "Критерий 1" },
+        { key: 'crit2', name: "Критерий 2" },
+        { key: 'crit3', name: "Критерий 3" },
+        { key: 'crit4', name: "Критерий 4" },
+        { key: 'crit5', name: "Критерий 5" },
+        { key: 'crit6', name: "Критерий 6" },
+        { key: 'crit7', name: "Критерий 7" },
+        { key: 'crit8', name: "Критерий 8" },
+        { key: 'crit9', name: "Критерий 9" },
+        { key: 'crit10', name: "Критерий 10" },    ];
+
+    const rows = [
+        { 'crit1': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[0],
+            'crit2': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[1],
+            'crit3': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[2],
+            'crit4': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[3],
+            'crit5': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[4],
+            'crit6': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[5],
+            'crit7': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[6],
+            'crit8': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[7],
+            'crit9': countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[8],
+            'crit10':countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[9]}
+    ];
+
 
     return(
         <div className="container">
@@ -86,10 +112,8 @@ export const BaseCriteria: React.FC = () => {
                        id="customRange"/>
                 {range}
             </div>
-            <h3>заполняемая таблица с флажками, отмечающая базовые критерии</h3>
-            {announceBase(criteriasBase())}
-            <h3>таблица, показывающая, сколько баллов весят небазовые критерии</h3>
-            {printNumArray(fillPointsArray(criteriasBase()))}
+            <h3>Таблица, показывающая, сколько баллов весят небазовые критерии</h3>
+            {"True - базовый критерий, false - небазовый, в 2 раза весомее базового"}
 
                     <div style={containerStyle}>
 
@@ -112,18 +136,23 @@ export const BaseCriteria: React.FC = () => {
                     <div className="p-3"></div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>вывод суммы всех баллов</h3>
+            <h3>Вывод суммы всех баллов</h3>
             {countSumPoints(fillPointsArray(criteriasBase())).toString()}
             </div>
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>вывод веса базового критерия</h3>
+            <h3>Вывод веса базового критерия</h3>
             {pointWeight.toString()}
             </div>
 
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>вывод значений веса всех критериев</h3>
-            {printNumArray(countFinalPoints(fillPointsArray(criteriasBase()), pointWeight))}
+            <h3>Вывод значений веса всех критериев</h3>
+
+                <DataGrid
+                    columns={columns}
+                    rows={rows}
+                />
+
             </div>
         </div>
             </div>
@@ -161,15 +190,6 @@ function announceBase(criteriasBase: Array<Boolean>) {
     return AnnounceMessage;
 }
 
-function printNumArray(numArray: Array<Number>)
-{
-    let printArray: String = "";
-    for (let i = 0; i < numArray.length; i++)
-    {
-        printArray = printArray + numArray[i].toString() + " ";
-    }
-    return printArray;
-}
 
 function countSumPoints(points: Array<number>) {
 

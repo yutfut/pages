@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
+import DataGrid from "react-data-grid";
 
 export const PointScore: React.FC = () => {
 
@@ -17,9 +18,9 @@ export const PointScore: React.FC = () => {
 
 
     const [rowData, setRowData] = useState<any[]>(
-        [   {"crit1": 1, "crit2": 1,"crit3": 1,
-            "crit4": 1,"crit5": 1,"crit6": 1,"crit7": 1,
-            "crit8": 1,"crit9": 1,"crit10": 1,} ]
+        [   {"crit1": 100, "crit2": 75,"crit3": 75,
+            "crit4": 75,"crit5": 75,"crit6": 50,"crit7": 100,
+            "crit8": 100,"crit9": 50,"crit10": 50} ]
     );
 
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
@@ -35,6 +36,25 @@ export const PointScore: React.FC = () => {
         { field: 'crit10', headerName: "Критерий 10" },
     ]);
 
+    let criteriasNum: number = 10;
+
+    function criteriasPoints() {
+        let criteriasPoints: Array<number> = [100, 75, 75, 75, 75, 50, 100, 100, 50, 50];
+
+        criteriasPoints[0] = rowData[0].crit1;
+        criteriasPoints[1] = rowData[0].crit2;
+        criteriasPoints[2] = rowData[0].crit3;
+        criteriasPoints[3] = rowData[0].crit4;
+        criteriasPoints[4] = rowData[0].crit5;
+        criteriasPoints[5] = rowData[0].crit6;
+        criteriasPoints[6] = rowData[0].crit7;
+        criteriasPoints[7] = rowData[0].crit8;
+        criteriasPoints[8] = rowData[0].crit9;
+        criteriasPoints[9] = rowData[0].crit10;
+
+        return criteriasPoints;
+    }
+
     const defaultColDef = useMemo<ColDef>(() => {
         return {
             editable: true,
@@ -42,6 +62,33 @@ export const PointScore: React.FC = () => {
         };
     }, []);
 
+    let pointWeight: number = 1/countSumPoints(criteriasPoints());
+
+
+    const columns = [
+        { key: 'crit1', name: "Критерий 1" },
+        { key: 'crit2', name: "Критерий 2" },
+        { key: 'crit3', name: "Критерий 3" },
+        { key: 'crit4', name: "Критерий 4" },
+        { key: 'crit5', name: "Критерий 5" },
+        { key: 'crit6', name: "Критерий 6" },
+        { key: 'crit7', name: "Критерий 7" },
+        { key: 'crit8', name: "Критерий 8" },
+        { key: 'crit9', name: "Критерий 9" },
+        { key: 'crit10', name: "Критерий 10" },    ];
+
+    const rows = [
+        { 'crit1': (countFinalPoints(criteriasPoints()))[0],
+            'crit2': (countFinalPoints(criteriasPoints()))[1],
+            'crit3': (countFinalPoints(criteriasPoints()))[2],
+            'crit4': (countFinalPoints(criteriasPoints()))[3],
+            'crit5': (countFinalPoints(criteriasPoints()))[4],
+            'crit6': (countFinalPoints(criteriasPoints()))[5],
+            'crit7': (countFinalPoints(criteriasPoints()))[6],
+            'crit8': (countFinalPoints(criteriasPoints()))[7],
+            'crit9': (countFinalPoints(criteriasPoints()))[8],
+            'crit10':(countFinalPoints(criteriasPoints()))[9]}
+    ];
 
     return(
         <div className="container">
@@ -67,8 +114,6 @@ export const PointScore: React.FC = () => {
             </div>
 
             <h3>таблица для ввода значений критериев</h3>
-            {printNumArray(criteriasPoints)}
-
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -91,17 +136,21 @@ export const PointScore: React.FC = () => {
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод суммы всех баллов</h3>
-            {countSumPoints(criteriasPoints).toString()}
+            {countSumPoints(criteriasPoints())}
             </div>
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод веса одного балла критерия</h3>
-            {pointWeight.toString()}
+            {pointWeight}
             </div>
 
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод значений веса всех критериев</h3>
-            {printNumArray(countFinalPoints(criteriasPoints))}
+                <DataGrid
+                    columns={columns}
+                    rows={rows}
+                />
+
             </div>
         </div>
             </div>
@@ -109,9 +158,6 @@ export const PointScore: React.FC = () => {
     )
 }
 
-let criteriasNum: number = 10;
-
-let criteriasPoints: Array<number> = [100, 75, 75, 75, 75, 50, 100, 100, 50, 50];
 
 function printNumArray(numArray: Array<Number>)
 {
@@ -128,13 +174,12 @@ function countSumPoints(points: Array<number>)
     let sumPoints: number = 0;
 
     for (let i = 0; i < points.length; i++) {
-        sumPoints += points[i];
+        sumPoints += Number(points[i]);
     }
-
     return sumPoints;
 }
 
-let pointWeight: number = 1/countSumPoints(criteriasPoints);
+
 
 function countFinalPoints(critPoints: Array<number>)
 {
@@ -143,7 +188,7 @@ function countFinalPoints(critPoints: Array<number>)
     let criteriasFinalPoints: Array<number> = critPoints;
 
     for (let i = 0; i < critPoints.length; i++) {
-        sumPoints += critPoints[i];
+        sumPoints += Number(critPoints[i]);
     }
 
     let pointWeight: number = 1/sumPoints;

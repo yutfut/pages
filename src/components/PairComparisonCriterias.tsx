@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
+import DataGrid from "react-data-grid";
 
 export const PairComparisonCriterias: React.FC = () => {
 
@@ -82,6 +83,44 @@ export const PairComparisonCriterias: React.FC = () => {
         return criteriasComparison;
     }
 
+    const columns = [
+        { key: 'crit1', name: "Критерий 1" },
+        { key: 'crit2', name: "Критерий 2" },
+        { key: 'crit3', name: "Критерий 3" },
+        { key: 'crit4', name: "Критерий 4" },
+        { key: 'crit5', name: "Критерий 5" },
+        { key: 'crit6', name: "Критерий 6" },
+        { key: 'crit7', name: "Критерий 7" },
+        { key: 'crit8', name: "Критерий 8" },
+        { key: 'crit9', name: "Критерий 9" },
+        { key: 'crit10', name: "Критерий 10" },    ];
+
+    const rows1 = [
+        {   'crit1': countCriteriasPoints(criteriasComparison())[0],
+            'crit2': countCriteriasPoints(criteriasComparison())[1],
+            'crit3': countCriteriasPoints(criteriasComparison())[2],
+            'crit4': countCriteriasPoints(criteriasComparison())[3],
+            'crit5': countCriteriasPoints(criteriasComparison())[4],
+            'crit6': countCriteriasPoints(criteriasComparison())[5],
+            'crit7': countCriteriasPoints(criteriasComparison())[6],
+            'crit8': countCriteriasPoints(criteriasComparison())[7],
+            'crit9': countCriteriasPoints(criteriasComparison())[8],
+            'crit10':countCriteriasPoints(criteriasComparison())[9]}
+    ];
+
+
+    const rows2 = [
+        {   'crit1': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[0],
+            'crit2': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[1],
+            'crit3': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[2],
+            'crit4': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[3],
+            'crit5': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[4],
+            'crit6': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[5],
+            'crit7': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[6],
+            'crit8': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[7],
+            'crit9': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[8],
+            'crit10':countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[9]}
+];
 
     return(
         <div className="container">
@@ -135,7 +174,10 @@ export const PairComparisonCriterias: React.FC = () => {
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вывод баллов каждого критерия</h3>
-            {countCriteriasPoints(criteriasComparison()).toString()}
+                <DataGrid
+                    columns={columns}
+                    rows={rows1}
+                />
             </div>
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
@@ -150,7 +192,10 @@ export const PairComparisonCriterias: React.FC = () => {
 
             <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Итоговое значение критериев</h3>
-            {countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))}
+              <DataGrid
+                    columns={columns}
+                    rows={rows2}
+                />
             </div>
             </div>
             </div>
@@ -183,7 +228,7 @@ function countCriteriasPoints(critsComparison: Array<Array<number>>)
     {
         for (let j = 0; j < critsComparison[i].length; j++)
         {
-            criteriasPoints[i] = criteriasPoints[i] + critsComparison[i][j];
+            criteriasPoints[i] = Number(criteriasPoints[i] + critsComparison[i][j]);
         }
     }
 
@@ -196,7 +241,7 @@ function countSumPoints(points: Array<number>) {
     let sumPoints: number = 0;
 
     for (let i = 0; i < points.length; i++) {
-        sumPoints += points[i];
+        sumPoints += Number(points[i]);
     }
     return sumPoints;
 }

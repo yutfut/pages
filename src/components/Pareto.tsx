@@ -77,6 +77,7 @@ export const Pareto: React.FC = () => {
         />;
     }
 
+
     return(
         <div className="container">
 
@@ -106,39 +107,31 @@ export const Pareto: React.FC = () => {
 
             <div className="show" >
                 <h3>Значения критериев для вариантов:</h3>
+            </div>
+            <div style={{height: "300px"}}>
+                            <div style={containerStyle}>
 
+                                <div style={gridStyle} className="ag-theme-alpine">
+                                    <AgGridReact
+                                        ref={gridRef}
+                                        rowData={rowData}
+                                        columnDefs={columnDefs}
+                                        defaultColDef={defaultColDef}
+                                    ></AgGridReact>
+                                </div>
+                                <button className="btn btn-primary"
+                                        onClick={onBtExport}
+                                >
+                                    Export to Excel
+                                </button>
 
-                <div className={"text-center"} style={{ width: 500 }}>
-                    {printmatrix(critsVars)}
-                </div>
+                            </div>
             </div>
 
-                <div style={containerStyle}>
-
-                    <div style={gridStyle} className="ag-theme-alpine">
-                        <AgGridReact
-                            ref={gridRef}
-                            rowData={rowData}
-                            columnDefs={columnDefs}
-                            defaultColDef={defaultColDef}
-                        ></AgGridReact>
-                    </div>
-                    <button className="btn btn-primary p-1"
-                            onClick={onBtExport}
-                    >
-                        Export to Excel
-                    </button>
-
-                </div>
-
-                <div className="p-5">
-                    {printmatrix(getRows())}
-                </div>
 
             <div className={(range >= "2") ? " show" : " collapse"}>
                 <h3>Матрица сравнения вариантов:</h3>
-                {printmatrix(compareVars(getRows()))}
-                <div className={"text-center"} style={{ width: 500 }}>
+                <div className={"text-center"} style={{ width: "500px"}}>
                     <DataGrid
                         columns={critsVarsCols}
                         rows={createRows(compareVars(getRows()), "Вариант")}
@@ -148,12 +141,17 @@ export const Pareto: React.FC = () => {
 
             <div className={(range >= "3") ? " show" : " collapse"} >
                <h3>Вывод об оптимальности вариантов:</h3>
-               {printBoolArray(paretoCheck(compareVars(getRows())))}
-               {paretoCheckPrint(paretoCheck(compareVars(getRows())))}
+                <div>
+                    {paretoCheckPrint(paretoCheck(compareVars(getRows())))[0]}
+                </div>
+                <div>
+                    {paretoCheckPrint(paretoCheck(compareVars(getRows())))[1]}
+                </div>
+                <div>
+                    {paretoCheckPrint(paretoCheck(compareVars(getRows())))[2]}
+                </div>
+
             </div>
-
-
-
 
             </div>
             </div>
@@ -274,17 +272,17 @@ function paretoCheck (matrix: Array<Array<number>>)
 
 function paretoCheckPrint (result: Array<boolean>)
 {
-    let resultPrint: String = "";
+    let resultPrint: Array<String> = ['', '',''];
 
     for (let i = 0; i < 3; i++)
     {
         if (result[i])
         {
-            resultPrint = resultPrint + "Вариант " + (i+1) + " парето-оптимален \n";
+            resultPrint[i] = "Вариант " + (i+1) + " парето-оптимален \n";
         }
         else
         {
-            resultPrint = resultPrint + "Вариант " + (i+1) + " не оптимален \n";
+            resultPrint[i] = "Вариант " + (i+1) + " не оптимален \n";
         }
     }
 

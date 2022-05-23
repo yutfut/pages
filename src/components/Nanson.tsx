@@ -68,10 +68,7 @@ export const Nanson: React.FC = () => {
             </div>
 
             <h3>Таблица с мнениями экспертов для трёх вариантов</h3>
-            { printExperts(expsVars, vars) }
 
-
-                    return (
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -99,7 +96,7 @@ export const Nanson: React.FC = () => {
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Подсчет баллов для трех вариантов</h3>
-            {printNumArray(countNansonPoints(expsVars, vars))}
+            {printNumArray(countMatrixPoints((nansonPairComparison(expsVars, vars))))}
             </div>
 
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
@@ -252,7 +249,7 @@ function reduceMatrix(matrix: Array<Array<number>>, unwantedOption: number)
 
 function countMatrixPoints(matrixComparison: Array<Array<number>>)
 {
-    let totalPoints: Array<number> = [0,0]
+    let totalPoints: Array<number> = [0,0,0]
 
     for (let i = 0; i < matrixComparison.length; i++)
     {
