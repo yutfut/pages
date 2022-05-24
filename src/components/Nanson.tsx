@@ -2,6 +2,7 @@ import React, {useCallback, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
+import DataGrid from "react-data-grid";
 
 export const Nanson: React.FC = () => {
 
@@ -25,12 +26,60 @@ export const Nanson: React.FC = () => {
             {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
     );
 
+    function expsVars() {
+        let expsVars: Array<number> = [29, 0, 6, 17, 14, 14]; //длина массива - expertsTypes, т.е. факториал от кол-ва вариантов
+        for (let i = 0; i<6; i++) {
+            expsVars[i] = rowData[i].count;
+        }
+        return expsVars
+    }
+
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { field: 'count', headerName: "Кол-во экспертов", editable: true, width: 240 },
         { field: 'place1', headerName: "1 место" },
         { field: 'place2', headerName: "2 место" },
         { field: 'place3', headerName: "3 место" },
     ]);
+
+    let pairComparison: Array<Array<number>> = nansonPairComparison(expsVars(), vars);
+
+
+    const columns = [{key: 'vars', name: 'Вариант сравнения'},
+        {key: 'var1', name: 'Вариант 1'},
+        {key: 'var2', name: 'Вариант 2'},
+        {key: 'var3', name: 'Вариант 3'}]
+    const rows = [
+        {'vars': 'Вариант 1', 'var1': nansonPairComparison(expsVars(), vars)[0][0],
+         'var2': nansonPairComparison(expsVars(), vars)[0][1],
+         'var3': nansonPairComparison(expsVars(), vars)[0][2]},
+        {'vars': 'Вариант 2', 'var1': nansonPairComparison(expsVars(), vars)[1][0],
+            'var2': nansonPairComparison(expsVars(), vars)[1][1],
+            'var3': nansonPairComparison(expsVars(), vars)[1][2]},
+        {'vars': 'Вариант 3', 'var1': nansonPairComparison(expsVars(), vars)[2][0],
+            'var2': nansonPairComparison(expsVars(), vars)[2][1],
+            'var3': nansonPairComparison(expsVars(), vars)[2][2]}]
+
+    const columns2 = [
+        { key: 'crit1', name: "Вариант 1" },
+        { key: 'crit2', name: "Вариант 2" },
+        { key: 'crit3', name: "Вариант 3" },
+    ];
+
+    const rows2 = [
+        { 'crit1': countMatrixPoints((nansonPairComparison(expsVars(), vars)))[0],
+            'crit2': countMatrixPoints((nansonPairComparison(expsVars(), vars)))[1],
+            'crit3': countMatrixPoints((nansonPairComparison(expsVars(), vars)))[2]}
+    ];
+
+
+    for(let i = 0; i < 3; i++)
+    {
+        for(let j = 0; j < 3; j++)
+        {
+            result[i]=result[i]+nansonPairComparison(expsVars(), vars)[i][j];
+        }
+
+    }
 
     const defaultColDef = useMemo<ColDef>(() => {
         return {
@@ -69,6 +118,7 @@ export const Nanson: React.FC = () => {
 
             <h3>Таблица с мнениями экспертов для трёх вариантов</h3>
 
+                    <div style={{height: "400px"}}>
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -86,37 +136,46 @@ export const Nanson: React.FC = () => {
                         </button>
 
                     </div>
+                    </div>
 
                     <div className="p-3"></div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Матрица парного сравнения вариантов</h3>
-            {printmatrix(nansonPairComparison(expsVars, vars))}
+
+                <DataGrid
+                    columns={columns}
+                    rows={rows}
+                />
+
             </div>
 
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Подсчет баллов для трех вариантов</h3>
-            {printNumArray(countMatrixPoints((nansonPairComparison(expsVars, vars))))}
+                <DataGrid
+                    columns={columns2}
+                    rows={rows2}
+                />
             </div>
 
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Отсеивание наименьшего варианта</h3>
-            {findWorstOption(countNansonPoints(expsVars, vars))}
+            {"Худший вариант: " + (findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars)))) + 1)}
             </div>
 
             <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Матрица парного сравнения оставшихся вариантов</h3>
-            {printmatrix(reduceMatrix(nansonPairComparison(expsVars, vars), findWorstOption(countNansonPoints(expsVars, vars))))}
+            {printmatrix(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars))))}
             </div>
 
             <div className={(range >= "6") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Подсчет баллов для двух вариантов</h3>
-            {printNumArray(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars, vars), findWorstOption(countNansonPoints(expsVars, vars)))))}
+            {printNumArray(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))))}
             </div>
 
             <div className={(range >= "7") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Отсеивание наименьшего варианта</h3>
-            {findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars, vars), findWorstOption(countNansonPoints(expsVars, vars)))))}
+            {"Худший вариант: " + (findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars))))) + 1)}
             </div>
 
             <div className={(range >= "8") ? "accordion-body show" : "accordion-body collapse"}>
@@ -136,7 +195,6 @@ let expertsTypes: number = 6; //факториал от количества в�
 
 let vars: Array<Array<number>> = [[3, 2, 1], [3, 1, 2],[2, 3, 1], [1, 3, 2], [2,1,3], [1,2,3]]; //все возможные варианты расстановки мест
 
-let expsVars: Array<number> = [29, 0, 6, 17, 14, 14]; //длина массива - expertsTypes, т.е. факториал от кол-ва вариантов
 
 let result: Array<number> = [0,0,0]; //длина массива - количество вариантов
 
@@ -209,16 +267,6 @@ function printmatrix(matrix: Array<Array<number>>) //приводим всю м�
 }
 
 
-for(let i = 0; i < 3; i++)
-{
-    for(let j = 0; j < 3; j++)
-    {
-        result[i]=result[i]+nansonPairComparison(expsVars, vars)[i][j];
-    }
-
-}
-
-
 function findWorstOption(pointArray: Array<number>)
 {
     let worstOption: number = 0;
@@ -232,8 +280,6 @@ function findWorstOption(pointArray: Array<number>)
     return worstOption;
 }
 
-
-let pairComparison: Array<Array<number>> = nansonPairComparison(expsVars, vars);
 
 function reduceMatrix(matrix: Array<Array<number>>, unwantedOption: number)
 {
@@ -249,34 +295,15 @@ function reduceMatrix(matrix: Array<Array<number>>, unwantedOption: number)
 
 function countMatrixPoints(matrixComparison: Array<Array<number>>)
 {
-    let totalPoints: Array<number> = [0,0,0]
+    let totalPoints: Array<number> = [];
 
     for (let i = 0; i < matrixComparison.length; i++)
     {
+        totalPoints.push(0);
         for (let j = 0; j < matrixComparison[i].length; j++)
         {
             totalPoints[i] = totalPoints[i] + matrixComparison[i][j];
         }
     }
     return totalPoints;
-}
-
-
-result.splice(findWorstOption(result),1)
-result[0] = 0;
-result[1] = 0;
-
-for(let i = 0; i < 2; i++)
-{
-    for(let j = 0; j < 2; j++)
-    {
-        result[i]=result[i]+pairComparison[i][j];
-    }
-
-}
-
-pairComparison.splice(findWorstOption(result),1)
-for(let i = 0; i < 1; i++)
-{
-    pairComparison[i].splice(findWorstOption(result),1)
 }

@@ -34,7 +34,8 @@ export const Pareto: React.FC = () => {
 
 
     const [rowData, setRowData] = useState<any[]>(
-        [  {"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
+        [
+            {"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
             {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
             {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]
     );
@@ -67,15 +68,6 @@ export const Pareto: React.FC = () => {
 
     const [range, setRange] = useState('1');
 
-    function MyGrid() {
-        const [rows, setRows] = useState(critsVarsRows);
-
-        return <DataGrid columns={critsVarsCols}
-                         rows={rows}
-            //rowKeyGetter={rowKeyGetter}
-                         onRowsChange={setRows}
-        />;
-    }
 
 
     return(
@@ -124,8 +116,9 @@ export const Pareto: React.FC = () => {
                                 >
                                     Export to Excel
                                 </button>
-
+                                <div className="p-4"></div>
                             </div>
+
             </div>
 
 

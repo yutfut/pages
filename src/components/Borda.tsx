@@ -98,6 +98,7 @@ export const Borda: React.FC = () => {
             </div>
 
             <h3>Таблица для подсчёта мнений экспертов</h3>
+                    <div style={{height: "400px"}}>
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -115,7 +116,7 @@ export const Borda: React.FC = () => {
                         </button>
 
                     </div>
-
+                    </div>
                     <div className="p-3"></div>
 
 

@@ -114,7 +114,7 @@ export const BaseCriteria: React.FC = () => {
             </div>
             <h3>Таблица, показывающая, сколько баллов весят небазовые критерии</h3>
             {"True - базовый критерий, false - небазовый, в 2 раза весомее базового"}
-
+                    <div style={{height: "300px"}}>
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -132,8 +132,7 @@ export const BaseCriteria: React.FC = () => {
                         </button>
 
                     </div>
-
-                    <div className="p-3"></div>
+                    </div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вывод суммы всех баллов</h3>

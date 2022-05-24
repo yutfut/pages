@@ -39,14 +39,14 @@ export const WeightedSum: React.FC = () => {
         [
             {"crits":"Критерий 1", "weights": 0.157, "var1": 1,"var2": 0.89, "var3": 0.83},
             {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 1, "var3": 0.75},
-            {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
-            {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
-            {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
-            {"crits":"Критерий 2", "weights": 0.05,  "var1": 0.5,"var2": 1, "var3": 1},
-            {"crits":"Критерий 2", "weights": 0.157, "var1": 0.67,"var2": 0.83, "var3": 1},
-            {"crits":"Критерий 2", "weights": 0.157, "var1": 0.667,"var2": 0.833, "var3": 0},
-            {"crits":"Критерий 2", "weights": 0.05,  "var1": 1,"var2": 0.8, "var3": 0.9},
-            {"crits":"Критерий 3", "weights": 0.05,  "var1": 1,"var2": 0.9, "var3": 0.9}]
+            {"crits":"Критерий 3", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+            {"crits":"Критерий 4", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+            {"crits":"Критерий 5", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+            {"crits":"Критерий 6", "weights": 0.05,  "var1": 0.5,"var2": 1, "var3": 1},
+            {"crits":"Критерий 7", "weights": 0.157, "var1": 0.67,"var2": 0.83, "var3": 1},
+            {"crits":"Критерий 8", "weights": 0.157, "var1": 0.667,"var2": 0.833, "var3": 0},
+            {"crits":"Критерий 9", "weights": 0.05,  "var1": 1,"var2": 0.8, "var3": 0.9},
+            {"crits":"Критерий 10", "weights": 0.05,  "var1": 1,"var2": 0.9, "var3": 0.9}]
     );
 
     let criteriasNum: number = 10;
@@ -157,7 +157,7 @@ export const WeightedSum: React.FC = () => {
                     </div>
 
 
-                    <div className="p-3"></div>
+                    <div className="p-4" >{" "}</div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Таблица с нормированными значениями</h3>
@@ -183,7 +183,6 @@ export const WeightedSum: React.FC = () => {
             </div>
         </div>
     )
-
 }
 
 

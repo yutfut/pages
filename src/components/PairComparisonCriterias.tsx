@@ -68,16 +68,16 @@ export const PairComparisonCriterias: React.FC = () => {
 
         for (let i = 0; i<10; i++)
         {
-            criteriasComparison[0][i] = rowData[i].crit1;
-            criteriasComparison[1][i] = rowData[i].crit2;
-            criteriasComparison[2][i] = rowData[i].crit3;
-            criteriasComparison[3][i] = rowData[i].crit4;
-            criteriasComparison[4][i] = rowData[i].crit5;
-            criteriasComparison[5][i] = rowData[i].crit6;
-            criteriasComparison[6][i] = rowData[i].crit7;
-            criteriasComparison[7][i] = rowData[i].crit8;
-            criteriasComparison[8][i] = rowData[i].crit9;
-            criteriasComparison[9][i] = rowData[i].crit10;
+            criteriasComparison[i][0] = rowData[i].crit1;
+            criteriasComparison[i][1] = rowData[i].crit2;
+            criteriasComparison[i][2] = rowData[i].crit3;
+            criteriasComparison[i][3] = rowData[i].crit4;
+            criteriasComparison[i][4] = rowData[i].crit5;
+            criteriasComparison[i][5] = rowData[i].crit6;
+            criteriasComparison[i][6] = rowData[i].crit7;
+            criteriasComparison[i][7] = rowData[i].crit8;
+            criteriasComparison[i][8] = rowData[i].crit9;
+            criteriasComparison[i][9] = rowData[i].crit10;
         }
 
         return criteriasComparison;
@@ -150,7 +150,6 @@ export const PairComparisonCriterias: React.FC = () => {
             </div>
 
             <h3>таблица с матрицей сравнения</h3>
-            {printmatrix(criteriasComparison())}
 
                     <div style={containerStyle}>
 
@@ -170,7 +169,6 @@ export const PairComparisonCriterias: React.FC = () => {
 
                     </div>
 
-                    <div className="p-3"></div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Вывод баллов каждого критерия</h3>
@@ -228,7 +226,7 @@ function countCriteriasPoints(critsComparison: Array<Array<number>>)
     {
         for (let j = 0; j < critsComparison[i].length; j++)
         {
-            criteriasPoints[i] = Number(criteriasPoints[i] + critsComparison[i][j]);
+            criteriasPoints[i] = Number( Number(criteriasPoints[i]) + Number(critsComparison[i][j]));
         }
     }
 
@@ -256,7 +254,7 @@ function countFinalPoints(criteriasPoints: Array<number>, pointWeight: number) {
 
     for (let i = 0; i < criteriasFinalPoints.length; i++)
     {
-        criteriasFinalPoints[i] = criteriasPoints[i] * pointWeight;
+        criteriasFinalPoints[i] = Number(Number(criteriasPoints[i]) * Number(pointWeight));
     }
 
     return  criteriasFinalPoints;

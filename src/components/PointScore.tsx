@@ -114,6 +114,7 @@ export const PointScore: React.FC = () => {
             </div>
 
             <h3>таблица для ввода значений критериев</h3>
+                    <div style={{height: "300px"}}>
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -131,8 +132,7 @@ export const PointScore: React.FC = () => {
                         </button>
 
                     </div>
-
-                    <div className="p-3"></div>
+                    </div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод суммы всех баллов</h3>

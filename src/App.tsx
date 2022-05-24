@@ -14,6 +14,7 @@ import {WeightedSum} from "./components/WeightedSum";
 import {PairComparisonCriterias} from "./components/PairComparisonCriterias";
 
 
+
 function App() {
   return (
     <div className="App">
