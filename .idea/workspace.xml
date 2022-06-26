@@ -6,16 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="919f0a39-fcb3-4df5-8cfd-67b969427d36" name="Changes" comment="Initialize project using Create React App">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/BaseCriteria.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BaseCriteria.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Borda.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Borda.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Nanson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Nanson.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PairComparisonCriterias.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PairComparisonCriterias.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Pareto.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Pareto.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PointScore.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PointScore.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/WeightedSum.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WeightedSum.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/methodDescriptions/BordaDescription.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/methodDescriptions/BordaDescription.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/methodDescriptions/Nanson.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/methodDescriptions/Nanson.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,16 +38,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="ts.external.directory.path" value="C:\Users\Chease282\WebstormProjects\diploma_dmonstrate\node_modules\typescript\lib" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Мария\\WebstormProjects\\diploma_upd\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Мария\WebstormProjects\diploma\src\components" />
@@ -110,6 +104,18 @@
       <workItem from="1653293239245" duration="855000" />
       <workItem from="1653297449820" duration="1143000" />
       <workItem from="1653301480297" duration="4312000" />
+      <workItem from="1653569313101" duration="1201000" />
+      <workItem from="1653831540674" duration="690000" />
+      <workItem from="1653899958671" duration="941000" />
+      <workItem from="1655725857935" duration="748000" />
+      <workItem from="1655745437549" duration="2159000" />
+      <workItem from="1655856652931" duration="513000" />
+      <workItem from="1655887577855" duration="696000" />
+      <workItem from="1655973017762" duration="1657000" />
+      <workItem from="1655976668458" duration="1084000" />
+      <workItem from="1656021398393" duration="275000" />
+      <workItem from="1656255558968" duration="727000" />
+      <workItem from="1656279067891" duration="557000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize project using Create React App">
       <created>1652739336016</created>

@@ -3,7 +3,6 @@
 import React, { useState, useCallback, useMemo, useRef} from "react";
 import DataGrid from 'react-data-grid';
 import {Hub} from "./Hub";
-//import {Step1, getRows} from "./Step1"
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -25,7 +24,7 @@ import {
 export const Pareto: React.FC = () => {
 
     const gridRef = useRef<AgGridReact>(null);
-    const containerStyle = useMemo(() => ({ width: '85%', height: '60%' }), []);
+    const containerStyle = useMemo(() => ({ width: '75%', height: '60%' }), []);
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
     const onBtExport = useCallback(() => {
@@ -100,7 +99,7 @@ export const Pareto: React.FC = () => {
             <div className="show" >
                 <h3>Значения критериев для вариантов:</h3>
             </div>
-            <div style={{height: "300px"}}>
+            <div style={{height: "350px"}}>
                             <div style={containerStyle}>
 
                                 <div style={gridStyle} className="ag-theme-alpine">
