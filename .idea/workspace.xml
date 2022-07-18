@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="919f0a39-fcb3-4df5-8cfd-67b969427d36" name="Changes" comment="Initialize project using Create React App">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/BaseCriteria.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/BaseCriteria.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Borda.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Borda.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/Nanson.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Nanson.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PairComparisonCriterias.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PairComparisonCriterias.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/Pareto.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/Pareto.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/PointScore.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/PointScore.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/WeightedSum.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/WeightedSum.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,7 +123,7 @@
       <workItem from="1657900752225" duration="4280000" />
       <workItem from="1658053440484" duration="2419000" />
       <workItem from="1658139706148" duration="6756000" />
-      <workItem from="1658148823255" duration="455000" />
+      <workItem from="1658148823255" duration="706000" />
     </task>
     <task id="LOCAL-00001" summary="Initialize project using Create React App">
       <created>1652739336016</created>
@@ -237,7 +230,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656279817923</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Initialize project using Create React App">
+      <created>1658149290217</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1658149290217</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

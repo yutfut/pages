@@ -31,6 +31,7 @@ export const Nanson: React.FC = () => {
 
     const [variants, setVariants] = useState([1, 1, 1]);
 
+
     const [columnDefsStepTwo, setColumnDefsStepTwo] = useState<ColDef[]>([
         { field: 'varName', headerName: "Вариант"},
         { field: 'comparison1', headerName: "Вариант 1" },
@@ -69,8 +70,6 @@ export const Nanson: React.FC = () => {
         { field: 'place2', headerName: "2 место" },
         { field: 'place3', headerName: "3 место" },
     ]);
-
-    let pairComparison: Array<Array<number>> = nansonPairComparison(expsVars(), vars);
 
     const columns = [{key: 'vars', name: 'Вариант сравнения'},
         {key: 'var1', name: 'Вариант 1'},
@@ -122,19 +121,12 @@ export const Nanson: React.FC = () => {
 
     }
 
+    //сделать все столбцы шириной 200
     const defaultColDef = useMemo<ColDef>(() => {
         return {
             width: 200,
         };
     }, []);
-
-
-    function kickOffVariantPrint(vars: Array<number>, unWantedOption: number){
-        vars[unWantedOption] = 0;
-        setVariants(vars)
-
-        return ("Худший вариант - " + (unWantedOption + 1))
-    }
 
 
     return(
@@ -262,29 +254,10 @@ export const Nanson: React.FC = () => {
 }
 
 
-let variants: number = 3;
-
-let expertsTypes: number = 6; //факториал от количества вариантов
-
 let vars: Array<Array<number>> = [[3, 2, 1], [3, 1, 2],[2, 3, 1], [1, 3, 2], [2,1,3], [1,2,3]]; //все возможные варианты расстановки мест
 
 let result: Array<number> = [0,0,0]; //длина массива - количество вариантов
 
-
-function printExperts(expsVars: Array<number>, vars: Array<Array<number>>)
-{
-    let ExpertsOpinion: String = "";
-    for(let i = 0; i < 6; i++)
-    {
-        ExpertsOpinion+="\n";
-        ExpertsOpinion+= expsVars[i].toString() + " экспертов считают, что  ";
-        for(let j = 0; j < 3; j++)
-        {
-            ExpertsOpinion+= "вариант " + (j+1).toString() + " заслуживает " +  vars[i][j].toString() + " баллов;";
-        }
-    }
-    return ExpertsOpinion;
-}
 
 function countNansonPoints (expsVars: Array<number>, vars: Array<Array<number>>) //подсчёт очков каждого варианта с целью поиска худшего
 {
@@ -296,16 +269,6 @@ function countNansonPoints (expsVars: Array<number>, vars: Array<Array<number>>)
         }
     }
     return result;
-}
-
-function printNumArray(numArray: Array<Number>)
-{
-    let printArray: String = "";
-    for (let i = 0; i < numArray.length; i++)
-    {
-        printArray = printArray + numArray[i].toString() + " ";
-    }
-    return printArray;
 }
 
 function nansonPairComparison (expsVars: Array<number>, vars: Array<Array<number>>) //создание матрицы парного сравнения вариантов
@@ -363,10 +326,6 @@ function reduceMatrix(matrix: Array<Array<number>>, unwantedOption: number)
     return newMatrix
 }
 
-function kickOffVariant(arr: Array<number>, unWantedOption: number){
-    arr[unWantedOption] = 0;
-    return arr;
-}
 
 function countMatrixPoints(matrixComparison: Array<Array<number>>)
 {
