@@ -125,12 +125,6 @@ export const BaseCriteria: React.FC = () => {
                                 defaultColDef={defaultColDef}
                             ></AgGridReact>
                         </div>
-                        <button className="btn btn-primary p-1"
-                                onClick={onBtExport}
-                        >
-                            Export to Excel
-                        </button>
-
                     </div>
                     </div>
 
@@ -144,15 +138,22 @@ export const BaseCriteria: React.FC = () => {
             {pointWeight.toString()}
             </div>
 
-            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Вывод значений веса всех критериев</h3>
+                    <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>Вывод значений веса всех критериев</h3>
 
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                />
+                        <DataGrid
+                                columns={columns}
+                                rows={rows}
+                        />
 
-            </div>
+                    </div>
+
+                    <button className="btn btn-primary p-1"
+                            onClick={onBtExport}
+                    >
+                        Export to Excel
+                    </button>
+
         </div>
             </div>
         </div>

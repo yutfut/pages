@@ -161,12 +161,6 @@ export const PairComparisonCriterias: React.FC = () => {
                                 defaultColDef={defaultColDef}
                             ></AgGridReact>
                         </div>
-                        <button className="btn btn-primary p-1"
-                                onClick={onBtExport}
-                        >
-                            Export to Excel
-                        </button>
-
                     </div>
 
 
@@ -183,40 +177,31 @@ export const PairComparisonCriterias: React.FC = () => {
             {countSumPoints(countCriteriasPoints(criteriasComparison()))}
             </div>
 
-            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Вес одного балла</h3>
-            {getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison())))}
-            </div>
+                <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Вес одного балла</h3>
+                    {getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison())))}
+                </div>
 
-            <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Итоговое значение критериев</h3>
-              <DataGrid
-                    columns={columns}
-                    rows={rows2}
-                />
-            </div>
-            </div>
+                    <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Итоговое значение критериев</h3>
+                      <DataGrid
+                            columns={columns}
+                            rows={rows2}
+                        />
+                    </div>
+
+                    <button className="btn btn-primary p-1"
+                            onClick={onBtExport}
+                    >
+                        Export to Excel
+                    </button>
+
+                </div>
             </div>
         </div>
     )
 }
 
-
-
-
-function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
-{
-    let printedMatrix: string = "";
-
-    for (let i = 0; i < matrix.length; i++){
-        printedMatrix = printedMatrix + "\n | ";
-        for (let j = 0; j < matrix[i].length; j++){
-            printedMatrix = printedMatrix + matrix[i][j] + " ";
-        }
-    }
-
-    return printedMatrix;
-}
 
 function countCriteriasPoints(critsComparison: Array<Array<number>>)
 {

@@ -1,7 +1,6 @@
 'use strict';
 
 import React, { useState, useCallback, useMemo, useRef} from "react";
-import DataGrid from 'react-data-grid';
 import {Hub} from "./Hub";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -20,16 +19,27 @@ import {
 } from 'ag-grid-community';
 
 
-
 export const Pareto: React.FC = () => {
+
+    let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
+
+    const [critsVarsCols, setCritsVarsCols] = useState<ColDef[]>([
+        { field: 'Crits', headerName: '' },
+        { field: 'Var1', headerName: 'Вариант 1', editable: false},
+        { field: 'Var2', headerName: 'Вариант 2', editable: false},
+        { field: 'Var3', headerName: 'Вариант 3', editable: false}
+    ]);
+
+    const critsVarsRows = [
+        { crits: 'Критерий 1', var1: critsVars[0][0], var2: critsVars[1][0], var3: critsVars[2][0]},
+        { crits: 'Критерий 2', var1: critsVars[0][1], var2: critsVars[1][1], var3: critsVars[2][1]},
+        { crits: 'Критерий 3', var1: critsVars[0][2], var2: critsVars[1][2], var3: critsVars[2][2]},
+    ];
+
 
     const gridRef = useRef<AgGridReact>(null);
     const containerStyle = useMemo(() => ({ width: '75%', height: '60%' }), []);
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
-
-    const onBtExport = useCallback(() => {
-        gridRef.current!.api.exportDataAsCsv();
-    }, []);
 
 
     const [rowData, setRowData] = useState<any[]>(
@@ -40,15 +50,16 @@ export const Pareto: React.FC = () => {
     );
 
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
-        { field: 'crits', headerName: "Критерии" },
-        { field: 'var1', headerName: "Вариант 1" },
-        { field: 'var2', headerName: "Вариант 2" },
-        { field: 'var3', headerName: "Вариант 3" },
+        { field: 'crits', headerName: "Критерии", editable: false },
+        { field: 'var1', headerName: "Вариант 1", editable: true  },
+        { field: 'var2', headerName: "Вариант 2", editable: true  },
+        { field: 'var3', headerName: "Вариант 3", editable: true  },
     ]);
 
+    //здесь можно добавить общее свойство для всех таблиц
     const defaultColDef = useMemo<ColDef>(() => {
         return {
-            editable: true,
+
         };
     }, []);
 
@@ -65,9 +76,12 @@ export const Pareto: React.FC = () => {
         return matrix;
     }
 
+    const onBtExport = useCallback(() => {
+        gridRef.current!.api.exportDataAsCsv();
+    }, []);
+
+    //количество отображаемых шагов
     const [range, setRange] = useState('1');
-
-
 
     return(
         <div className="container">
@@ -110,12 +124,6 @@ export const Pareto: React.FC = () => {
                                         defaultColDef={defaultColDef}
                                     ></AgGridReact>
                                 </div>
-                                <button className="btn btn-primary"
-                                        onClick={onBtExport}
-                                >
-                                    Export to Excel
-                                </button>
-                                <div className="p-4"></div>
                             </div>
 
             </div>
@@ -123,12 +131,22 @@ export const Pareto: React.FC = () => {
 
             <div className={(range >= "2") ? " show" : " collapse"}>
                 <h3>Матрица сравнения вариантов:</h3>
-                <div className={"text-center"} style={{ width: "500px"}}>
-                    <DataGrid
-                        columns={critsVarsCols}
-                        rows={createRows(compareVars(getRows()), "Вариант")}
-                    />
+
+                <div style={{height: "350px"}}>
+                    <div style={containerStyle}>
+
+                        <div style={gridStyle} className="ag-theme-alpine">
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={createRows(compareVars(getRows()), "Вариант")}
+                                columnDefs={critsVarsCols}
+                                defaultColDef={defaultColDef}
+                            ></AgGridReact>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
 
             <div className={(range >= "3") ? " show" : " collapse"} >
@@ -145,26 +163,20 @@ export const Pareto: React.FC = () => {
 
             </div>
 
+                <button className="btn btn-primary"
+                        onClick={onBtExport}
+                >
+                    Export to Excel
+                </button>
+                <div className="p-4"></div>
+
             </div>
             </div>
         </div>
     )
 }
 
-let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
 
-const critsVarsCols = [
-    { key: 'Crits', name: '' },
-    { key: 'Var1', name: 'Вариант 1', editable: true},
-    { key: 'Var2', name: 'Вариант 2', editable: true},
-    { key: 'Var3', name: 'Вариант 3', editable: true}
-];
-
-const critsVarsRows = [
-    { Crits: 'Критерий 1', Var1: critsVars[0][0], Var2: critsVars[1][0], Var3: critsVars[2][0]},
-    { Crits: 'Критерий 2', Var1: critsVars[0][1], Var2: critsVars[1][1], Var3: critsVars[2][1]},
-    { Crits: 'Критерий 3', Var1: critsVars[0][2], Var2: critsVars[1][2], Var3: critsVars[2][2]},
-];
 
 function rowsToMatrix(rows: any){
     let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];

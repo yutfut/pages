@@ -17,6 +17,8 @@ export const Nanson: React.FC = () => {
     }, []);
 
 
+
+
     const [rowData, setRowData] = useState<any[]>(
         [   {"count": 29, "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
             {"count": 0, "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
@@ -24,6 +26,33 @@ export const Nanson: React.FC = () => {
             {"count": 17, "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
             {"count": 14, "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
             {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
+    );
+
+
+    const [variants, setVariants] = useState([1, 1, 1]);
+
+    const [columnDefsStepTwo, setColumnDefsStepTwo] = useState<ColDef[]>([
+        { field: 'varName', headerName: "Вариант"},
+        { field: 'comparison1', headerName: "Вариант 1" },
+        { field: 'comparison2', headerName: "Вариант 2" },
+        { field: 'comparison3', headerName: "Вариант 3" }
+    ]);
+
+    const [rowDataStepTwo, setRowDataStepTwo] = useState<any[]>(
+        [
+            {   "varName": "Вариант 1",
+                "comparison1": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[0][0],
+                "comparison2": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[0][1],
+                "comparison3": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[0][2]},
+            {   "varName": "Вариант 2",
+                "comparison1": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[1][0],
+                "comparison2": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[1][1],
+                "comparison3": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[1][2]},
+            {   "varName": "Вариант 3",
+                "comparison1": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[2][0],
+                "comparison2": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[2][1],
+                "comparison3": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[2][2]},
+            ]
     );
 
     function expsVars() {
@@ -43,11 +72,11 @@ export const Nanson: React.FC = () => {
 
     let pairComparison: Array<Array<number>> = nansonPairComparison(expsVars(), vars);
 
-
     const columns = [{key: 'vars', name: 'Вариант сравнения'},
         {key: 'var1', name: 'Вариант 1'},
         {key: 'var2', name: 'Вариант 2'},
         {key: 'var3', name: 'Вариант 3'}]
+
     const rows = [
         {'vars': 'Вариант 1', 'var1': nansonPairComparison(expsVars(), vars)[0][0],
          'var2': nansonPairComparison(expsVars(), vars)[0][1],
@@ -66,9 +95,21 @@ export const Nanson: React.FC = () => {
     ];
 
     const rows2 = [
-        { 'crit1': countMatrixPoints((nansonPairComparison(expsVars(), vars)))[0],
+        {   'crit1': countMatrixPoints((nansonPairComparison(expsVars(), vars)))[0],
             'crit2': countMatrixPoints((nansonPairComparison(expsVars(), vars)))[1],
             'crit3': countMatrixPoints((nansonPairComparison(expsVars(), vars)))[2]}
+    ];
+
+    const columns3 = [
+        { key: 'crit1', name: "Вариант 1" },
+        { key: 'crit2', name: "Вариант 2" },
+        { key: 'crit3', name: "Вариант 3" }
+    ];
+
+    const rows3 = [
+        {   'crit1': countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars))))[0],
+            'crit2': countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars))))[1],
+            'crit3': countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars))))[2]}
     ];
 
 
@@ -87,6 +128,13 @@ export const Nanson: React.FC = () => {
         };
     }, []);
 
+
+    function kickOffVariantPrint(vars: Array<number>, unWantedOption: number){
+        vars[unWantedOption] = 0;
+        setVariants(vars)
+
+        return ("Худший вариант - " + (unWantedOption + 1))
+    }
 
 
     return(
@@ -129,12 +177,6 @@ export const Nanson: React.FC = () => {
                                 defaultColDef={defaultColDef}
                             ></AgGridReact>
                         </div>
-                        <button className="btn btn-primary p-1"
-                                onClick={onBtExport}
-                        >
-                            Export to Excel
-                        </button>
-
                     </div>
                     </div>
 
@@ -159,30 +201,61 @@ export const Nanson: React.FC = () => {
             </div>
 
             <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Отсеивание наименьшего варианта</h3>
-            {"Худший вариант: " + (findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars)))) + 1)}
+                <h3>Отсеивание наименьшего варианта</h3>
+                {"Худший вариант: " + (findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars)))) + 1)}
             </div>
 
             <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>Матрица парного сравнения оставшихся вариантов</h3>
-            {printmatrix(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars))))}
-            </div>
+                <div style={{height: "400px"}}>
+                    <div style={containerStyle}>
 
-            <div className={(range >= "6") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Подсчет баллов для двух вариантов</h3>
-            {printNumArray(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))))}
-            </div>
+                        <div style={gridStyle} className="ag-theme-alpine">
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={rowDataStepTwo}
+                                columnDefs={columnDefsStepTwo}
+                                defaultColDef={defaultColDef}
+                            ></AgGridReact>
+                        </div>
+                    </div>
+                </div>
 
-            <div className={(range >= "7") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Отсеивание наименьшего варианта</h3>
-            {"Худший вариант: " + (findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars))))) + 1)}
-            </div>
 
-            <div className={(range >= "8") ? "accordion-body show" : "accordion-body collapse"}>
-                <h3>Вывод лучшего варианта</h3>
-                {"Тот который остался"}
-            </div>
-            </div>
+
+
+
+                        <div className={(range >= "6") ? "accordion-body show" : "accordion-body collapse"}>
+                            <h3>Подсчет баллов для двух вариантов</h3>
+                            <DataGrid
+                                columns={columns3}
+                                rows={rows3}
+                            />
+                        </div>
+                    </div>
+
+                    <div className={(range >= "7") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>Отсеивание наименьшего варианта</h3>
+                        {"Худший вариант: " + (findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars),
+                            findWorstOption(countNansonPoints(expsVars(), vars))))) + 1)}
+                    </div>
+
+                    <div className={(range >= "8") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>Вывод лучшего варианта</h3>
+                        {"Победивший вариант - "}
+                        {findLastOption
+                        (   findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars),
+                                findWorstOption(countNansonPoints(expsVars(), vars))))),
+                            findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars))))  )
+                            + 1}
+                    </div>
+
+                    <button className="btn btn-primary p-1"
+                            onClick={onBtExport}
+                    >
+                        Export to Excel
+                    </button>
+                </div>
             </div>
         </div>
     )
@@ -194,7 +267,6 @@ let variants: number = 3;
 let expertsTypes: number = 6; //факториал от количества вариантов
 
 let vars: Array<Array<number>> = [[3, 2, 1], [3, 1, 2],[2, 3, 1], [1, 3, 2], [2,1,3], [1,2,3]]; //все возможные варианты расстановки мест
-
 
 let result: Array<number> = [0,0,0]; //длина массива - количество вариантов
 
@@ -252,27 +324,13 @@ function nansonPairComparison (expsVars: Array<number>, vars: Array<Array<number
     return pairComparison;
 }
 
-function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
-{
-    let printedMatrix: string = "";
-
-    for (let i = 0; i < matrix.length; i++){
-        printedMatrix = printedMatrix + "\n | ";
-        for (let j = 0; j < matrix[i].length; j++){
-            printedMatrix = printedMatrix + matrix[i][j] + " ";
-        }
-    }
-
-    return printedMatrix;
-}
-
 
 function findWorstOption(pointArray: Array<number>)
 {
     let worstOption: number = 0;
 
     for (let i = 0; i < pointArray.length; i++) {
-        if (pointArray[i] < pointArray[worstOption]) {
+        if (pointArray[i] < pointArray[worstOption] && pointArray[i] != 0) {
             worstOption = i;
         }
     }
@@ -281,7 +339,7 @@ function findWorstOption(pointArray: Array<number>)
 }
 
 
-function reduceMatrix(matrix: Array<Array<number>>, unwantedOption: number)
+function reduceMatrixWithSplice(matrix: Array<Array<number>>, unwantedOption: number)
 {
     let newMatrix: Array<Array<number>> = matrix;
     newMatrix.splice(unwantedOption, 1)
@@ -291,6 +349,23 @@ function reduceMatrix(matrix: Array<Array<number>>, unwantedOption: number)
     }
 
     return newMatrix
+}
+
+function reduceMatrix(matrix: Array<Array<number>>, unwantedOption: number)
+{
+    let newMatrix: Array<Array<number>> = matrix;
+
+    for (let i = 0; i < matrix.length; i++) {
+        newMatrix[i][unwantedOption] = 0;
+        newMatrix[unwantedOption][i] = 0;
+    }
+
+    return newMatrix
+}
+
+function kickOffVariant(arr: Array<number>, unWantedOption: number){
+    arr[unWantedOption] = 0;
+    return arr;
 }
 
 function countMatrixPoints(matrixComparison: Array<Array<number>>)
@@ -306,4 +381,21 @@ function countMatrixPoints(matrixComparison: Array<Array<number>>)
         }
     }
     return totalPoints;
+}
+
+function findLastOption(loser1: number, loser2: number){
+
+    let arr: Array<boolean> = [true, true, true];
+
+    arr[loser1] = false;
+    arr[loser2] = false;
+
+    let winner: number = 100;
+
+    for (let i = 0; i < arr.length; i++)
+    {
+        if (arr[i]) { winner = i }
+    }
+
+    return winner;
 }

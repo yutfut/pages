@@ -125,11 +125,6 @@ export const PointScore: React.FC = () => {
                                 defaultColDef={defaultColDef}
                             ></AgGridReact>
                         </div>
-                        <button className="btn btn-primary p-1"
-                                onClick={onBtExport}
-                        >
-                            Export to Excel
-                        </button>
 
                     </div>
                     </div>
@@ -142,32 +137,27 @@ export const PointScore: React.FC = () => {
             <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод веса одного балла критерия</h3>
             {pointWeight}
-            </div>
+                </div>
 
-            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>вывод значений веса всех критериев</h3>
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                />
+                    <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>вывод значений веса всех критериев</h3>
+                            <DataGrid
+                                columns={columns}
+                                rows={rows}
+                            />
 
-            </div>
-        </div>
+                    </div>
+                    <button className="btn btn-primary p-1"
+                            onClick={onBtExport}
+                    >
+                        Export to Excel
+                    </button>
+                </div>
             </div>
         </div>
     )
 }
 
-
-function printNumArray(numArray: Array<Number>)
-{
-    let printArray: String = "";
-    for (let i = 0; i < numArray.length; i++)
-    {
-        printArray = printArray + numArray[i].toString() + " ";
-    }
-    return printArray;
-}
 
 function countSumPoints(points: Array<number>)
 {
@@ -178,7 +168,6 @@ function countSumPoints(points: Array<number>)
     }
     return sumPoints;
 }
-
 
 
 function countFinalPoints(critPoints: Array<number>)

@@ -88,73 +88,58 @@ export const Borda: React.FC = () => {
                        style={{width: 150, verticalAlign: "middle" }}
                        min="1" max="3" step="1"
                        onChange={(e) =>
-                       {
-                           setRange(e.target.value);
-                       }
+                           {
+                               setRange(e.target.value);
+                           }
                        }
                        value = {range}
                        id="customRange"/>
                 {range}
             </div>
 
-            <h3>Таблица для подсчёта мнений экспертов</h3>
+                    <h3>Таблица для подсчёта мнений экспертов</h3>
                     <div style={{height: "400px"}}>
-                    <div style={containerStyle}>
+                        <div style={containerStyle}>
 
-                        <div style={gridStyle} className="ag-theme-alpine">
-                            <AgGridReact
-                                ref={gridRef}
-                                rowData={rowData}
-                                columnDefs={columnDefs}
-                                defaultColDef={defaultColDef}
-                            ></AgGridReact>
+                            <div style={gridStyle} className="ag-theme-alpine">
+                                <AgGridReact
+                                    ref={gridRef}
+                                    rowData={rowData}
+                                    columnDefs={columnDefs}
+                                    defaultColDef={defaultColDef}
+                                ></AgGridReact>
+                            </div>
+
                         </div>
-                        <button className="btn btn-primary p-1"
-                                onClick={onBtExport}
-                        >
-                            Export to Excel
-                        </button>
+                    </div>
 
-                    </div>
-                    </div>
                     <div className="p-3"></div>
 
+                    <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Таблица со значение подсчётов Yj (баллов для каждого варианта)</h3>
+                        <DataGrid
+                            columns={columns}
+                            rows={rows}
+                        />
+                    </div>
 
-            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Таблица со значение подсчётов Yj (баллов для каждого варианта)</h3>
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                />
-            </div>
+                    <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>Вывод номера лучшего варианта</h3>
+                        {findBestOption(countBordaPoints(expsVars(), vars))}
+                    </div>
 
-            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Вывод номера лучшего варианта</h3>
-            {findBestOption(countBordaPoints(expsVars(), vars))}
-            </div>
+                    <button className="btn btn-primary p-1"
+                            onClick={onBtExport}
+                    >
+                        Export to Excel
+                    </button>
+
             </div>
             </div>
         </div>
     )
 }
 
-
-
-
-function printExperts(expsVars: Array<number>, vars: Array<Array<number>>)
-{
-    let ExpertsOpinion: String = "";
-    for(let i = 0; i < 6; i++)
-    {
-        ExpertsOpinion+="\n";
-        ExpertsOpinion+= expsVars[i].toString() + " экспертов считают, что  ";
-        for(let j = 0; j < 3; j++)
-        {
-            ExpertsOpinion+= "вариант " + (j+1).toString() + " заслуживает " +  vars[i][j].toString() + " баллов;";
-        }
-    }
-    return ExpertsOpinion;
-}
 
 function bordaPairComparison (vars: Array<Array<number>>, expsVars: Array<number>)
 {
@@ -172,19 +157,6 @@ function bordaPairComparison (vars: Array<Array<number>>, expsVars: Array<number
     return pairComparison;
 }
 
-function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
-{
-    let printedMatrix: string = "";
-
-    for (let i = 0; i < matrix.length; i++){
-        printedMatrix = printedMatrix + "\n | ";
-        for (let j = 0; j < matrix[i].length; j++){
-            printedMatrix = printedMatrix + matrix[i][j] + " ";
-        }
-    }
-
-    return printedMatrix;
-}
 
 function countBordaPoints (expsVars: Array<number>, vars: Array<Array<number>>)
 {
@@ -198,15 +170,6 @@ function countBordaPoints (expsVars: Array<number>, vars: Array<Array<number>>)
     return result;
 }
 
-function printNumArray(numArray: Array<Number>)
-{
-    let printArray: String = "";
-    for (let i = 0; i < numArray.length; i++)
-    {
-        printArray = printArray + numArray[i].toString() + " ";
-    }
-    return printArray;
-}
 
 function findBestOption(pointArray: Array<number>) {
     let bestOption: number = 0;

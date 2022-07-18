@@ -186,30 +186,6 @@ export const WeightedSum: React.FC = () => {
 }
 
 
-function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
-{
-    let printedMatrix: string = "";
-
-    for (let i = 0; i < matrix.length; i++){
-        printedMatrix = printedMatrix + "\n | ";
-        for (let j = 0; j < matrix[i].length; j++){
-            printedMatrix = printedMatrix + matrix[i][j] + " ";
-        }
-    }
-
-    return printedMatrix;
-}
-
-function printNumArray(numArray: Array<Number>)
-{
-    let printArray: String = "";
-    for (let i = 0; i < numArray.length; i++)
-    {
-        printArray = printArray + numArray[i].toString() + " ";
-    }
-    return printArray;
-}
-
 function NormingCrits (matrix: Array<Array<number>>){
     let maxPoint: number;
     for (let i = 0; i < matrix.length; i++)
@@ -230,8 +206,6 @@ function NormingCrits (matrix: Array<Array<number>>){
     }
     return matrix;
 }
-
-
 
 
 function countWeight (matrix: Array<Array<number>>, criteriasWeight: Array<number>)
