@@ -38,7 +38,7 @@ export const Pareto: React.FC = () => {
 
 
     const gridRef = useRef<AgGridReact>(null);
-    const containerStyle = useMemo(() => ({ width: '75%', height: '60%' }), []);
+    const containerStyle = useMemo(() => ({ width: '85%', height: '90%' }), []);
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
 
@@ -84,36 +84,43 @@ export const Pareto: React.FC = () => {
     const [range, setRange] = useState('1');
 
     return(
-        <div className="container">
+        <div className="Base">
 
-            <div className="row">
-            <div className="col col-3">
-                <h2>Навигация</h2>
-                <Hub/>
-            </div>
+            {/*<div className="row">*/}
+            {/*<div className="col col-3">*/}
+            {/*    <h2>Навигация</h2>*/}
+            {/*    <Hub/>*/}
+            {/*</div>*/}
 
-            <div className="col">
-            <h2>Проверка парето-оптимальности вариантов</h2>
+            {/*className="col"*/}
+            <div>
+                <h2>Проверка парето-оптимальности вариантов</h2>
 
-            <div className="alert alert-dark " >
-                <label htmlFor="customRange" className="form-label p-1" ><strong>Показать шаги:</strong></label>
-                <input type="range" className="form-range p-4 "
-                       style={{width: 150, verticalAlign: "middle"}}
-                       min="1" max="3" step="1"
-                       onChange={(e) =>
-                                       {
-                                           setRange(e.target.value);
-                                       }
-                                }
-                       value = {range}
-                       id="customRange"/>
-                <strong>{range}</strong>
-            </div>
+                <div className="alert alert-dark Che row">
+                    <div className="col">
+                        <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
+                        <input type="range" className="form-range p-4 "
+                               style={{width: 150, verticalAlign: "middle"}}
+                               min="1" max="3" step="1"
+                               onChange={(e) => {setRange(e.target.value);}}
+                               value = {range}
+                               id="customRange"/>
+                        <strong>{range}</strong>
+                    </div>
+
+
+                    <div className="input-group mb-3 col p-1">
+                        <span className="input-group-text">Название: </span>
+                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                    </div>
+                </div>
 
             <div className="show" >
                 <h3>Значения критериев для вариантов:</h3>
             </div>
-            <div style={{height: "350px"}}>
+
+            <div style={{height: "196px"}}>
                             <div style={containerStyle}>
 
                                 <div style={gridStyle} className="ag-theme-alpine">
@@ -132,7 +139,7 @@ export const Pareto: React.FC = () => {
             <div className={(range >= "2") ? " show" : " collapse"}>
                 <h3>Матрица сравнения вариантов:</h3>
 
-                <div style={{height: "350px"}}>
+                <div style={{height: "196px"}}>
                     <div style={containerStyle}>
 
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -161,17 +168,14 @@ export const Pareto: React.FC = () => {
                     {paretoCheckPrint(paretoCheck(compareVars(getRows())))[2]}
                 </div>
 
-            </div>
 
-                <button className="btn btn-primary"
-                        onClick={onBtExport}
-                >
-                    Export to Excel
-                </button>
+            </div>
+                {/*<button className="btn btn-primary" onClick={onBtExport}>*/}
+                {/*    Export to Excel*/}
+                {/*</button>*/}
                 <div className="p-4"></div>
-
             </div>
-            </div>
+            {/*</div>*/}
         </div>
     )
 }

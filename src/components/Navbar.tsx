@@ -13,8 +13,14 @@ export const Navbar = () => (
                     <li className="nav-item">
                         <a className="nav-link " href={"/Theory"}>Теория</a>
                     </li>
+                    {/*<li className="nav-item">*/}
+                    {/*    <a className="nav-link " href={"/About"}>О приложении</a>*/}
+                    {/*</li>*/}
                     <li className="nav-item">
-                        <a className="nav-link " href={"/About"}>О приложении</a>
+                        <a className="nav-link " href={"/auth"}>auth</a>
+                    </li>
+                    <li className="nav-item">
+                        <a className="nav-link " href={"/method"}>method</a>
                     </li>
                 </ul>
             </div>

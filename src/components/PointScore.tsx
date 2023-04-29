@@ -9,8 +9,10 @@ export const PointScore: React.FC = () => {
     const [range, setRange] = useState('1');
 
     const gridRef = useRef<AgGridReact>(null);
-    const containerStyle = useMemo(() => ({ width: '128%', height: '40%' }), []);
-    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+    // const containerStyle = useMemo(() => ({ width: '128%', height: '40%' }), []);
+    // const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+    const containerStyle = useMemo(() => ({ width: '128%', height: '90%' }), []);
+    const gridStyle = useMemo(() => ({ height: '100%', width: '100%', overflow: 'scroll' }), []);
 
     const onBtExport = useCallback(() => {
         gridRef.current!.api.exportDataAsCsv();
@@ -91,32 +93,32 @@ export const PointScore: React.FC = () => {
     ];
 
     return(
-        <div className="container">
+        <div className="Base">
 
-            <div className="row">
-                <div className="col col-3">
-                    <h2>Навигация</h2>
-                    <Hub/>
+            {/*<div className="row">*/}
+                {/*<div className="col col-3">*/}
+                {/*    <h2>Навигация</h2>*/}
+                {/*    <Hub/>*/}
+                {/*</div>*/}
+
+                {/*className="col"*/}
+            <div>
+                <h2>Определение весовых коэффициентов методом бальной оценки</h2>
+
+                <div className="alert alert-dark Che">
+                    <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
+                    <input type="range" className="form-range p-4"
+                           style={{width: 150, verticalAlign: "middle" }}
+                           min="1" max="4" step="1"
+                           onChange={(e) => setRange(e.target.value) }
+                           value = {range}
+                           id="customRange"/>
+                    {range}
                 </div>
 
-                <div className="col">
-            <h2>Определение весовых коэффициентов методом бальной оценки</h2>
-
-            <div className="border-danger">
-                <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
-                <input type="range" className="form-range p-3"
-                       style={{width: 150, verticalAlign: "middle" }}
-                       min="1" max="4" step="1"
-                       onChange={(e) => setRange(e.target.value) }
-                       value = {range}
-                       id="customRange"/>
-                {range}
-            </div>
-
-            <h3>таблица для ввода значений критериев</h3>
-                    <div style={{height: "300px"}}>
+                <h3>таблица для ввода значений критериев</h3>
+                <div style={{height: "103px"}}>
                     <div style={containerStyle}>
-
                         <div style={gridStyle} className="ag-theme-alpine">
                             <AgGridReact
                                 ref={gridRef}
@@ -125,9 +127,8 @@ export const PointScore: React.FC = () => {
                                 defaultColDef={defaultColDef}
                             ></AgGridReact>
                         </div>
-
                     </div>
-                    </div>
+                </div>
 
             <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
             <h3>вывод суммы всех баллов</h3>
@@ -141,19 +142,16 @@ export const PointScore: React.FC = () => {
 
                     <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
                         <h3>вывод значений веса всех критериев</h3>
-                            <DataGrid
-                                columns={columns}
-                                rows={rows}
-                            />
+                        <DataGrid columns={columns} rows={rows}/>
 
                     </div>
-                    <button className="btn btn-primary p-1"
-                            onClick={onBtExport}
-                    >
-                        Export to Excel
-                    </button>
+                    {/*<button className="btn btn-primary p-1"*/}
+                    {/*        onClick={onBtExport}*/}
+                    {/*>*/}
+                    {/*    Export to Excel*/}
+                    {/*</button>*/}
                 </div>
-            </div>
+            {/*</div>*/}
         </div>
     )
 }

@@ -10,7 +10,7 @@ export const WeightedSum: React.FC = () => {
     const [range, setRange] = useState('1');
 
     const gridRef = useRef<AgGridReact>(null);
-    const containerStyle = useMemo(() => ({ width: '78%', height: '130%'}), []);
+    const containerStyle = useMemo(() => ({ width: '78%', height: '95%'}), []);
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
     const onBtExport = useCallback(() => {
@@ -115,31 +115,31 @@ export const WeightedSum: React.FC = () => {
 
 
     return(
-        <div className="container">
+        <div className="Base">
 
-            <div className="row">
-                <div className="col col-3">
-                    <h2>Навигация</h2>
-                    <Hub/>
-                </div>
-
-                <div className="col">
+            {/*<div className="row">*/}
+            {/*    <div className="col col-3">*/}
+            {/*        <h2>Навигация</h2>*/}
+            {/*        <Hub/>*/}
+            {/*    </div>*/}
+            {/*className="col"*/}
+                <div>
             <h2>Принятие решений с использованием интегрального критерия взвешенной суммы показателей сравнения</h2>
 
-            <div className="border-danger">
-                <label htmlFor="customRange" className="form-label p-3" >Показать шаги:</label>
-                <input type="range" className="form-range p-3"
-                       style={{width: 150, verticalAlign: "middle" }}
-                       min="1" max="4" step="1"
-                       onChange={(e) =>setRange(e.target.value) }
-                       value = {range}
-                       id="customRange"/>
-                {range}
-            </div>
+                    <div className="alert alert-dark Che">
+                        <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
+                        <input type="range" className="form-range p-4"
+                               style={{width: 150, verticalAlign: "middle" }}
+                               min="1" max="4" step="1"
+                               onChange={(e) =>setRange(e.target.value) }
+                               value = {range}
+                               id="customRange"/>
+                        {range}
+                    </div>
 
             <h3>Таблица для ввода значений критериев</h3>
+                <div style={{height: "496px"}}>
                     <div style={containerStyle}>
-
                         <div style={gridStyle} className="ag-theme-alpine">
                             <AgGridReact
                                 ref={gridRef}
@@ -148,14 +148,8 @@ export const WeightedSum: React.FC = () => {
                                 defaultColDef={defaultColDef}
                             ></AgGridReact>
                         </div>
-                        <button className="btn btn-primary p-1"
-                                onClick={onBtExport}
-                        >
-                            Export to Excel
-                        </button>
-
                     </div>
-
+                </div>
 
                     <div className="p-4" >{" "}</div>
 
@@ -180,7 +174,7 @@ export const WeightedSum: React.FC = () => {
             {findBestOption(countWeight(NormingCrits(critVars()),criteriasWeight() ))}
             </div>
                 </div>
-            </div>
+            {/*</div>*/}
         </div>
     )
 }
