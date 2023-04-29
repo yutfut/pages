@@ -20,8 +20,7 @@ import {Method} from "./components/Method"
 function App() {
     return (
         <div className="App">
-            <Navbar />
-
+            <Navbar/>
             <BrowserRouter>
                 <div style={{marginLeft: "50px", marginTop: "20px"}}>
                     <Routes>

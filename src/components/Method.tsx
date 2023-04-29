@@ -14,6 +14,7 @@ export const Method: React.FC = () => {
     const [data, setData] = useState<DataI>(null)
     useEffect(() => {
             (async ()=> {
+
                 const response = await fetch('http://127.0.0.1:8000/api/get_all',{
                     method:'GET',
                     credentials: "include",
@@ -43,10 +44,12 @@ export const Method: React.FC = () => {
         <div>
             {
                 data.map((item, i)=>{
+                    const url = "http://127.0.0.1:3000/" + item.Name + "?id=" + item.Id;
                     return <div key={i}>
                         {item.Id}
                         {item.Name}
                         {item.MethodName}
+                        <a href={url}>che</a>
                     </div>
                 })
             }

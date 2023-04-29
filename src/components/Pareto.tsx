@@ -1,6 +1,7 @@
 'use strict';
 
-import React, { useState, useCallback, useMemo, useRef} from "react";
+import React, {useState, useCallback, useMemo, useRef, MouseEventHandler, useEffect} from "react";
+import { useSearchParams } from "react-router-dom";
 import {Hub} from "./Hub";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
@@ -18,8 +19,78 @@ import {
     ValueGetterParams
 } from 'ag-grid-community';
 
+import {DataI} from "./Method";
+
+export interface ParetoData {
+    Id:         number;
+    MethodName: string;
+    Name:       string;
+}
+
+export type ParetoDataI = ParetoData[]|null
+
 
 export const Pareto: React.FC = () => {
+
+    const [paretoData, setParetoData] = useState<ParetoDataI>(null)
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+        if (paretoData) {
+            return
+        }
+            (async ()=> {
+
+                if (searchParams.get("id") === null) {
+                    console.log("doesn't have params")
+                } else {
+                    console.log(searchParams.get("id"))
+                    const response = await fetch(`http://127.0.0.1:8000/api/get_pareto?id=${searchParams.get("id")}`,{
+                        method:'GET',
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8"
+                        }
+                    })
+                    if(response.ok){
+                        console.log('success')
+                        const responseBody = await response.json();
+                        setParetoData(responseBody)
+                        console.log(responseBody)
+                        console.log(paretoData)
+                        console.log(setParetoData)
+                    } else{
+                        console.log('prosas')
+                    }
+                }
+            }) ()
+
+        }
+        ,[searchParams]
+    )
+
+    const handleSetPareto:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+        const response = await fetch('http://127.0.0.1:8000/api/set_pareto',{
+            method:'POST',
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "name": "123",
+                "var1": [1.1,2.2,3.3],
+                "var2": [4.4,5.5,6.6],
+                "var3": [7.7,8.8,9.9]
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+        } else{
+            console.log('prosas')
+        }
+    }
 
     let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
 
@@ -41,6 +112,16 @@ export const Pareto: React.FC = () => {
     const containerStyle = useMemo(() => ({ width: '85%', height: '90%' }), []);
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
+    // const [rowData, setRowData] = useState<any[]>([]);
+    // if (data !== null) {
+    //     setRowData([{"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
+    //     {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
+    //     {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}])
+    // } else {
+    //     setRowData([{"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
+    //         {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
+    //         {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}])
+    // }
 
     const [rowData, setRowData] = useState<any[]>(
         [
@@ -112,7 +193,7 @@ export const Pareto: React.FC = () => {
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
                         <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
-                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                        <button onClick={handleSetPareto} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>
 
@@ -121,27 +202,24 @@ export const Pareto: React.FC = () => {
             </div>
 
             <div style={{height: "196px"}}>
-                            <div style={containerStyle}>
+                <div style={containerStyle}>
 
-                                <div style={gridStyle} className="ag-theme-alpine">
-                                    <AgGridReact
-                                        ref={gridRef}
-                                        rowData={rowData}
-                                        columnDefs={columnDefs}
-                                        defaultColDef={defaultColDef}
-                                    ></AgGridReact>
-                                </div>
-                            </div>
-
+                    <div style={gridStyle} className="ag-theme-alpine">
+                        <AgGridReact
+                            ref={gridRef}
+                            rowData={rowData}
+                            columnDefs={columnDefs}
+                            defaultColDef={defaultColDef}
+                        ></AgGridReact>
+                    </div>
+                </div>
             </div>
 
 
             <div className={(range >= "2") ? " show" : " collapse"}>
                 <h3>Матрица сравнения вариантов:</h3>
-
                 <div style={{height: "196px"}}>
                     <div style={containerStyle}>
-
                         <div style={gridStyle} className="ag-theme-alpine">
                             <AgGridReact
                                 ref={gridRef}
@@ -151,9 +229,7 @@ export const Pareto: React.FC = () => {
                             ></AgGridReact>
                         </div>
                     </div>
-
                 </div>
-
             </div>
 
             <div className={(range >= "3") ? " show" : " collapse"} >
