@@ -23,7 +23,6 @@ export const Auth: React.FC = () => {
         } else{
             console.log('prosas')
         }
-
     }
 
     const Register:MouseEventHandler<HTMLButtonElement> = async (event)=>{
