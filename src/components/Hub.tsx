@@ -14,7 +14,7 @@ export const Hub = ( ) => (
             <a className="nav-link" href="/pointScore">Балльный критерий</a>
         </li>
         <li className="nav-item">
-            <a className="nav-link" href="/pairComparisonCriterias">Парное сравнение</a>
+            <a className="nav-link" href="/pairComparisonCriteria">Парное сравнение</a>
         </li>
         <li className="nav-item">
             <a className="nav-link" href="/borda">Борда</a>

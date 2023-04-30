@@ -1,10 +1,55 @@
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from 'react-data-grid';
+import {ParetoData, ParetoDataI} from "./Pareto";
+import {useSearchParams} from "react-router-dom";
+
+export interface BaseCriteriaData {
+    Id:         number;
+    Name:       string;
+    Var1:       boolean[];
+}
+
+export type BaseCriteriaDataI = BaseCriteriaData[]|null
 
 export const BaseCriteria: React.FC = () => {
+
+    const [BaseCriteriaData, setBaseCriteriaData] = useState<BaseCriteriaDataI>(null)
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+            if (BaseCriteriaData) {
+                return
+            }
+            (async ()=> {
+
+                if (searchParams.get("id") === null) {
+                    console.log("doesn't have params")
+                } else {
+                    console.log(searchParams.get("id"))
+                    const response = await fetch(`http://127.0.0.1:8000/api/get_base_criteria?id=${searchParams.get("id")}`,{
+                        method:'GET',
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8"
+                        }
+                    })
+                    if(response.ok){
+                        console.log('success')
+                        const responseBody = await response.json();
+                        setBaseCriteriaData(responseBody)
+                        console.log(responseBody)
+                        console.log(BaseCriteriaData)
+                        console.log(setBaseCriteriaData)
+                    } else{
+                        console.log('prosas')
+                    }
+                }
+            }) ()
+        },[searchParams]
+    )
 
     const [range, setRange] = useState('1')
 

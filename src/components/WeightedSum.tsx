@@ -1,11 +1,60 @@
-import React, {useCallback, useMemo, useRef} from "react";
+import React, {useCallback, useEffect, useMemo, useRef} from "react";
 import {useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
+import {ParetoData, ParetoDataI} from "./Pareto";
+import {useSearchParams} from "react-router-dom";
+
+export interface WeightedSumData {
+    Id:         number;
+    Name:       string;
+    Var1:       string[];
+    Var2:       number[];
+    Var3:       number[];
+    Var4:       number[];
+    Var5:       number[];
+}
+
+export type WeightedSumDataI = WeightedSumData[]|null
 
 export const WeightedSum: React.FC = () => {
+
+    const [weightedSumData, setWeightedSumData] = useState<WeightedSumDataI>(null)
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+            if (weightedSumData) {
+                return
+            }
+            (async ()=> {
+
+                if (searchParams.get("id") === null) {
+                    console.log("doesn't have params")
+                } else {
+                    console.log(searchParams.get("id"))
+                    const response = await fetch(`http://127.0.0.1:8000/api/get_weighted_sum?id=${searchParams.get("id")}`,{
+                        method:'GET',
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8"
+                        }
+                    })
+                    if(response.ok){
+                        console.log('success')
+                        const responseBody = await response.json();
+                        setWeightedSumData(responseBody)
+                        console.log(responseBody)
+                        console.log(weightedSumData)
+                        console.log(setWeightedSumData)
+                    } else{
+                        console.log('prosas')
+                    }
+                }
+            }) ()
+        },[searchParams]
+    )
 
     const [range, setRange] = useState('1');
 

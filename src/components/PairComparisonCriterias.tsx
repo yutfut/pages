@@ -1,10 +1,64 @@
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
+import {ParetoData, ParetoDataI} from "./Pareto";
+import {useSearchParams} from "react-router-dom";
+
+export interface PairComparisonCriteriaData {
+    Id:         number;
+    Name:       string;
+    Var1:       number[];
+    Var2:       number[];
+    Var3:       number[];
+    Var4:       number[];
+    Var5:       number[];
+    Var6:       number[];
+    Var7:       number[];
+    Var8:       number[];
+    Var9:       number[];
+    Var10:       number[];
+}
+
+export type PairComparisonCriteriaDataI = PairComparisonCriteriaData[]|null
 
 export const PairComparisonCriterias: React.FC = () => {
+
+    const [PairComparisonCriteriaData, setPairComparisonCriteriaData] = useState<PairComparisonCriteriaDataI>(null)
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+            if (PairComparisonCriteriaData) {
+                return
+            }
+            (async ()=> {
+
+                if (searchParams.get("id") === null) {
+                    console.log("doesn't have params")
+                } else {
+                    console.log(searchParams.get("id"))
+                    const response = await fetch(`http://127.0.0.1:8000/api/get_pair_comparison_criteria?id=${searchParams.get("id")}`,{
+                        method:'GET',
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8"
+                        }
+                    })
+                    if(response.ok){
+                        console.log('success')
+                        const responseBody = await response.json();
+                        setPairComparisonCriteriaData(responseBody)
+                        console.log(responseBody)
+                        console.log(PairComparisonCriteriaData)
+                        console.log(setPairComparisonCriteriaData)
+                    } else{
+                        console.log('prosas')
+                    }
+                }
+            }) ()
+        },[searchParams]
+    )
 
     const [range, setRange] = useState('1');
 

@@ -1,10 +1,58 @@
-import React, {useCallback, useMemo, useRef, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
+import {ParetoData, ParetoDataI} from "./Pareto";
+import {useSearchParams} from "react-router-dom";
+
+export interface NansonData {
+    Id:         number;
+    Name:       string;
+    Var1:       number[];
+    Var2:       string[];
+    Var3:       string[];
+    Var4:       string[];
+}
+
+export type NansonDataI = NansonData[]|null
 
 export const Nanson: React.FC = () => {
+
+    const [nansonData, setNansonData] = useState<NansonDataI>(null)
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+            if (nansonData) {
+                return
+            }
+            (async ()=> {
+
+                if (searchParams.get("id") === null) {
+                    console.log("doesn't have params")
+                } else {
+                    console.log(searchParams.get("id"))
+                    const response = await fetch(`http://127.0.0.1:8000/api/get_nanson?id=${searchParams.get("id")}`,{
+                        method:'GET',
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8"
+                        }
+                    })
+                    if(response.ok){
+                        console.log('success')
+                        const responseBody = await response.json();
+                        setNansonData(responseBody)
+                        console.log(responseBody)
+                        console.log(nansonData)
+                        console.log(setNansonData)
+                    } else{
+                        console.log('prosas')
+                    }
+                }
+            }) ()
+        },[searchParams]
+    )
 
     const [range, setRange] = useState('1');
 

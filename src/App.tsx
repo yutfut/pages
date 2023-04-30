@@ -30,7 +30,7 @@ function App() {
                         <Route path={'/pareto'} element = {<Pareto/>}/>
                         <Route path={'/baseCriteria'} element = {<BaseCriteria/>}/>
                         <Route path={'/pointScore'} element = {<PointScore/>}/>
-                        <Route path={'/pairComparisonCriterias'} element = {<PairComparisonCriterias/>}/>
+                        <Route path={'/pairComparisonCriteria'} element = {<PairComparisonCriterias/>}/>
                         <Route path={'/borda'} element = {<Borda/>}/>
                         <Route path={'/nanson'} element = {<Nanson/>}/>
                         <Route path={'/weightedSum'} element = {<WeightedSum/>}/>

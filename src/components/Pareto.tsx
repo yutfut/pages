@@ -24,9 +24,9 @@ import {DataI} from "./Method";
 export interface ParetoData {
     Id:         number;
     Name:       string;
-    Var1: number[];
-    Var2: number[];
-    Var3: number[];
+    Var1:       number[];
+    Var2:       number[];
+    Var3:       number[];
 }
 
 export type ParetoDataI = ParetoData[]|null
@@ -66,9 +66,7 @@ export const Pareto: React.FC = () => {
                     }
                 }
             }) ()
-
-        }
-        ,[searchParams]
+        },[searchParams]
     )
 
     const handleSetPareto:MouseEventHandler<HTMLButtonElement> = async (event)=>{

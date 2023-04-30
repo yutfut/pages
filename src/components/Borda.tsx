@@ -1,10 +1,57 @@
-import React, {useCallback, useMemo, useRef, useState} from "react";
-import {Hub} from "./Hub";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
+import {useSearchParams} from "react-router-dom";
+import {ParetoDataI} from "./Pareto";
+
+export interface BordaData {
+    Id:         number;
+    Name:       string;
+    Var1:       number[];
+    Var2:       string[];
+    Var3:       string[];
+    Var4:       string[];
+}
+
+export type BordaDataI = BordaData[]|null
 
 export const Borda: React.FC = () => {
+
+    const [bordaData, setBordaData] = useState<BordaDataI>(null)
+    const [searchParams] = useSearchParams();
+
+    useEffect(() => {
+            if (bordaData) {
+                return
+            }
+            (async ()=> {
+
+                if (searchParams.get("id") === null) {
+                    console.log("doesn't have params")
+                } else {
+                    console.log(searchParams.get("id"))
+                    const response = await fetch(`http://127.0.0.1:8000/api/get_borda?id=${searchParams.get("id")}`,{
+                        method:'GET',
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json; charset=UTF-8"
+                        }
+                    })
+                    if(response.ok){
+                        console.log('success')
+                        const responseBody = await response.json();
+                        setBordaData(responseBody)
+                        console.log(responseBody)
+                        console.log(bordaData)
+                        console.log(setBordaData)
+                    } else{
+                        console.log('prosas')
+                    }
+                }
+            }) ()
+        },[searchParams]
+    )
 
     const [range, setRange] = useState('1')
 
