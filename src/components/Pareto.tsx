@@ -2,7 +2,6 @@
 
 import React, {useState, useCallback, useMemo, useRef, MouseEventHandler, useEffect} from "react";
 import { useSearchParams } from "react-router-dom";
-import {Hub} from "./Hub";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
@@ -18,8 +17,6 @@ import {
     GridReadyEvent,
     ValueGetterParams
 } from 'ag-grid-community';
-
-import {DataI} from "./Method";
 
 export interface ParetoData {
     Id:         number;
@@ -166,18 +163,48 @@ export const Pareto: React.FC = () => {
     //количество отображаемых шагов
     const [range, setRange] = useState('1');
 
+    const [selected, setSelected] = useState(null);
+
+    const toggle = (i: any) =>
+    {
+        if (selected === i) {
+            return setSelected(null)
+        }
+        setSelected(i)
+    }
+
+    const myOpenedStyle = {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+    const myClosedStyle = {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+
     return(
         <div className="Base">
-
-            {/*<div className="row">*/}
-            {/*<div className="col col-3">*/}
-            {/*    <h2>Навигация</h2>*/}
-            {/*    <Hub/>*/}
-            {/*</div>*/}
-
-            {/*className="col"*/}
             <div>
                 <h2>Проверка парето-оптимальности вариантов</h2>
+
+                <div style={{margin: "10px"}} className="accordion-item">
+                    <h2 className="accordion-header" id="headingOne">
+                        <button className={ (selected === 1) ? "accordion-button open" : "accordion-button collapsed" }
+                                onClick={()=>  toggle((1)) }
+                                style={{display: "flex", alignItems: "center", justifyContent: "center", width: 100, height: 30, border: "solid", borderRadius: 5}}
+                                type="button" aria-expanded="true" aria-controls="collapseOne">
+                            Теория
+                        </button>
+                    </h2>
+
+                    <div id="collapseOne"
+                         className={ (selected === 1) ? "accordion-collapse" : "accordion-collapse" }
+                         style = {(selected === 1) ? myOpenedStyle : myClosedStyle }
+                         aria-expanded={ (selected === 1) }
+                         aria-labelledby="headingOne"
+                    >
+                        <div className="accordion-body" style={{width: 750}}>
+                            Проверка парето-оптимальности предназначена для поиска заведомо неудачных
+                            вариантов. Варианты сравнивают попарно между собой, и если обнаруживается,
+                            что в паре один вариант уступает другому по всем критериям, то этот вариант
+                            считается неоптимальным, и его рекомендуется не рассматривать при принятии решения.
+                        </div>
+                    </div>
+                </div>
 
                 <div className="alert alert-dark Che row">
                     <div className="col">

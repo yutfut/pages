@@ -175,11 +175,52 @@ export const PairComparisonCriterias: React.FC = () => {
             'crit9': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[8],
             'crit10':countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[9]}
 ];
+    const [selected, setSelected] = useState(null);
+
+    const toggle = (i: any) =>
+    {
+        if (selected === i) {
+            return setSelected(null)
+        }
+        setSelected(i)
+    }
+
+    const myOpenedStyle = {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+    const myClosedStyle = {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+
 
     return(
         <div className="Base">
             <div>
                 <h2>Определение весовых коэффициентов методом парного сравнения критериев</h2>
+
+                <div style={{margin: "10px"}} className="accordion-item">
+                    <h2 className="accordion-header" id="headingOne">
+                        <button className={ (selected === 1) ? "accordion-button open" : "accordion-button collapsed" }
+                                onClick={()=>  toggle((1)) }
+                                style={{display: "flex", alignItems: "center", justifyContent: "center", width: 100, height: 30, border: "solid", borderRadius: 5}}
+                                type="button" aria-expanded="true" aria-controls="collapseOne">
+                            Теория
+                        </button>
+                    </h2>
+
+                    <div id="collapseOne"
+                         className={ (selected === 1) ? "accordion-collapse" : "accordion-collapse" }
+                         style = {(selected === 1) ? myOpenedStyle : myClosedStyle }
+                         aria-expanded={ (selected === 1) }
+                         aria-labelledby="headingOne"
+                    >
+                        <div className="accordion-body" style={{width: 750}}>
+                            Состаляется квадратная матрица, размером, равным количествам критериев.
+                            Если важность критерия в строке превосходит важность критерия в столбце,
+                            то соответствующая ячейка заполняется единицей. Если уступает - нулем.
+                            Если критерии примерно одинаковы - 0,5. Затем подсчитывается сумма
+                            значений по строкам. Итоговое значение критерия будет равно
+                            подсчитанной сумме, деленной на сумму значений всех ячеек в матрице.
+                        </div>
+                    </div>
+                </div>
+
                 <div className="alert alert-dark Che row">
                     <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>

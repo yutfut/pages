@@ -137,10 +137,48 @@ export const PointScore: React.FC = () => {
             'crit10':(countFinalPoints(criteriasPoints()))[9]}
     ];
 
+    const [selected, setSelected] = useState(null);
+
+    const toggle = (i: any) =>
+    {
+        if (selected === i) {
+            return setSelected(null)
+        }
+        setSelected(i)
+    }
+
+    const myOpenedStyle = {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+    const myClosedStyle = {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+
+
     return(
         <div className="Base">
             <div>
                 <h2>Определение весовых коэффициентов методом бальной оценки</h2>
+
+                <div style={{margin: "10px"}} className="accordion-item">
+                    <h2 className="accordion-header" id="headingOne">
+                        <button className={ (selected === 1) ? "accordion-button open" : "accordion-button collapsed" }
+                                onClick={()=>  toggle((1)) }
+                                style={{display: "flex", alignItems: "center", justifyContent: "center", width: 100, height: 30, border: "solid", borderRadius: 5}}
+                                type="button" aria-expanded="true" aria-controls="collapseOne">
+                            Теория
+                        </button>
+                    </h2>
+
+                    <div id="collapseOne"
+                         className={ (selected === 1) ? "accordion-collapse" : "accordion-collapse" }
+                         style = {(selected === 1) ? myOpenedStyle : myClosedStyle }
+                         aria-expanded={ (selected === 1) }
+                         aria-labelledby="headingOne"
+                    >
+                        <div className="accordion-body" style={{width: 750}}>
+                            Каждому критерию даётся оценка по стобалльной шкале. Затем
+                            оценки складываются, и итоговое значение весового коэффициента
+                            получается путём умножения оценки на единицу, деленную на сумму всех оценок.
+                        </div>
+                    </div>
+                </div>
 
                 <div className="alert alert-dark Che">
                     <div className="col">

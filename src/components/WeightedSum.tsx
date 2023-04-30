@@ -1,10 +1,7 @@
-import React, {useCallback, useEffect, useMemo, useRef} from "react";
-import {useState} from "react";
-import {Hub} from "./Hub";
+import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
-import {ParetoData, ParetoDataI} from "./Pareto";
 import {useSearchParams} from "react-router-dom";
 
 export interface WeightedSumData {
@@ -162,11 +159,52 @@ export const WeightedSum: React.FC = () => {
             'crit3': countWeight(NormingCrits(critVars()),criteriasWeight() )[2]}
     ];
 
+    const [selected, setSelected] = useState(null);
+
+    const toggle = (i: any) =>
+    {
+        if (selected === i) {
+            return setSelected(null)
+        }
+        setSelected(i)
+    }
+
+    const myOpenedStyle = {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+    const myClosedStyle = {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
+
 
     return(
         <div className="Base">
             <div>
                 <h2>Принятие решений с использованием интегрального критерия взвешенной суммы показателей сравнения</h2>
+
+                <div style={{margin: "10px"}} className="accordion-item">
+                    <h2 className="accordion-header" id="headingOne">
+                        <button className={ (selected === 1) ? "accordion-button open" : "accordion-button collapsed" }
+                                onClick={()=>  toggle((1)) }
+                                style={{display: "flex", alignItems: "center", justifyContent: "center", width: 100, height: 30, border: "solid", borderRadius: 5}}
+                                type="button" aria-expanded="true" aria-controls="collapseOne">
+                            Теория
+                        </button>
+                    </h2>
+
+                    <div id="collapseOne"
+                         className={ (selected === 1) ? "accordion-collapse" : "accordion-collapse" }
+                         style = {(selected === 1) ? myOpenedStyle : myClosedStyle }
+                         aria-expanded={ (selected === 1) }
+                         aria-labelledby="headingOne"
+                    >
+                        <div className="accordion-body" style={{width: 750}}>
+                            Составляется таблица, строки которой отвечают за критерии, а столбцы - за варианты.
+                            Дополнительный столбец заполняется весовыми значениями коэффициентов.
+                            Значения критериев нормализуются, т.е. приводятся в единую шкалу - от 0 до 1.
+                            После чего суммируются произведения нормализованных критериев на соответствующие
+                            весовые коэффициенты.
+                            Вариант, набравший максимальную сумму, считается наилучшим.
+                        </div>
+                    </div>
+                </div>
+
                 <div className="alert alert-dark Che row">
                     <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>

@@ -137,11 +137,50 @@ export const BaseCriteria: React.FC = () => {
             'crit10':countFinalPoints(fillPointsArray(criteriasBase()), pointWeight)[9]}
     ];
 
+    const [selected, setSelected] = useState(null);
+
+    const toggle = (i: any) =>
+    {
+        if (selected === i) {
+            return setSelected(null)
+        }
+        setSelected(i)
+    }
+
+    const myOpenedStyle = {maxHeight: "999px", transition: "all 0.3s cubic-bezier(1,0,1,0)"}
+    const myClosedStyle = {maxHeight: "0px", overflow: "hidden", transition: "all 0.3s cubic-bezier(0,1,0,1)"}
 
     return(
         <div className="Base">
             <div>
                 <h2>Определение весовых коэффициентов методом базового критерия</h2>
+
+                <div style={{margin: "10px"}} className="accordion-item">
+                    <h2 className="accordion-header" id="headingOne">
+                        <button className={ (selected === 1) ? "accordion-button open" : "accordion-button collapsed" }
+                                onClick={()=>  toggle((1)) }
+                                style={{display: "flex", alignItems: "center", justifyContent: "center", width: 100, height: 30, border: "solid", borderRadius: 5}}
+                                type="button" aria-expanded="true" aria-controls="collapseOne">
+                            Теория
+                        </button>
+                    </h2>
+
+                    <div id="collapseOne"
+                         className={ (selected === 1) ? "accordion-collapse" : "accordion-collapse" }
+                         style = {(selected === 1) ? myOpenedStyle : myClosedStyle }
+                         aria-expanded={ (selected === 1) }
+                         aria-labelledby="headingOne"
+                    >
+                        <div className="accordion-body" style={{width: 750}}>
+                            Один или несколько критериев определяются как базовые - с весом, равным единице,
+                            а вес остальных назначаются в зависимости от того, во сколько раз они важнее
+                            базового. После чего вычисляется сумма весов. Итоговое значение весового коэффициента
+                            для базовых критериев будет равно единице, деленной на полученную сумму,
+                            остальные же получат значение, большее значения базового в то количество раз,
+                            которое было определено на прошлом этапе.
+                        </div>
+                    </div>
+                </div>
 
                 <div className="alert alert-dark Che row">
                     <div className="col">
