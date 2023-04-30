@@ -124,18 +124,10 @@ export const PairComparisonCriterias: React.FC = () => {
 
     return(
         <div className="Base">
-
-            {/*<div className="row">*/}
-                {/*<div className="col col-3">*/}
-                {/*    <h2>Навигация</h2>*/}
-                {/*    <Hub/>*/}
-                {/*</div>*/}
-
-            {/*className="col"*/}
-                <div>
-            <h2>Определение весовых коэффициентов методом парного сравнения критериев</h2>
-
-                    <div className="alert alert-dark Che">
+            <div>
+                <h2>Определение весовых коэффициентов методом парного сравнения критериев</h2>
+                <div className="alert alert-dark Che row">
+                    <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
                         <input type="range" className="form-range p-4"
                                style={{width: 150, verticalAlign: "middle" }}
@@ -147,14 +139,20 @@ export const PairComparisonCriterias: React.FC = () => {
                                }
                                value = {range}
                                id="customRange"/>
-                        {range}
+                        <strong>{range}</strong>
                     </div>
 
-            <h3>таблица с матрицей сравнения</h3>
+                    <div className="input-group mb-3 col p-1">
+                        <span className="input-group-text">Название: </span>
+                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                    </div>
+                </div>
+
+                <h3>таблица с матрицей сравнения</h3>
 
                 <div style={{height: "480px"}}>
                     <div style={containerStyle}>
-
                         <div style={gridStyle} className="ag-theme-alpine">
                             <AgGridReact
                                 ref={gridRef}
@@ -167,40 +165,26 @@ export const PairComparisonCriterias: React.FC = () => {
                 </div>
 
 
-            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Вывод баллов каждого критерия</h3>
-                <DataGrid
-                    columns={columns}
-                    rows={rows1}
-                />
-            </div>
+                <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Вывод баллов каждого критерия</h3>
+                    <DataGrid columns={columns} rows={rows1}/>
+                </div>
 
-            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Сумма баллов всех критериев</h3>
-            {countSumPoints(countCriteriasPoints(criteriasComparison()))}
-            </div>
+                <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Сумма баллов всех критериев</h3>
+                    {countSumPoints(countCriteriasPoints(criteriasComparison()))}
+                </div>
 
                 <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
                     <h3>Вес одного балла</h3>
                     {getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison())))}
                 </div>
 
-                    <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
+                <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
                     <h3>Итоговое значение критериев</h3>
-                      <DataGrid
-                            columns={columns}
-                            rows={rows2}
-                        />
-                    </div>
-
-                    {/*<button className="btn btn-primary p-1"*/}
-                    {/*        onClick={onBtExport}*/}
-                    {/*>*/}
-                    {/*    Export to Excel*/}
-                    {/*</button>*/}
-
+                    <DataGrid columns={columns} rows={rows2}/>
                 </div>
-            {/*</div>*/}
+            </div>
         </div>
     )
 }

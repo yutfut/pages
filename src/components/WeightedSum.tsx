@@ -116,17 +116,10 @@ export const WeightedSum: React.FC = () => {
 
     return(
         <div className="Base">
-
-            {/*<div className="row">*/}
-            {/*    <div className="col col-3">*/}
-            {/*        <h2>Навигация</h2>*/}
-            {/*        <Hub/>*/}
-            {/*    </div>*/}
-            {/*className="col"*/}
-                <div>
-            <h2>Принятие решений с использованием интегрального критерия взвешенной суммы показателей сравнения</h2>
-
-                    <div className="alert alert-dark Che">
+            <div>
+                <h2>Принятие решений с использованием интегрального критерия взвешенной суммы показателей сравнения</h2>
+                <div className="alert alert-dark Che row">
+                    <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
                         <input type="range" className="form-range p-4"
                                style={{width: 150, verticalAlign: "middle" }}
@@ -134,10 +127,17 @@ export const WeightedSum: React.FC = () => {
                                onChange={(e) =>setRange(e.target.value) }
                                value = {range}
                                id="customRange"/>
-                        {range}
+                        <strong>{range}</strong>
                     </div>
 
-            <h3>Таблица для ввода значений критериев</h3>
+                    <div className="input-group mb-3 col p-1">
+                        <span className="input-group-text">Название: </span>
+                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                    </div>
+                </div>
+
+                <h3>Таблица для ввода значений критериев</h3>
                 <div style={{height: "496px"}}>
                     <div style={containerStyle}>
                         <div style={gridStyle} className="ag-theme-alpine">
@@ -151,30 +151,21 @@ export const WeightedSum: React.FC = () => {
                     </div>
                 </div>
 
-                    <div className="p-4" >{" "}</div>
-
-            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Таблица с нормированными значениями</h3>
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                />
-            </div>
-
-            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Одномерная таблица с подсчитанной взвешенной суммой для каждого варианта</h3>
-                <DataGrid
-                    columns={columns2}
-                    rows={rows2}
-                />
+                <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Таблица с нормированными значениями</h3>
+                    <DataGrid columns={columns} rows={rows}/>
                 </div>
 
-            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Вывод номера лучшего варианта</h3>
-            {findBestOption(countWeight(NormingCrits(critVars()),criteriasWeight() ))}
-            </div>
+                <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Одномерная таблица с подсчитанной взвешенной суммой для каждого варианта</h3>
+                    <DataGrid columns={columns2} rows={rows2}/>
                 </div>
-            {/*</div>*/}
+
+                <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Вывод номера лучшего варианта</h3>
+                    {findBestOption(countWeight(NormingCrits(critVars()),criteriasWeight() ))}
+                </div>
+            </div>
         </div>
     )
 }

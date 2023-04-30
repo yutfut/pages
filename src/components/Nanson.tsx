@@ -131,18 +131,11 @@ export const Nanson: React.FC = () => {
 
     return(
         <div className="Base">
+            <div>
+                <h2>Прямой метод принятия решений процедурой Нансона</h2>
 
-            {/*<div className="row">*/}
-            {/*    <div className="col col-3">*/}
-            {/*        <h2>Навигация</h2>*/}
-            {/*        <Hub/>*/}
-            {/*    </div>*/}
-
-            {/*className="col"*/}
-                <div>
-            <h2>Прямой метод принятия решений процедурой Нансона</h2>
-
-                    <div className="alert alert-dark Che">
+                <div className="alert alert-dark Che row">
+                    <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
                         <input type="range" className="form-range p-4"
                                style={{width: 150, verticalAlign: "middle" }}
@@ -154,14 +147,20 @@ export const Nanson: React.FC = () => {
                                }
                                value = {range}
                                id="customRange"/>
-                        {range}
+                        <strong>{range}</strong>
                     </div>
 
-            <h3>Таблица с мнениями экспертов для трёх вариантов</h3>
+                    <div className="input-group mb-3 col p-1">
+                        <span className="input-group-text">Название: </span>
+                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                    </div>
+                </div>
 
-                    <div style={{height: "318px"}}>
+                <h3>Таблица с мнениями экспертов для трёх вариантов</h3>
+
+                <div style={{height: "318px"}}>
                     <div style={containerStyle}>
-
                         <div style={gridStyle} className="ag-theme-alpine">
                             <AgGridReact
                                 ref={gridRef}
@@ -171,59 +170,43 @@ export const Nanson: React.FC = () => {
                             ></AgGridReact>
                         </div>
                     </div>
-                    </div>
-
-                    <div className="p-3"></div>
-
-            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Матрица парного сравнения вариантов</h3>
-
-                <DataGrid
-                    columns={columns}
-                    rows={rows}
-                />
-
-            </div>
-
-            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Подсчет баллов для трех вариантов</h3>
-                <DataGrid
-                    columns={columns2}
-                    rows={rows2}
-                />
-            </div>
-
-            <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-                <h3>Отсеивание наименьшего варианта</h3>
-                {"Худший вариант: " + (findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars)))) + 1)}
-            </div>
-
-            <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Матрица парного сравнения оставшихся вариантов</h3>
-                <div style={{height: "186px"}}>
-                    <div style={containerStyle}>
-
-                        <div style={gridStyle} className="ag-theme-alpine">
-                            <AgGridReact
-                                ref={gridRef}
-                                rowData={rowDataStepTwo}
-                                columnDefs={columnDefsStepTwo}
-                                defaultColDef={defaultColDef}
-                            ></AgGridReact>
-                        </div>
-                    </div>
                 </div>
 
+                <div className="p-3">
+                    <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>Матрица парного сравнения вариантов</h3>
+                        <DataGrid columns={columns} rows={rows}/>
+                    </div>
 
+                    <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>Подсчет баллов для трех вариантов</h3>
+                        <DataGrid columns={columns2} rows={rows2}/>
+                    </div>
 
+                    <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>Отсеивание наименьшего варианта</h3>
+                        {"Худший вариант: " + (findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars)))) + 1)}
+                    </div>
 
+                    <div className={(range >= "5") ? "accordion-body show" : "accordion-body collapse"}>
+                        <h3>Матрица парного сравнения оставшихся вариантов</h3>
+                        <div style={{height: "186px"}}>
+                            <div style={containerStyle}>
+
+                                <div style={gridStyle} className="ag-theme-alpine">
+                                    <AgGridReact
+                                        ref={gridRef}
+                                        rowData={rowDataStepTwo}
+                                        columnDefs={columnDefsStepTwo}
+                                        defaultColDef={defaultColDef}
+                                    ></AgGridReact>
+                                </div>
+                            </div>
+                        </div>
 
                         <div className={(range >= "6") ? "accordion-body show" : "accordion-body collapse"}>
                             <h3>Подсчет баллов для двух вариантов</h3>
-                            <DataGrid
-                                columns={columns3}
-                                rows={rows3}
-                            />
+                            <DataGrid columns={columns3} rows={rows3}/>
                         </div>
                     </div>
 
@@ -234,22 +217,16 @@ export const Nanson: React.FC = () => {
                     </div>
 
                     <div className={(range >= "8") ? "accordion-body show" : "accordion-body collapse"}>
-                        <h3>Вывод лучшего варианта</h3>
-                        {"Победивший вариант - "}
-                        {findLastOption
-                        (   findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars),
-                                findWorstOption(countNansonPoints(expsVars(), vars))))),
-                            findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars))))  )
-                            + 1}
+                            <h3>Вывод лучшего варианта</h3>
+                            {"Победивший вариант - "}
+                            {findLastOption
+                            (   findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars),
+                                    findWorstOption(countNansonPoints(expsVars(), vars))))),
+                                findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars))))  )
+                                + 1}
                     </div>
-
-                    {/*<button className="btn btn-primary p-1"*/}
-                    {/*        onClick={onBtExport}*/}
-                    {/*>*/}
-                    {/*    Export to Excel*/}
-                    {/*</button>*/}
                 </div>
-            {/*</div>*/}
+            </div>
         </div>
     )
 }

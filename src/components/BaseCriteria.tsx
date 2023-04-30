@@ -95,18 +95,11 @@ export const BaseCriteria: React.FC = () => {
 
     return(
         <div className="Base">
+            <div>
+                <h2>Определение весовых коэффициентов методом базового критерия</h2>
 
-            <div className="row">
-                {/*<div className="col col-3">*/}
-                {/*    <h2>Навигация</h2>*/}
-                {/*    <Hub/>*/}
-                {/*</div>*/}
-
-                {/*className="col"*/}
-                <div>
-
-            <h2>Определение весовых коэффициентов методом базового критерия</h2>
-                    <div className="alert alert-dark Che">
+                <div className="alert alert-dark Che row">
+                    <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
                         <input type="range" className="form-range p-4"
                                style={{width: 150, verticalAlign: "middle" }}
@@ -114,51 +107,45 @@ export const BaseCriteria: React.FC = () => {
                                onChange={(e) => setRange(e.target.value)  }
                                value = {range}
                                id="customRange"/>
-                        {range}
+                        <strong>{range}</strong>
                     </div>
 
-            <h3>Таблица, показывающая, сколько баллов весят небазовые критерии</h3>
-            {"True - базовый критерий, false - небазовый, в 2 раза весомее базового"}
-                    <div style={{height: "92px", marginBottom: "10px"}}>
-                        <div style={containerStyle}>
-                            <div style={gridStyle} className="ag-theme-alpine">
-                                <AgGridReact
-                                    ref={gridRef}
-                                    rowData={rowData}
-                                    columnDefs={columnDefs}
-                                    defaultColDef={defaultColDef}
-                                ></AgGridReact>
-                            </div>
+                    <div className="input-group mb-3 col p-1">
+                        <span className="input-group-text">Название: </span>
+                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                    </div>
+                </div>
+
+                <h3>Таблица, показывающая, сколько баллов весят небазовые критерии</h3>
+                {"True - базовый критерий, false - небазовый, в 2 раза весомее базового"}
+                <div style={{height: "92px", marginBottom: "10px"}}>
+                    <div style={containerStyle}>
+                        <div style={gridStyle} className="ag-theme-alpine">
+                            <AgGridReact
+                                ref={gridRef}
+                                rowData={rowData}
+                                columnDefs={columnDefs}
+                                defaultColDef={defaultColDef}
+                            ></AgGridReact>
                         </div>
                     </div>
+                </div>
 
-                    <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
-                        <h3>Вывод суммы всех баллов</h3>
-                        {countSumPoints(fillPointsArray(criteriasBase())).toString()}
-                    </div>
+                <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Вывод суммы всех баллов</h3>
+                    {countSumPoints(fillPointsArray(criteriasBase())).toString()}
+                </div>
 
-            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>Вывод веса базового критерия</h3>
-            {pointWeight.toString()}
-            </div>
+                <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Вывод веса базового критерия</h3>
+                    {pointWeight.toString()}
+                </div>
 
-                    <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-                        <h3>Вывод значений веса всех критериев</h3>
-
-                        <DataGrid
-                                columns={columns}
-                                rows={rows}
-                        />
-
-                    </div>
-
-                    {/*<button className="btn btn-primary p-1"*/}
-                    {/*        onClick={onBtExport}*/}
-                    {/*>*/}
-                    {/*    Export to Excel*/}
-                    {/*</button>*/}
-
-        </div>
+                <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>Вывод значений веса всех критериев</h3>
+                    <DataGrid columns={columns} rows={rows}/>
+                </div>
             </div>
         </div>
 

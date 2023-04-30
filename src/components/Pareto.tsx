@@ -23,8 +23,10 @@ import {DataI} from "./Method";
 
 export interface ParetoData {
     Id:         number;
-    MethodName: string;
     Name:       string;
+    Var1: number[];
+    Var2: number[];
+    Var3: number[];
 }
 
 export type ParetoDataI = ParetoData[]|null
@@ -113,10 +115,12 @@ export const Pareto: React.FC = () => {
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
     // const [rowData, setRowData] = useState<any[]>([]);
-    // if (data !== null) {
-    //     setRowData([{"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
-    //     {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
-    //     {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}])
+    // if (paretoData !== null) {
+    //     paretoData.map((item, i) => {
+    //         setRowData([{"crits":"Критерий 1", "var1": item.Var1[0],"var2": item.Var2[0], "var3": item.Var3[0]},
+    //             {"crits":"Критерий 2", "var1": item.Var1[1],"var2": item.Var2[1], "var3": item.Var3[1]},
+    //             {"crits":"Критерий 3", "var1": item.Var1[2],"var2": item.Var2[2], "var3": item.Var3[2]}])
+    //     })
     // } else {
     //     setRowData([{"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
     //         {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
@@ -188,7 +192,6 @@ export const Pareto: React.FC = () => {
                                id="customRange"/>
                         <strong>{range}</strong>
                     </div>
-
 
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>

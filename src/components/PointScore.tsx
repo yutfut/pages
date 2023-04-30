@@ -94,26 +94,26 @@ export const PointScore: React.FC = () => {
 
     return(
         <div className="Base">
-
-            {/*<div className="row">*/}
-                {/*<div className="col col-3">*/}
-                {/*    <h2>Навигация</h2>*/}
-                {/*    <Hub/>*/}
-                {/*</div>*/}
-
-                {/*className="col"*/}
             <div>
                 <h2>Определение весовых коэффициентов методом бальной оценки</h2>
 
                 <div className="alert alert-dark Che">
-                    <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
-                    <input type="range" className="form-range p-4"
-                           style={{width: 150, verticalAlign: "middle" }}
-                           min="1" max="4" step="1"
-                           onChange={(e) => setRange(e.target.value) }
-                           value = {range}
-                           id="customRange"/>
-                    {range}
+                    <div className="col">
+                        <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
+                        <input type="range" className="form-range p-4"
+                               style={{width: 150, verticalAlign: "middle" }}
+                               min="1" max="4" step="1"
+                               onChange={(e) => setRange(e.target.value) }
+                               value = {range}
+                               id="customRange"/>
+                        <strong>{range}</strong>
+                    </div>
+
+                    <div className="input-group mb-3 col p-1">
+                        <span className="input-group-text">Название: </span>
+                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                    </div>
                 </div>
 
                 <h3>таблица для ввода значений критериев</h3>
@@ -130,28 +130,21 @@ export const PointScore: React.FC = () => {
                     </div>
                 </div>
 
-            <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>вывод суммы всех баллов</h3>
-            {countSumPoints(criteriasPoints())}
+                <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>вывод суммы всех баллов</h3>
+                    {countSumPoints(criteriasPoints())}
+                </div>
+
+                <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>вывод веса одного балла критерия</h3>
+                    {pointWeight}
+                </div>
+
+                <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
+                    <h3>вывод значений веса всех критериев</h3>
+                    <DataGrid columns={columns} rows={rows}/>
+                </div>
             </div>
-
-            <div className={(range >= "3") ? "accordion-body show" : "accordion-body collapse"}>
-            <h3>вывод веса одного балла критерия</h3>
-            {pointWeight}
-                </div>
-
-                    <div className={(range >= "4") ? "accordion-body show" : "accordion-body collapse"}>
-                        <h3>вывод значений веса всех критериев</h3>
-                        <DataGrid columns={columns} rows={rows}/>
-
-                    </div>
-                    {/*<button className="btn btn-primary p-1"*/}
-                    {/*        onClick={onBtExport}*/}
-                    {/*>*/}
-                    {/*    Export to Excel*/}
-                    {/*</button>*/}
-                </div>
-            {/*</div>*/}
         </div>
     )
 }
