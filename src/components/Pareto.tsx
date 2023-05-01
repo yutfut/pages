@@ -34,6 +34,14 @@ export const Pareto: React.FC = () => {
     const [paretoData, setParetoData] = useState<ParetoDataI>(null)
     const [searchParams] = useSearchParams();
 
+    const [rowData, setRowData] = useState<any[]>([{"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
+        {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
+        {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]);
+
+    useEffect(()=>{
+        console.log(JSON.stringify(rowData))
+    },[rowData])
+
     useEffect(() => {
         if (paretoData) {
             return
@@ -56,8 +64,15 @@ export const Pareto: React.FC = () => {
                         const responseBody = await response.json();
                         setParetoData(responseBody)
                         console.log(responseBody)
-                        console.log(paretoData)
-                        console.log(setParetoData)
+                        if (responseBody.var1 && responseBody.var2 && responseBody.var3) {
+                            Object.keys(responseBody).map((item: any, i: number) => {
+                                const test = [{"crits":"Критерий 1", "var1": responseBody.var1[0],"var2": responseBody.var2[0], "var3": responseBody.var3[0]},
+                                    {"crits":"Критерий 2", "var1": responseBody.var1[1],"var2": responseBody.var2[1], "var3": responseBody.var3[1]},
+                                    {"crits":"Критерий 3", "var1": responseBody.var1[2],"var2": responseBody.var2[2], "var3": responseBody.var3[2]}]
+                                console.log('test222',test)
+                                setRowData(test)
+                            })
+                        }
                     } else{
                         console.log('prosas')
                     }
@@ -109,25 +124,12 @@ export const Pareto: React.FC = () => {
     const containerStyle = useMemo(() => ({ width: '85%', height: '90%' }), []);
     const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
 
-    // const [rowData, setRowData] = useState<any[]>([]);
-    // if (paretoData !== null) {
-    //     paretoData.map((item, i) => {
-    //         setRowData([{"crits":"Критерий 1", "var1": item.Var1[0],"var2": item.Var2[0], "var3": item.Var3[0]},
-    //             {"crits":"Критерий 2", "var1": item.Var1[1],"var2": item.Var2[1], "var3": item.Var3[1]},
-    //             {"crits":"Критерий 3", "var1": item.Var1[2],"var2": item.Var2[2], "var3": item.Var3[2]}])
-    //     })
-    // } else {
-    //     setRowData([{"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
+    // const [rowData, setRowData] = useState<any[]>(
+    //     [
+    //         {"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
     //         {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
-    //         {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}])
-    // }
-
-    const [rowData, setRowData] = useState<any[]>(
-        [
-            {"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
-            {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
-            {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]
-    );
+    //         {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]
+    // );
 
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { field: 'crits', headerName: "Критерии", editable: false },
@@ -144,7 +146,6 @@ export const Pareto: React.FC = () => {
     }, []);
 
     function getRows(){
-
         let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
 
         for (let i = 0; i<3; i++) {
@@ -155,6 +156,7 @@ export const Pareto: React.FC = () => {
 
         return matrix;
     }
+
 
     const onBtExport = useCallback(() => {
         gridRef.current!.api.exportDataAsCsv();
@@ -235,10 +237,20 @@ export const Pareto: React.FC = () => {
                     <div style={gridStyle} className="ag-theme-alpine">
                         <AgGridReact
                             ref={gridRef}
+                            onCellValueChanged={(val)=>{
+                                setRowData((old)=>{
+                                    return old.map(el=>{
+                                        if(val?.data && el.crits === val?.data?.crits){
+                                            return val.data
+                                        }
+                                        return el
+                                    })
+                                })
+                            }}
                             rowData={rowData}
                             columnDefs={columnDefs}
                             defaultColDef={defaultColDef}
-                        ></AgGridReact>
+                        />
                     </div>
                 </div>
             </div>
@@ -254,7 +266,7 @@ export const Pareto: React.FC = () => {
                                 rowData={createRows(compareVars(getRows()), "Вариант")}
                                 columnDefs={critsVarsCols}
                                 defaultColDef={defaultColDef}
-                            ></AgGridReact>
+                            />
                         </div>
                     </div>
                 </div>
