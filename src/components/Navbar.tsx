@@ -1,8 +1,4 @@
 import React, {MouseEventHandler, useEffect, useState} from "react";
-import Cookies from "js-cookie"
-
-
-const CookiesLib = Cookies?.noConflict?.()
 
 export interface UserData {
     Id:         number;
@@ -57,7 +53,7 @@ export const Navbar = () => {
         }
     }
 
-    return (
+    return  (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
@@ -85,13 +81,15 @@ export const Navbar = () => {
 
                             )
                         }
-
                         {
-                            userData && (<li className="nav-item" style={{marginLeft: "auto"}}>
-                                <div className="mb-3">
-                                    <button onClick={Logout} type="button" className="btn btn-primary" id="button-addon2">Выйти</button>
-                                </div>
-                            </li>)
+                            userData && (
+                                <li className="nav-item" style={{marginLeft: "auto"}}>
+                                    <div className="mb-3">
+
+                                        <button onClick={Logout} type="button" className="btn btn-primary" id="button-addon2">Выйти</button>
+                                    </div>
+                                </li>
+                            )
                         }
                     </ul>
                 </div>

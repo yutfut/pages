@@ -45,11 +45,12 @@ export const Method: React.FC = () => {
             {
                 data.map((item, i)=>{
                     const url = "http://127.0.0.1:3000/" + item.Name + "?id=" + item.Id;
-                    return <div key={i}>
-                        {item.Id}
-                        {item.Name}
-                        {item.MethodName}
-                        <a href={url}>che</a>
+                    return <div key={i} style={{width: "90%",display: "flex", justifyContent: "space-between", margin: "10px", marginRight: "50px"}}>
+                        <p style={{width: "200px", marginLeft: "auto", marginRight: "auto"}}>{i+1}</p>
+                        {/*<p style={{width: "200px", marginLeft: "auto", marginRight: "auto"}}>{item.Id}</p>*/}
+                        <p style={{width: "200px", marginLeft: "auto", marginRight: "auto"}}>{item.Name}</p>
+                        <p style={{width: "200px", marginLeft: "auto", marginRight: "auto"}}>{item.MethodName}</p>
+                        <a style={{width: "200px", marginLeft: "auto", marginRight: "auto"}} href={url}>Перейти к методу</a>
                     </div>
                 })
             }
