@@ -120,6 +120,32 @@ export const Pareto: React.FC = () => {
         }
     }
 
+    const handleDeletePareto:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+        let id = 0;
+        paretoData?.map((item: ParetoData, i:number)=>{
+            console.log(item.Id)
+            id = item.Id
+        })
+        const response = await fetch('http://127.0.0.1:8000/api/delete_pareto',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": id,
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+        } else{
+            console.log('prosas')
+        }
+    }
+
     let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
 
     const [critsVarsCols, setCritsVarsCols] = useState<ColDef[]>([
@@ -224,8 +250,8 @@ export const Pareto: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="alert alert-dark Che row">
-                    <div className="col">
+                <div className="alert alert-dark Che" style={{display: "flex"}}>
+                    <div>
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
                         <input type="range" className="form-range p-4 "
                                style={{width: 150, verticalAlign: "middle"}}
@@ -236,10 +262,21 @@ export const Pareto: React.FC = () => {
                         <strong>{range}</strong>
                     </div>
 
-                    <div className="input-group mb-3 col p-1">
+                    <div className="input-group mb-3 p-1" style={{marginLeft: "auto", width: "900px"}}>
+                        {/*{*/}
+                        {/*    paretoData && (*/}
+                        {/*        <button onClick={handleDeletePareto} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>*/}
+                        {/*    )*/}
+                        {/*}*/}
+                        <button onClick={handleDeletePareto} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>
                         <span className="input-group-text">Название: </span>
                         {/*aria-label="Amount (to the nearest dollar)"*/}
                         <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+                        {
+                            paretoData && (
+                                <button type="button" className="btn btn-primary" id="button-addon2">Обновить</button>
+                            )
+                        }
                         <button onClick={handleSetPareto} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>

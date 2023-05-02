@@ -12,6 +12,8 @@ export type DataI = Data[]|null
 
 export const Method: React.FC = () => {
     const [data, setData] = useState<DataI>(null)
+
+
     useEffect(() => {
             (async ()=> {
 
