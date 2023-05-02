@@ -28,7 +28,6 @@ export interface ParetoData {
 
 export type ParetoDataI = ParetoData[]|null
 
-
 export const Pareto: React.FC = () => {
 
     const [paretoData, setParetoData] = useState<ParetoDataI>(null)
