@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
@@ -20,6 +20,17 @@ export const Borda: React.FC = () => {
 
     const [bordaData, setBordaData] = useState<BordaDataI>(null)
     const [searchParams] = useSearchParams();
+
+    const [inputOne, setInputOne] = useState('');
+
+    const [rowData, setRowData] = useState<any[]>(
+        [   {"count": 29, "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
+            {"count": 0, "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
+            {"count": 6, "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
+            {"count": 17, "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
+            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
+            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
+    );
 
     useEffect(() => {
             if (bordaData) {
@@ -43,8 +54,25 @@ export const Borda: React.FC = () => {
                         const responseBody = await response.json();
                         setBordaData(responseBody)
                         console.log(responseBody)
-                        console.log(bordaData)
-                        console.log(setBordaData)
+
+                        if (
+                            responseBody.name &&
+                            responseBody.var1
+                        ) {
+                            setInputOne(responseBody.name)
+
+                            const test = [
+                                {"count": responseBody.var1[0], "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
+                                {"count": responseBody.var1[1], "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
+                                {"count": responseBody.var1[2], "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
+                                {"count": responseBody.var1[3], "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
+                                {"count": responseBody.var1[4], "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
+                                {"count": responseBody.var1[5], "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"}
+                            ]
+                            console.log('test: ',test)
+
+                            setRowData(test)
+                        }
                     } else{
                         console.log('prosas')
                     }
@@ -52,6 +80,59 @@ export const Borda: React.FC = () => {
             }) ()
         },[searchParams]
     )
+
+    let dataBorda: any[] = [];
+
+    const handledataBorda:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        // for () {
+        //
+        // }
+
+        dataBorda.push(Number(rowData[0].crit1))
+        dataBorda.push(Number(rowData[0].crit2))
+        dataBorda.push(Number(rowData[0].crit3))
+        dataBorda.push(Number(rowData[0].crit4))
+        dataBorda.push(Number(rowData[0].crit5))
+        dataBorda.push(Number(rowData[0].crit6))
+        dataBorda.push(Number(rowData[0].crit7))
+        dataBorda.push(Number(rowData[0].crit8))
+        dataBorda.push(Number(rowData[0].crit9))
+        dataBorda.push(Number(rowData[0].crit10))
+
+        console.log(dataBorda)
+
+        const response = await fetch('http://127.0.0.1:8000/api/set_point_score',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "name": inputOne,
+                "var1": [
+                    dataBorda[0],
+                    dataBorda[1],
+                    dataBorda[2],
+                    dataBorda[3],
+                    dataBorda[4],
+                    dataBorda[5],
+                    dataBorda[6],
+                    dataBorda[7],
+                    dataBorda[8],
+                    dataBorda[9]
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+        } else{
+            console.log('prosas')
+        }
+    }
 
     const [range, setRange] = useState('1')
 
@@ -75,15 +156,6 @@ export const Borda: React.FC = () => {
             width: 200,
         };
     }, []);
-
-    const [rowData, setRowData] = useState<any[]>(
-        [   {"count": 29, "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
-            {"count": 0, "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
-            {"count": 6, "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
-            {"count": 17, "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
-            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
-            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
-    );
 
     let variants: number = 3; //количество вариантов
 
@@ -179,7 +251,7 @@ export const Borda: React.FC = () => {
 
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
-                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
                         <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>

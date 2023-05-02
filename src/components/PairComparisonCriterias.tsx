@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
@@ -28,6 +28,22 @@ export const PairComparisonCriterias: React.FC = () => {
     const [PairComparisonCriteriaData, setPairComparisonCriteriaData] = useState<PairComparisonCriteriaDataI>(null)
     const [searchParams] = useSearchParams();
 
+    const [inputOne, setInputOne] = useState('');
+
+    const [rowData, setRowData] = useState<any[]>(
+        [
+            {"crit1": 1, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
+            {"crit1": 0, "crit2": 1,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
+            {"crit1": 0, "crit2": 0,"crit3": 1, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
+            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 1,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
+            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 1,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
+            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 1,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
+            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 1, "crit8": 0,"crit9": 0,"crit10": 0,},
+            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 1,"crit9": 0,"crit10": 0,},
+            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 1,"crit10": 0,},
+            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 1,}]
+    );
+
     useEffect(() => {
             if (PairComparisonCriteriaData) {
                 return
@@ -50,8 +66,146 @@ export const PairComparisonCriterias: React.FC = () => {
                         const responseBody = await response.json();
                         setPairComparisonCriteriaData(responseBody)
                         console.log(responseBody)
-                        console.log(PairComparisonCriteriaData)
-                        console.log(setPairComparisonCriteriaData)
+                        if (
+                            responseBody.name &&
+                            responseBody.var1 &&
+                            responseBody.var2 &&
+                            responseBody.var3 &&
+                            responseBody.var4 &&
+                            responseBody.var5 &&
+                            responseBody.var6 &&
+                            responseBody.var7 &&
+                            responseBody.var8 &&
+                            responseBody.var9 &&
+                            responseBody.var10
+                        ) {
+                            setInputOne(responseBody.name)
+
+                            const test = [
+                                {
+                                    "crit1": responseBody.var1[0],
+                                    "crit2": responseBody.var1[1],
+                                    "crit3": responseBody.var1[2],
+                                    "crit4": responseBody.var1[3],
+                                    "crit5": responseBody.var1[4],
+                                    "crit6": responseBody.var1[5],
+                                    "crit7": responseBody.var1[6],
+                                    "crit8": responseBody.var1[7],
+                                    "crit9": responseBody.var1[8],
+                                    "crit10": responseBody.var1[9],
+                                },
+                                {
+                                    "crit1": responseBody.var2[0],
+                                    "crit2": responseBody.var2[1],
+                                    "crit3": responseBody.var2[2],
+                                    "crit4": responseBody.var2[3],
+                                    "crit5": responseBody.var2[4],
+                                    "crit6": responseBody.var2[5],
+                                    "crit7": responseBody.var2[6],
+                                    "crit8": responseBody.var2[7],
+                                    "crit9": responseBody.var2[8],
+                                    "crit10": responseBody.var2[9],
+                                },
+                                {
+                                    "crit1": responseBody.var3[0],
+                                    "crit2": responseBody.var3[1],
+                                    "crit3": responseBody.var3[2],
+                                    "crit4": responseBody.var3[3],
+                                    "crit5": responseBody.var3[4],
+                                    "crit6": responseBody.var3[5],
+                                    "crit7": responseBody.var3[6],
+                                    "crit8": responseBody.var3[7],
+                                    "crit9": responseBody.var3[8],
+                                    "crit10": responseBody.var3[9],
+                                },
+                                {
+                                    "crit1": responseBody.var4[0],
+                                    "crit2": responseBody.var4[1],
+                                    "crit3": responseBody.var4[2],
+                                    "crit4": responseBody.var4[3],
+                                    "crit5": responseBody.var4[4],
+                                    "crit6": responseBody.var4[5],
+                                    "crit7": responseBody.var4[6],
+                                    "crit8": responseBody.var4[7],
+                                    "crit9": responseBody.var4[8],
+                                    "crit10": responseBody.var4[9],
+                                },
+                                {
+                                    "crit1": responseBody.var5[0],
+                                    "crit2": responseBody.var5[1],
+                                    "crit3": responseBody.var5[2],
+                                    "crit4": responseBody.var5[3],
+                                    "crit5": responseBody.var5[4],
+                                    "crit6": responseBody.var5[5],
+                                    "crit7": responseBody.var5[6],
+                                    "crit8": responseBody.var5[7],
+                                    "crit9": responseBody.var5[8],
+                                    "crit10": responseBody.var5[9],
+                                },
+                                {
+                                    "crit1": responseBody.var6[0],
+                                    "crit2": responseBody.var6[1],
+                                    "crit3": responseBody.var6[2],
+                                    "crit4": responseBody.var6[3],
+                                    "crit5": responseBody.var6[4],
+                                    "crit6": responseBody.var6[5],
+                                    "crit7": responseBody.var6[6],
+                                    "crit8": responseBody.var6[7],
+                                    "crit9": responseBody.var6[8],
+                                    "crit10": responseBody.var6[9],
+                                },
+                                {
+                                    "crit1": responseBody.var7[0],
+                                    "crit2": responseBody.var7[1],
+                                    "crit3": responseBody.var7[2],
+                                    "crit4": responseBody.var7[3],
+                                    "crit5": responseBody.var7[4],
+                                    "crit6": responseBody.var7[5],
+                                    "crit7": responseBody.var7[6],
+                                    "crit8": responseBody.var7[7],
+                                    "crit9": responseBody.var7[8],
+                                    "crit10": responseBody.var7[9],
+                                },
+                                {
+                                    "crit1": responseBody.var8[0],
+                                    "crit2": responseBody.var8[1],
+                                    "crit3": responseBody.var8[2],
+                                    "crit4": responseBody.var8[3],
+                                    "crit5": responseBody.var8[4],
+                                    "crit6": responseBody.var8[5],
+                                    "crit7": responseBody.var8[6],
+                                    "crit8": responseBody.var8[7],
+                                    "crit9": responseBody.var8[8],
+                                    "crit10": responseBody.var8[9],
+                                },
+                                {
+                                    "crit1": responseBody.var9[0],
+                                    "crit2": responseBody.var9[1],
+                                    "crit3": responseBody.var9[2],
+                                    "crit4": responseBody.var9[3],
+                                    "crit5": responseBody.var9[4],
+                                    "crit6": responseBody.var9[5],
+                                    "crit7": responseBody.var9[6],
+                                    "crit8": responseBody.var9[7],
+                                    "crit9": responseBody.var9[8],
+                                    "crit10": responseBody.var9[9],
+                                },
+                                {
+                                    "crit1": responseBody.var10[0],
+                                    "crit2": responseBody.var10[1],
+                                    "crit3": responseBody.var10[2],
+                                    "crit4": responseBody.var10[3],
+                                    "crit5": responseBody.var10[4],
+                                    "crit6": responseBody.var10[5],
+                                    "crit7": responseBody.var10[6],
+                                    "crit8": responseBody.var10[7],
+                                    "crit9": responseBody.var10[8],
+                                    "crit10": responseBody.var10[9],
+                                }
+                            ]
+                            console.log('test: ',test)
+                            setRowData(test)
+                        }
                     } else{
                         console.log('prosas')
                     }
@@ -59,6 +213,165 @@ export const PairComparisonCriterias: React.FC = () => {
             }) ()
         },[searchParams]
     )
+
+    let dataPairComparisonCriteria: any[] = [];
+
+    const handleSetPairComparisonCriteria:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        for (let i = 0; i < 10; i++) {
+            dataPairComparisonCriteria.push(Number(rowData[i].crit1))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit2))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit3))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit4))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit5))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit6))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit7))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit8))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit9))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit10))
+        }
+
+        console.log(dataPairComparisonCriteria)
+
+        const response = await fetch('http://127.0.0.1:8000/api/set_pair_comparison_criteria',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "name": inputOne,
+                "var1": [
+                    dataPairComparisonCriteria[0],
+                    dataPairComparisonCriteria[1],
+                    dataPairComparisonCriteria[2],
+                    dataPairComparisonCriteria[3],
+                    dataPairComparisonCriteria[4],
+                    dataPairComparisonCriteria[5],
+                    dataPairComparisonCriteria[6],
+                    dataPairComparisonCriteria[7],
+                    dataPairComparisonCriteria[8],
+                    dataPairComparisonCriteria[9]
+                ],
+                "var2": [
+                    dataPairComparisonCriteria[10],
+                    dataPairComparisonCriteria[11],
+                    dataPairComparisonCriteria[12],
+                    dataPairComparisonCriteria[13],
+                    dataPairComparisonCriteria[14],
+                    dataPairComparisonCriteria[15],
+                    dataPairComparisonCriteria[16],
+                    dataPairComparisonCriteria[17],
+                    dataPairComparisonCriteria[18],
+                    dataPairComparisonCriteria[19]
+                ],
+                "var3": [
+                    dataPairComparisonCriteria[20],
+                    dataPairComparisonCriteria[21],
+                    dataPairComparisonCriteria[22],
+                    dataPairComparisonCriteria[23],
+                    dataPairComparisonCriteria[24],
+                    dataPairComparisonCriteria[25],
+                    dataPairComparisonCriteria[26],
+                    dataPairComparisonCriteria[27],
+                    dataPairComparisonCriteria[28],
+                    dataPairComparisonCriteria[29]
+                ],
+                "var4": [
+                    dataPairComparisonCriteria[30],
+                    dataPairComparisonCriteria[31],
+                    dataPairComparisonCriteria[32],
+                    dataPairComparisonCriteria[33],
+                    dataPairComparisonCriteria[34],
+                    dataPairComparisonCriteria[35],
+                    dataPairComparisonCriteria[36],
+                    dataPairComparisonCriteria[37],
+                    dataPairComparisonCriteria[38],
+                    dataPairComparisonCriteria[39]
+                ],
+                "var5": [
+                    dataPairComparisonCriteria[40],
+                    dataPairComparisonCriteria[41],
+                    dataPairComparisonCriteria[42],
+                    dataPairComparisonCriteria[43],
+                    dataPairComparisonCriteria[44],
+                    dataPairComparisonCriteria[45],
+                    dataPairComparisonCriteria[46],
+                    dataPairComparisonCriteria[47],
+                    dataPairComparisonCriteria[48],
+                    dataPairComparisonCriteria[49]
+                ],
+                "var6": [
+                    dataPairComparisonCriteria[50],
+                    dataPairComparisonCriteria[51],
+                    dataPairComparisonCriteria[52],
+                    dataPairComparisonCriteria[53],
+                    dataPairComparisonCriteria[54],
+                    dataPairComparisonCriteria[55],
+                    dataPairComparisonCriteria[56],
+                    dataPairComparisonCriteria[57],
+                    dataPairComparisonCriteria[58],
+                    dataPairComparisonCriteria[59]
+                ],
+                "var7": [
+                    dataPairComparisonCriteria[60],
+                    dataPairComparisonCriteria[61],
+                    dataPairComparisonCriteria[62],
+                    dataPairComparisonCriteria[63],
+                    dataPairComparisonCriteria[64],
+                    dataPairComparisonCriteria[65],
+                    dataPairComparisonCriteria[66],
+                    dataPairComparisonCriteria[67],
+                    dataPairComparisonCriteria[68],
+                    dataPairComparisonCriteria[69]
+                ],
+                "var8": [
+                    dataPairComparisonCriteria[70],
+                    dataPairComparisonCriteria[71],
+                    dataPairComparisonCriteria[72],
+                    dataPairComparisonCriteria[73],
+                    dataPairComparisonCriteria[74],
+                    dataPairComparisonCriteria[75],
+                    dataPairComparisonCriteria[76],
+                    dataPairComparisonCriteria[77],
+                    dataPairComparisonCriteria[78],
+                    dataPairComparisonCriteria[79]
+                ],
+                "var9": [
+                    dataPairComparisonCriteria[80],
+                    dataPairComparisonCriteria[81],
+                    dataPairComparisonCriteria[82],
+                    dataPairComparisonCriteria[83],
+                    dataPairComparisonCriteria[84],
+                    dataPairComparisonCriteria[85],
+                    dataPairComparisonCriteria[86],
+                    dataPairComparisonCriteria[87],
+                    dataPairComparisonCriteria[88],
+                    dataPairComparisonCriteria[89]
+                ],
+                "var10": [
+                    dataPairComparisonCriteria[90],
+                    dataPairComparisonCriteria[91],
+                    dataPairComparisonCriteria[92],
+                    dataPairComparisonCriteria[93],
+                    dataPairComparisonCriteria[94],
+                    dataPairComparisonCriteria[95],
+                    dataPairComparisonCriteria[96],
+                    dataPairComparisonCriteria[97],
+                    dataPairComparisonCriteria[98],
+                    dataPairComparisonCriteria[99]
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+        } else{
+            console.log('prosas')
+        }
+    }
 
     const [range, setRange] = useState('1');
 
@@ -89,20 +402,6 @@ export const PairComparisonCriterias: React.FC = () => {
             width: 120,
         };
     }, []);
-
-    const [rowData, setRowData] = useState<any[]>(
-        [
-            {"crit1": 1, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
-            {"crit1": 0, "crit2": 1,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
-            {"crit1": 0, "crit2": 0,"crit3": 1, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
-            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 1,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
-            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 1,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
-            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 1,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 0,},
-            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 1, "crit8": 0,"crit9": 0,"crit10": 0,},
-            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 1,"crit9": 0,"crit10": 0,},
-            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 1,"crit10": 0,},
-            {"crit1": 0, "crit2": 0,"crit3": 0, "crit4": 0,"crit5": 0,"crit6": 0,"crit7": 0, "crit8": 0,"crit9": 0,"crit10": 1,}]
-    );
 
     let criteriasNum: number = 10;
 
@@ -239,8 +538,8 @@ export const PairComparisonCriterias: React.FC = () => {
 
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
-                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
-                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+                        <button onClick={handleSetPairComparisonCriteria} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>
 

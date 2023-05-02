@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
@@ -18,6 +18,14 @@ export const PointScore: React.FC = () => {
 
     const [pointScoreData, setPointScoreData] = useState<PointScoreDataI>(null)
     const [searchParams] = useSearchParams();
+
+    const [inputOne, setInputOne] = useState('');
+
+    const [rowData, setRowData] = useState<any[]>(
+        [   {"crit1": 100, "crit2": 75,"crit3": 75,
+            "crit4": 75,"crit5": 75,"crit6": 50,"crit7": 100,
+            "crit8": 100,"crit9": 50,"crit10": 50} ]
+    );
 
     useEffect(() => {
             if (pointScoreData) {
@@ -41,8 +49,27 @@ export const PointScore: React.FC = () => {
                         const responseBody = await response.json();
                         setPointScoreData(responseBody)
                         console.log(responseBody)
-                        console.log(pointScoreData)
-                        console.log(setPointScoreData)
+                        if (responseBody.name && responseBody.var1) {
+                            setInputOne(responseBody.name)
+                            const test = [
+                                {
+                                    "crit1": responseBody.var1[0],
+                                    "crit2": responseBody.var1[1],
+                                    "crit3": responseBody.var1[2],
+                                    "crit4": responseBody.var1[3],
+                                    "crit5": responseBody.var1[4],
+                                    "crit6": responseBody.var1[5],
+                                    "crit7": responseBody.var1[6],
+                                    "crit8": responseBody.var1[7],
+                                    "crit9": responseBody.var1[8],
+                                    "crit10": responseBody.var1[9]
+                                }
+                            ]
+                            console.log('test',test)
+                            setRowData(test)
+
+                        }
+
                     } else{
                         console.log('prosas')
                     }
@@ -50,6 +77,56 @@ export const PointScore: React.FC = () => {
             }) ()
         },[searchParams]
     )
+
+    let dataPointScore: any[] = [];
+
+
+    const handleSetPointScore:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        dataPointScore.push(Number(rowData[0].crit1))
+        dataPointScore.push(Number(rowData[0].crit2))
+        dataPointScore.push(Number(rowData[0].crit3))
+        dataPointScore.push(Number(rowData[0].crit4))
+        dataPointScore.push(Number(rowData[0].crit5))
+        dataPointScore.push(Number(rowData[0].crit6))
+        dataPointScore.push(Number(rowData[0].crit7))
+        dataPointScore.push(Number(rowData[0].crit8))
+        dataPointScore.push(Number(rowData[0].crit9))
+        dataPointScore.push(Number(rowData[0].crit10))
+
+        console.log(dataPointScore)
+
+        const response = await fetch('http://127.0.0.1:8000/api/set_point_score',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "name": inputOne,
+                "var1": [
+                    dataPointScore[0],
+                    dataPointScore[1],
+                    dataPointScore[2],
+                    dataPointScore[3],
+                    dataPointScore[4],
+                    dataPointScore[5],
+                    dataPointScore[6],
+                    dataPointScore[7],
+                    dataPointScore[8],
+                    dataPointScore[9]
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+        } else{
+            console.log('prosas')
+        }
+    }
 
     const [range, setRange] = useState('1');
 
@@ -62,13 +139,6 @@ export const PointScore: React.FC = () => {
     const onBtExport = useCallback(() => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
-
-
-    const [rowData, setRowData] = useState<any[]>(
-        [   {"crit1": 100, "crit2": 75,"crit3": 75,
-            "crit4": 75,"crit5": 75,"crit6": 50,"crit7": 100,
-            "crit8": 100,"crit9": 50,"crit10": 50} ]
-    );
 
     const [columnDefs, setColumnDefs] = useState<ColDef[]>([
         { field: 'crit1', headerName: "Критерий 1" },
@@ -180,7 +250,7 @@ export const PointScore: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="alert alert-dark Che">
+                <div className="alert alert-dark Che row">
                     <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
                         <input type="range" className="form-range p-4"
@@ -194,8 +264,8 @@ export const PointScore: React.FC = () => {
 
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
-                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
-                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+                        <button onClick={handleSetPointScore} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>
 
