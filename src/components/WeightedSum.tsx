@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
@@ -20,6 +20,23 @@ export const WeightedSum: React.FC = () => {
 
     const [weightedSumData, setWeightedSumData] = useState<WeightedSumDataI>(null)
     const [searchParams] = useSearchParams();
+
+    const [inputOne, setInputOne] = useState('');
+
+    const [rowData, setRowData] = useState<any[]>(
+        [
+            {"crits":"Критерий 1", "weights": 0.157, "var1": 1,"var2": 0.89, "var3": 0.83},
+            {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 1, "var3": 0.75},
+            {"crits":"Критерий 3", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+            {"crits":"Критерий 4", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+            {"crits":"Критерий 5", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
+            {"crits":"Критерий 6", "weights": 0.05,  "var1": 0.5,"var2": 1, "var3": 1},
+            {"crits":"Критерий 7", "weights": 0.157, "var1": 0.67,"var2": 0.83, "var3": 1},
+            {"crits":"Критерий 8", "weights": 0.157, "var1": 0.667,"var2": 0.833, "var3": 0},
+            {"crits":"Критерий 9", "weights": 0.05,  "var1": 1,"var2": 0.8, "var3": 0.9},
+            {"crits":"Критерий 10", "weights": 0.05,  "var1": 1,"var2": 0.9, "var3": 0.9}
+        ]
+    );
 
     useEffect(() => {
             if (weightedSumData) {
@@ -43,8 +60,34 @@ export const WeightedSum: React.FC = () => {
                         const responseBody = await response.json();
                         setWeightedSumData(responseBody)
                         console.log(responseBody)
-                        console.log(weightedSumData)
-                        console.log(setWeightedSumData)
+
+                        if (
+                            responseBody.name &&
+                            responseBody.var1 &&
+                            responseBody.var2 &&
+                            responseBody.var3 &&
+                            responseBody.var4 &&
+                            responseBody.var5
+                        ) {
+                            setInputOne(responseBody.name)
+
+                            const test = [
+                                {"crits": responseBody.var1[0], "weights": responseBody.var2[0], "var1": responseBody.var3[0],"var2": responseBody.var4[0], "var3": responseBody.var5[0]},
+                                {"crits": responseBody.var1[1], "weights": responseBody.var2[1], "var1": responseBody.var3[1],"var2": responseBody.var4[1], "var3": responseBody.var5[1]},
+                                {"crits": responseBody.var1[2], "weights": responseBody.var2[2], "var1": responseBody.var3[2],"var2": responseBody.var4[2], "var3": responseBody.var5[2]},
+                                {"crits": responseBody.var1[3], "weights": responseBody.var2[3], "var1": responseBody.var3[3],"var2": responseBody.var4[3], "var3": responseBody.var5[3]},
+                                {"crits": responseBody.var1[4], "weights": responseBody.var2[4], "var1": responseBody.var3[4],"var2": responseBody.var4[4], "var3": responseBody.var5[4]},
+                                {"crits": responseBody.var1[5], "weights": responseBody.var2[5], "var1": responseBody.var3[5],"var2": responseBody.var4[5], "var3": responseBody.var5[5]},
+                                {"crits": responseBody.var1[6], "weights": responseBody.var2[6], "var1": responseBody.var3[6],"var2": responseBody.var4[6], "var3": responseBody.var5[6]},
+                                {"crits": responseBody.var1[7], "weights": responseBody.var2[7], "var1": responseBody.var3[7],"var2": responseBody.var4[7], "var3": responseBody.var5[7]},
+                                {"crits": responseBody.var1[8], "weights": responseBody.var2[8], "var1": responseBody.var3[8],"var2": responseBody.var4[8], "var3": responseBody.var5[8]},
+                                {"crits": responseBody.var1[9], "weights": responseBody.var2[9], "var1": responseBody.var3[9],"var2": responseBody.var4[9], "var3": responseBody.var5[9]}
+                            ]
+                            console.log('test: ',test)
+
+                            setRowData(test)
+                        }
+
                     } else{
                         console.log('prosas')
                     }
@@ -52,6 +95,108 @@ export const WeightedSum: React.FC = () => {
             }) ()
         },[searchParams]
     )
+
+    let dataWeightedSumVar1: any[] = [];
+    let dataWeightedSumVar2: any[] = [];
+    let dataWeightedSumVar3: any[] = [];
+    let dataWeightedSumVar4: any[] = [];
+    let dataWeightedSumVar5: any[] = [];
+
+    const handlerSetWeightedSum:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        for (let i = 0; i < 10; i++) {
+            dataWeightedSumVar1.push(String(rowData[i].crits))
+            dataWeightedSumVar2.push(Number(rowData[i].weights))
+            dataWeightedSumVar3.push(Number(rowData[i].var1))
+            dataWeightedSumVar4.push(Number(rowData[i].var2))
+            dataWeightedSumVar5.push(Number(rowData[i].var3))
+        }
+
+        console.log(dataWeightedSumVar1)
+        console.log(dataWeightedSumVar2)
+        console.log(dataWeightedSumVar3)
+        console.log(dataWeightedSumVar4)
+        console.log(dataWeightedSumVar5)
+
+        const response = await fetch('http://127.0.0.1:8000/api/set_weighted_sum',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "name": inputOne,
+                "var1": [
+                    dataWeightedSumVar1[0],
+                    dataWeightedSumVar1[1],
+                    dataWeightedSumVar1[2],
+                    dataWeightedSumVar1[3],
+                    dataWeightedSumVar1[4],
+                    dataWeightedSumVar1[5],
+                    dataWeightedSumVar1[6],
+                    dataWeightedSumVar1[7],
+                    dataWeightedSumVar1[8],
+                    dataWeightedSumVar1[9],
+                ],
+                "var2": [
+                    dataWeightedSumVar2[0],
+                    dataWeightedSumVar2[1],
+                    dataWeightedSumVar2[2],
+                    dataWeightedSumVar2[3],
+                    dataWeightedSumVar2[4],
+                    dataWeightedSumVar2[5],
+                    dataWeightedSumVar2[6],
+                    dataWeightedSumVar2[7],
+                    dataWeightedSumVar2[8],
+                    dataWeightedSumVar2[9],
+                ],
+                "var3": [
+                    dataWeightedSumVar3[0],
+                    dataWeightedSumVar3[1],
+                    dataWeightedSumVar3[2],
+                    dataWeightedSumVar3[3],
+                    dataWeightedSumVar3[4],
+                    dataWeightedSumVar3[5],
+                    dataWeightedSumVar3[6],
+                    dataWeightedSumVar3[7],
+                    dataWeightedSumVar3[8],
+                    dataWeightedSumVar3[9],
+                ],
+                "var4": [
+                    dataWeightedSumVar4[0],
+                    dataWeightedSumVar4[1],
+                    dataWeightedSumVar4[2],
+                    dataWeightedSumVar4[3],
+                    dataWeightedSumVar4[4],
+                    dataWeightedSumVar4[5],
+                    dataWeightedSumVar4[6],
+                    dataWeightedSumVar4[7],
+                    dataWeightedSumVar4[8],
+                    dataWeightedSumVar4[9],
+                ],
+                "var5": [
+                    dataWeightedSumVar5[0],
+                    dataWeightedSumVar5[1],
+                    dataWeightedSumVar5[2],
+                    dataWeightedSumVar5[3],
+                    dataWeightedSumVar5[4],
+                    dataWeightedSumVar5[5],
+                    dataWeightedSumVar5[6],
+                    dataWeightedSumVar5[7],
+                    dataWeightedSumVar5[8],
+                    dataWeightedSumVar5[9],
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+        } else{
+            console.log('prosas')
+        }
+    }
 
     const [range, setRange] = useState('1');
 
@@ -78,22 +223,6 @@ export const WeightedSum: React.FC = () => {
             width: 140
         };
     }, []);
-
-
-
-    const [rowData, setRowData] = useState<any[]>(
-        [
-            {"crits":"Критерий 1", "weights": 0.157, "var1": 1,"var2": 0.89, "var3": 0.83},
-            {"crits":"Критерий 2", "weights": 0.095, "var1": 1,"var2": 1, "var3": 0.75},
-            {"crits":"Критерий 3", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
-            {"crits":"Критерий 4", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
-            {"crits":"Критерий 5", "weights": 0.095, "var1": 1,"var2": 0.89, "var3": 0.83},
-            {"crits":"Критерий 6", "weights": 0.05,  "var1": 0.5,"var2": 1, "var3": 1},
-            {"crits":"Критерий 7", "weights": 0.157, "var1": 0.67,"var2": 0.83, "var3": 1},
-            {"crits":"Критерий 8", "weights": 0.157, "var1": 0.667,"var2": 0.833, "var3": 0},
-            {"crits":"Критерий 9", "weights": 0.05,  "var1": 1,"var2": 0.8, "var3": 0.9},
-            {"crits":"Критерий 10", "weights": 0.05,  "var1": 1,"var2": 0.9, "var3": 0.9}]
-    );
 
     let criteriasNum: number = 10;
 
@@ -219,8 +348,8 @@ export const WeightedSum: React.FC = () => {
 
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
-                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
-                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+                        <button onClick={handlerSetWeightedSum} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>
 

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
@@ -22,6 +22,17 @@ export const Nanson: React.FC = () => {
     const [nansonData, setNansonData] = useState<NansonDataI>(null)
     const [searchParams] = useSearchParams();
 
+    const [inputOne, setInputOne] = useState('');
+
+    const [rowData, setRowData] = useState<any[]>(
+        [   {"count": 29, "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
+            {"count": 0, "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
+            {"count": 6, "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
+            {"count": 17, "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
+            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
+            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
+    );
+
     useEffect(() => {
             if (nansonData) {
                 return
@@ -44,8 +55,25 @@ export const Nanson: React.FC = () => {
                         const responseBody = await response.json();
                         setNansonData(responseBody)
                         console.log(responseBody)
-                        console.log(nansonData)
-                        console.log(setNansonData)
+
+                        if (
+                            responseBody.name &&
+                            responseBody.var1
+                        ) {
+                            setInputOne(responseBody.name)
+
+                            const test = [
+                                {"count": responseBody.var1[0], "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
+                                {"count": responseBody.var1[1], "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
+                                {"count": responseBody.var1[2], "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
+                                {"count": responseBody.var1[3], "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
+                                {"count": responseBody.var1[4], "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
+                                {"count": responseBody.var1[5], "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"}
+                            ]
+                            console.log('test: ',test)
+
+                            setRowData(test)
+                        }
                     } else{
                         console.log('prosas')
                     }
@@ -53,6 +81,44 @@ export const Nanson: React.FC = () => {
             }) ()
         },[searchParams]
     )
+
+    let dataNanson: any[] = [];
+
+    const handlerSetNanson:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        for (let i = 0; i < 6; i++) {
+            dataNanson.push(Number(rowData[i].count))
+        }
+
+        console.log(dataNanson)
+
+        const response = await fetch('http://127.0.0.1:8000/api/set_nanson',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "name": inputOne,
+                "var1": [
+                    dataNanson[0],
+                    dataNanson[1],
+                    dataNanson[2],
+                    dataNanson[3],
+                    dataNanson[4],
+                    dataNanson[5],
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+        } else{
+            console.log('prosas')
+        }
+    }
 
     const [range, setRange] = useState('1');
 
@@ -63,19 +129,6 @@ export const Nanson: React.FC = () => {
     const onBtExport = useCallback(() => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
-
-
-
-
-    const [rowData, setRowData] = useState<any[]>(
-        [   {"count": 29, "place1": "Вариант 1", "place2": "Вариант 2", "place3": "Вариант 3"},
-            {"count": 0, "place1": "Вариант 1", "place2": "Вариант 3", "place3": "Вариант 2"},
-            {"count": 6, "place1": "Вариант 2", "place2": "Вариант 1", "place3": "Вариант 3"},
-            {"count": 17, "place1": "Вариант 2", "place2": "Вариант 3", "place3": "Вариант 1"},
-            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 1", "place3": "Вариант 2"},
-            {"count": 14, "place1": "Вариант 3", "place2": "Вариант 2", "place3": "Вариант 1"} ]
-    );
-
 
     const [variants, setVariants] = useState([1, 1, 1]);
 
@@ -240,8 +293,8 @@ export const Nanson: React.FC = () => {
 
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
-                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
-                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+                        <button onClick={handlerSetNanson} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>
 

@@ -83,27 +83,16 @@ export const Borda: React.FC = () => {
 
     let dataBorda: any[] = [];
 
-    const handledataBorda:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+    const handlerSetBorda:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
 
-        // for () {
-        //
-        // }
-
-        dataBorda.push(Number(rowData[0].crit1))
-        dataBorda.push(Number(rowData[0].crit2))
-        dataBorda.push(Number(rowData[0].crit3))
-        dataBorda.push(Number(rowData[0].crit4))
-        dataBorda.push(Number(rowData[0].crit5))
-        dataBorda.push(Number(rowData[0].crit6))
-        dataBorda.push(Number(rowData[0].crit7))
-        dataBorda.push(Number(rowData[0].crit8))
-        dataBorda.push(Number(rowData[0].crit9))
-        dataBorda.push(Number(rowData[0].crit10))
+        for (let i = 0; i < 6; i++) {
+            dataBorda.push(Number(rowData[i].count))
+        }
 
         console.log(dataBorda)
 
-        const response = await fetch('http://127.0.0.1:8000/api/set_point_score',{
+        const response = await fetch('http://127.0.0.1:8000/api/set_nanson',{
             method:'POST',
             credentials: "include",
             headers:{
@@ -118,10 +107,6 @@ export const Borda: React.FC = () => {
                     dataBorda[3],
                     dataBorda[4],
                     dataBorda[5],
-                    dataBorda[6],
-                    dataBorda[7],
-                    dataBorda[8],
-                    dataBorda[9]
                 ],
             })
         })
@@ -252,7 +237,7 @@ export const Borda: React.FC = () => {
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
                         <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
-                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                        <button onClick={handlerSetBorda} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>
 
