@@ -65,9 +65,14 @@ export const Navbar = () => {
                         <li className="nav-item">
                             <a className="nav-link " href={"/Theory"}>Теория</a>
                         </li>
-                        <li className="nav-item">
-                            <a className="nav-link " href={"/method"}>Мои методы</a>
-                        </li>
+                        {
+                            userData && (
+                                <li className="nav-item">
+                                    <a className="nav-link " href={"/method"}>Мои методы</a>
+                                </li>
+                            )
+                        }
+
                         {
                             !userData && (
                                 <div style={{marginLeft: "auto", display: "flex"}}>
@@ -75,7 +80,7 @@ export const Navbar = () => {
                                         <a className="nav-link " href={"/auth"}>Войти</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link " href={"/auth"}>Зарегестрироваться</a>
+                                        <a className="nav-link " href={"/register"}>Зарегестрироваться</a>
                                     </li>
                                 </div>
 

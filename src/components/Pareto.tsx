@@ -34,9 +34,13 @@ export const Pareto: React.FC = () => {
     const [paretoData, setParetoData] = useState<ParetoDataI>(null)
     const [searchParams] = useSearchParams();
 
-    const [rowData, setRowData] = useState<any[]>([{"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
+    const [inputOne, setInputOne] = useState('');
+
+    const [rowData, setRowData] = useState<any[]>([
+        {"crits":"Критерий 1", "var1": 0,"var2": 0, "var3": 0},
         {"crits":"Критерий 2", "var1": 0,"var2": 0, "var3": 0},
-        {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]);
+        {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}
+    ]);
 
     useEffect(()=>{
         console.log(JSON.stringify(rowData))
@@ -64,11 +68,13 @@ export const Pareto: React.FC = () => {
                         const responseBody = await response.json();
                         setParetoData(responseBody)
                         console.log(responseBody)
-                        if (responseBody.var1 && responseBody.var2 && responseBody.var3) {
+                        if (responseBody.var1 && responseBody.var2 && responseBody.var3 && responseBody.name) {
+                            setInputOne(responseBody.name)
                             Object.keys(responseBody).map((item: any, i: number) => {
-                                const test = [{"crits":"Критерий 1", "var1": responseBody.var1[0],"var2": responseBody.var2[0], "var3": responseBody.var3[0]},
-                                    {"crits":"Критерий 2", "var1": responseBody.var1[1],"var2": responseBody.var2[1], "var3": responseBody.var3[1]},
-                                    {"crits":"Критерий 3", "var1": responseBody.var1[2],"var2": responseBody.var2[2], "var3": responseBody.var3[2]}]
+                                const test = [
+                                    {"crits":"Критерий 1", "var1": responseBody.var1[0],"var2": responseBody.var1[1], "var3": responseBody.var1[2]},
+                                    {"crits":"Критерий 2", "var1": responseBody.var2[0],"var2": responseBody.var2[1], "var3": responseBody.var2[2]},
+                                    {"crits":"Критерий 3", "var1": responseBody.var3[0],"var2": responseBody.var3[1], "var3": responseBody.var3[2]}]
                                 console.log('test222',test)
                                 setRowData(test)
                             })
@@ -81,18 +87,28 @@ export const Pareto: React.FC = () => {
         },[searchParams]
     )
 
+    let dataPareto: any[] = [];
+
+
     const handleSetPareto:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
+        for (let i=0; i<3; i++) {
+            dataPareto.push(Number(rowData[i].var1))
+            dataPareto.push(Number(rowData[i].var2))
+            dataPareto.push(Number(rowData[i].var3))
+        }
+        console.log(dataPareto)
         const response = await fetch('http://127.0.0.1:8000/api/set_pareto',{
             method:'POST',
+            credentials: "include",
             headers:{
                 "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
-                "name": "123",
-                "var1": [1.1,2.2,3.3],
-                "var2": [4.4,5.5,6.6],
-                "var3": [7.7,8.8,9.9]
+                "name": inputOne,
+                "var1": [dataPareto[0],dataPareto[1],dataPareto[2]],
+                "var2": [dataPareto[3],dataPareto[4],dataPareto[5]],
+                "var3": [dataPareto[6],dataPareto[7],dataPareto[8]]
             })
         })
         if(response.ok){
@@ -222,7 +238,8 @@ export const Pareto: React.FC = () => {
 
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
-                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
+                        {/*aria-label="Amount (to the nearest dollar)"*/}
+                        <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
                         <button onClick={handleSetPareto} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {Hub} from "./Hub";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
@@ -18,6 +18,14 @@ export const BaseCriteria: React.FC = () => {
 
     const [BaseCriteriaData, setBaseCriteriaData] = useState<BaseCriteriaDataI>(null)
     const [searchParams] = useSearchParams();
+
+    const [inputOne, setInputOne] = useState('');
+
+    const [rowData, setRowData] = useState<any[]>([
+        {"crit1": false, "crit2": false,"crit3": true,
+            "crit4": false,"crit5": true,"crit6": false,"crit7": false,
+            "crit8": false,"crit9": true,"crit10": true}
+    ]);
 
     useEffect(() => {
             if (BaseCriteriaData) {
@@ -41,8 +49,23 @@ export const BaseCriteria: React.FC = () => {
                         const responseBody = await response.json();
                         setBaseCriteriaData(responseBody)
                         console.log(responseBody)
-                        console.log(BaseCriteriaData)
-                        console.log(setBaseCriteriaData)
+                        if (responseBody.var1 && responseBody.name) {
+                            setInputOne(responseBody.name)
+                            const test = [{
+                                "crit1": responseBody.var1[0],
+                                "crit2": responseBody.var1[1],
+                                "crit3": responseBody.var1[2],
+                                "crit4": responseBody.var1[3],
+                                "crit5": responseBody.var1[4],
+                                "crit6": responseBody.var1[5],
+                                "crit7": responseBody.var1[6],
+                                "crit8": responseBody.var1[7],
+                                "crit9": responseBody.var1[8],
+                                "crit10": responseBody.var1[9]
+                            }]
+                            console.log('test: ',test)
+                            setRowData(test)
+                        }
                     } else{
                         console.log('prosas')
                     }
@@ -50,6 +73,54 @@ export const BaseCriteria: React.FC = () => {
             }) ()
         },[searchParams]
     )
+
+    let dataBasicCriteria: any[] = [];
+
+    const handleSetBasicCriteria:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        dataBasicCriteria.push(Boolean(rowData[0].crit1))
+        dataBasicCriteria.push(Boolean(rowData[0].crit2))
+        dataBasicCriteria.push(Boolean(rowData[0].crit3))
+        dataBasicCriteria.push(Boolean(rowData[0].crit4))
+        dataBasicCriteria.push(Boolean(rowData[0].crit5))
+        dataBasicCriteria.push(Boolean(rowData[0].crit6))
+        dataBasicCriteria.push(Boolean(rowData[0].crit7))
+        dataBasicCriteria.push(Boolean(rowData[0].crit8))
+        dataBasicCriteria.push(Boolean(rowData[0].crit9))
+        dataBasicCriteria.push(Boolean(rowData[0].crit10))
+
+        console.log(dataBasicCriteria)
+        const response = await fetch('http://127.0.0.1:8000/api/set_base_criteria',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "name": inputOne,
+                "var1": [
+                    dataBasicCriteria[0],
+                    dataBasicCriteria[1],
+                    dataBasicCriteria[2],
+                    dataBasicCriteria[3],
+                    dataBasicCriteria[4],
+                    dataBasicCriteria[5],
+                    dataBasicCriteria[6],
+                    dataBasicCriteria[7],
+                    dataBasicCriteria[8],
+                    dataBasicCriteria[9]
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+        } else{
+            console.log('prosas')
+        }
+    }
 
     const [range, setRange] = useState('1')
 
@@ -84,19 +155,13 @@ export const BaseCriteria: React.FC = () => {
         };
     }, []);
 
-    const [rowData, setRowData] = useState<any[]>(
-        [   {"crit1": false, "crit2": false,"crit3": true,
-            "crit4": false,"crit5": true,"crit6": false,"crit7": false,
-            "crit8": false,"crit9": true,"crit10": true} ]
-    );
-
 
     let criteriasNum: number = 10;
 
     function criteriasBase() {
         let criteriasBase: Array<boolean> = [false, false, true, false, true ,false, false , false, true, true];
 
-            criteriasBase[0] = rowData[0].crit1;
+        criteriasBase[0] = rowData[0].crit1;
         criteriasBase[1] = rowData[0].crit2;
         criteriasBase[2] = rowData[0].crit3;
         criteriasBase[3] = rowData[0].crit4;
@@ -196,8 +261,8 @@ export const BaseCriteria: React.FC = () => {
 
                     <div className="input-group mb-3 col p-1">
                         <span className="input-group-text">Название: </span>
-                        <input type="text" className="form-control" aria-label="Amount (to the nearest dollar)" />
-                        <button type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+                        <button onClick={handleSetBasicCriteria} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
                     </div>
                 </div>
 

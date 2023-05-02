@@ -14,6 +14,7 @@ import {WeightedSum} from "./components/WeightedSum";
 import {PairComparisonCriterias} from "./components/PairComparisonCriterias";
 import {Auth} from "./components/Auth";
 import {Method} from "./components/Method"
+import {Register} from "./components/Register"
 
 
 
@@ -35,6 +36,7 @@ function App() {
                         <Route path={'/nanson'} element = {<Nanson/>}/>
                         <Route path={'/weightedSum'} element = {<WeightedSum/>}/>
                         <Route path={'/auth'} element = {<Auth/>}/>
+                        <Route path={'/register'} element = {<Register/>}/>
                         <Route path={'/method'} element = {<Method/>}/>
                     </Routes>
                 </div>
