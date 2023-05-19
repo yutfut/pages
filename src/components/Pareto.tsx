@@ -466,12 +466,10 @@ function paretoCheckPrint (result: Array<boolean>)
 }
 
 function createRows(matrix: Array<Array<number>>, rowName: String){
-
     const newRows = [
         { Crits: rowName + ' 1', Var1: matrix[0][0], Var2: matrix[1][0], Var3: matrix[2][0]},
         { Crits: rowName + ' 2', Var1: matrix[0][1], Var2: matrix[1][1], Var3: matrix[2][1]},
         { Crits: rowName + ' 3', Var1: matrix[0][2], Var2: matrix[1][2], Var3: matrix[2][2]},
     ];
-
     return newRows;
 }
