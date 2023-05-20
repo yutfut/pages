@@ -78,14 +78,6 @@ export const Auth: React.FC = () => {
             <div className="mb-3">
                 <button onClick={Login} type="button" className="btn btn-primary" id="button-addon2">Войти</button>
             </div>
-
-            {/*<div className="mb-3">*/}
-            {/*    <button onClick={Register} type="button" className="btn btn-primary" id="button-addon2">Зарегестрироваться</button>*/}
-            {/*</div>*/}
-
-            {/*<div className="mb-3">*/}
-            {/*    <button onClick={Logout} type="button" className="btn btn-primary" id="button-addon2">Выйти</button>*/}
-            {/*</div>*/}
         </div>
     )
 };
