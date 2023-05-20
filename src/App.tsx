@@ -20,7 +20,8 @@ import {Register} from "./components/Register"
 
 function App() {
     return (
-        <div className="App">
+        // <div className="App">
+        <>
             <Navbar/>
             {/*<BrowserRouter>*/}
             {/*    <div style={{marginLeft: "50px", marginTop: "20px"}}>*/}
@@ -41,8 +42,8 @@ function App() {
                     </Routes>
                 {/*</div>*/}
             {/*</BrowserRouter>*/}
-
-        </div>
+        </>
+        // </div>
     );
 }
 
