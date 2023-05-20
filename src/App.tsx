@@ -22,8 +22,8 @@ function App() {
     return (
         <div className="App">
             <Navbar/>
-            <BrowserRouter>
-                <div style={{marginLeft: "50px", marginTop: "20px"}}>
+            {/*<BrowserRouter>*/}
+            {/*    <div style={{marginLeft: "50px", marginTop: "20px"}}>*/}
                     <Routes>
                         <Route path={'/'} element = {<Home/>}/>
                         <Route path={'/theory'} element = {<Theory/>}/>
@@ -39,8 +39,8 @@ function App() {
                         <Route path={'/register'} element = {<Register/>}/>
                         <Route path={'/method'} element = {<Method/>}/>
                     </Routes>
-                </div>
-            </BrowserRouter>
+                {/*</div>*/}
+            {/*</BrowserRouter>*/}
 
         </div>
     );
