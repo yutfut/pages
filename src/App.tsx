@@ -23,7 +23,7 @@ function App() {
             <BrowserRouter>
                 <div style={{marginLeft: "50px", marginTop: "20px"}}>
                     <Routes>
-                        <Route path={'yutfut.github.io/pages'} element = {<Home/>}/>
+                        <Route path={'/'} element = {<Home/>}/>
                         <Route path={'/theory'} element = {<Theory/>}/>
                         <Route path={'/pareto'} element = {<Pareto/>}/>
                         <Route path={'/baseCriteria'} element = {<BaseCriteria/>}/>
