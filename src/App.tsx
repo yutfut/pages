@@ -4,7 +4,6 @@ import {Route, Routes, BrowserRouter} from "react-router-dom";
 
 import {Theory} from "./pages/Theory";
 import {Home} from "./pages/Home";
-import {About} from "./pages/About";
 import {Pareto} from "./components/Pareto";
 import {BaseCriteria} from "./components/BaseCriteria";
 import {PointScore} from "./components/PointScore";
