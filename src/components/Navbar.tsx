@@ -63,7 +63,7 @@ export const Navbar = () => {
                             <a className="nav-link " aria-current="page" href="/pages">Главная</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link " href={"/pages/Theory"}>Теория</a>
+                            <a className="nav-link " href={"/pages/theory"}>Теория</a>
                         </li>
                         {
                             userData && (
