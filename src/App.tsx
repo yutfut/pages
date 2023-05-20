@@ -20,15 +20,13 @@ import {Register} from "./components/Register"
 
 function App() {
     return (
-        // <div className="App">
-        <>
+        <div className="App">
             <Navbar/>
-            {/*<BrowserRouter>*/}
-            {/*    <div style={{marginLeft: "50px", marginTop: "20px"}}>*/}
+            <BrowserRouter>
+                <div style={{marginLeft: "50px", marginTop: "20px"}}>
                     <Routes>
                         <Route path={'/'} element = {<Home/>}/>
                         <Route path={'/theory'} element = {<Theory/>}/>
-                        {/*<Route path={'/about'} element = {<About/>}/>*/}
                         <Route path={'/pareto'} element = {<Pareto/>}/>
                         <Route path={'/baseCriteria'} element = {<BaseCriteria/>}/>
                         <Route path={'/pointScore'} element = {<PointScore/>}/>
@@ -40,10 +38,9 @@ function App() {
                         <Route path={'/register'} element = {<Register/>}/>
                         <Route path={'/method'} element = {<Method/>}/>
                     </Routes>
-                {/*</div>*/}
-            {/*</BrowserRouter>*/}
-        </>
-        // </div>
+                </div>
+            </BrowserRouter>
+        </div>
     );
 }
 
