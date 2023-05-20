@@ -1,5 +1,3 @@
-'use strict';
-
 import React, {useState, useCallback, useMemo, useRef, MouseEventHandler, useEffect} from "react";
 import { useSearchParams } from "react-router-dom";
 import { AgGridReact } from 'ag-grid-react';
