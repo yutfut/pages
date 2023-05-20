@@ -22,8 +22,8 @@ function App() {
             <BrowserRouter>
                 <div style={{marginLeft: "50px", marginTop: "20px"}}>
                     <Routes>
-                        <Route path={'/'} element = {<Home/>}/>
-                        <Route path={'/theory'} element = {<Theory/>}/>
+                        <Route path={'/pages'} element = {<Home/>}/>
+                        <Route path={'/pages/theory'} element = {<Theory/>}/>
                         <Route path={'/pages/pareto'} element = {<Pareto/>}/>
                         <Route path={'/pages/baseCriteria'} element = {<BaseCriteria/>}/>
                         <Route path={'/pages/pointScore'} element = {<PointScore/>}/>
