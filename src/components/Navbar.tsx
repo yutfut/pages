@@ -60,10 +60,10 @@ export const Navbar = () => {
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0" style={{width: "100%"}}>
                         <span className="navbar-brand mb-0 h1">МГТУ</span>
                         <li className="nav-item">
-                            <a className="nav-link " aria-current="page" href="/">Главная</a>
+                            <a className="nav-link " aria-current="page" href="/pages">Главная</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link " href={"/Theory"}>Теория</a>
+                            <a className="nav-link " href={"/pages/Theory"}>Теория</a>
                         </li>
                         {
                             userData && (
