@@ -1,6 +1,6 @@
 import React from 'react';
 import {Navbar} from "./components/Navbar";
-import {Route, Routes, HashRouter} from "react-router-dom";
+import {Route, Routes, BrowserRouter} from "react-router-dom";
 
 import {Theory} from "./pages/Theory";
 import {Home} from "./pages/Home";
@@ -19,7 +19,7 @@ function App() {
     return (
         <div className="App">
             <Navbar/>
-            <HashRouter>
+            <BrowserRouter>
                 <div style={{marginLeft: "50px", marginTop: "20px"}}>
                     <Routes>
                         <Route path={'/'} element = {<Home/>}/>
@@ -36,7 +36,7 @@ function App() {
                         <Route path={'/method'} element = {<Method/>}/>
                     </Routes>
                 </div>
-            </HashRouter>
+            </BrowserRouter>
         </div>
     );
 }
