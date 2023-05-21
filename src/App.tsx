@@ -1,6 +1,6 @@
 import React from 'react';
 import {Navbar} from "./components/Navbar";
-import {Route, Routes, BrowserRouter} from "react-router-dom";
+import {Route, Routes, BrowserRouter, HashRouter} from "react-router-dom";
 
 import {Theory} from "./pages/Theory";
 import {Home} from "./pages/Home";
@@ -18,25 +18,28 @@ import {Register} from "./components/Register"
 function App() {
     return (
         <div className="App">
-            <Navbar/>
-            <Routes>
-                <Route path={'/'} element = {<Home/>}/>
-                <Route path={'/theory'} element = {<Theory/>}/>
-                <Route path={'/pareto'} element = {<Pareto/>}/>
-                <Route path={'/baseCriteria'} element = {<BaseCriteria/>}/>
-                <Route path={'/pointScore'} element = {<PointScore/>}/>
-                <Route path={'/pairComparisonCriteria'} element = {<PairComparisonCriterias/>}/>
-                <Route path={'/borda'} element = {<Borda/>}/>
-                <Route path={'/nanson'} element = {<Nanson/>}/>
-                <Route path={'/weightedSum'} element = {<WeightedSum/>}/>
-                <Route path={'/auth'} element = {<Auth/>}/>
-                <Route path={'/register'} element = {<Register/>}/>
-                <Route path={'/method'} element = {<Method/>}/>
-            </Routes>
+            <HashRouter>
+                <Navbar/>
+                <Routes>
+                    <Route path={'/'} element = {<Home/>}/>
+                    <Route path={'/theory'} element = {<Theory/>}/>
+                    <Route path={'/pareto'} element = {<Pareto/>}/>
+                    <Route path={'/baseCriteria'} element = {<BaseCriteria/>}/>
+                    <Route path={'/pointScore'} element = {<PointScore/>}/>
+                    <Route path={'/pairComparisonCriteria'} element = {<PairComparisonCriterias/>}/>
+                    <Route path={'/borda'} element = {<Borda/>}/>
+                    <Route path={'/nanson'} element = {<Nanson/>}/>
+                    <Route path={'/weightedSum'} element = {<WeightedSum/>}/>
+                    <Route path={'/auth'} element = {<Auth/>}/>
+                    <Route path={'/register'} element = {<Register/>}/>
+                    <Route path={'/method'} element = {<Method/>}/>
+                </Routes>
+            </HashRouter>
         </div>
     );
 }
 export default App;
+
 // function App() {
 //     return (
 //         <div className="App">
