@@ -5,25 +5,25 @@ export const Hub = ( ) => (
 
     <ul className="nav flex-column alert alert-primary" style={{maxWidth: "38rem"}}>
         <li className="nav-item">
-            <a className="nav-link active" aria-current="page" href="/pages/pareto">Парето</a>
+            <a className="nav-link active" aria-current="page" href="/pareto">Парето</a>
         </li>
         <li className="nav-item">
-            <a className="nav-link" href="/pages/baseCriteria">Базовый критерий</a>
+            <a className="nav-link" href="/baseCriteria">Базовый критерий</a>
         </li>
         <li className="nav-item">
-            <a className="nav-link" href="/pages/pointScore">Балльный критерий</a>
+            <a className="nav-link" href="/pointScore">Балльный критерий</a>
         </li>
         <li className="nav-item">
-            <a className="nav-link" href="/pages/pairComparisonCriteria">Парное сравнение</a>
+            <a className="nav-link" href="/pairComparisonCriteria">Парное сравнение</a>
         </li>
         <li className="nav-item">
-            <a className="nav-link" href="/pages/borda">Борда</a>
+            <a className="nav-link" href="/borda">Борда</a>
         </li>
         <li className="nav-item">
-            <a className="nav-link" href="/pages/nanson">Нансон</a>
+            <a className="nav-link" href="/nanson">Нансон</a>
         </li>
         <li className="nav-item">
-            <a className="nav-link" href="/pages/weightedSum">Взвешенная сумма</a>
+            <a className="nav-link" href="/weightedSum">Взвешенная сумма</a>
         </li>
     </ul>
 
