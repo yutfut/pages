@@ -42,28 +42,3 @@ function App() {
 }
 export default App;
 
-// function App() {
-//     return (
-//         <div className="App">
-//             <Navbar/>
-//             <BrowserRouter>
-//                 <div style={{marginLeft: "50px", marginTop: "20px"}}>
-//                     <Routes>
-//                         <Route path={'/'} element = {<Home/>}/>
-//                         <Route path={'/theory'} element = {<Theory/>}/>
-//                         <Route path={'/pareto'} element = {<Pareto/>}/>
-//                         <Route path={'/baseCriteria'} element = {<BaseCriteria/>}/>
-//                         <Route path={'/pointScore'} element = {<PointScore/>}/>
-//                         <Route path={'/pairComparisonCriteria'} element = {<PairComparisonCriterias/>}/>
-//                         <Route path={'/borda'} element = {<Borda/>}/>
-//                         <Route path={'/nanson'} element = {<Nanson/>}/>
-//                         <Route path={'/weightedSum'} element = {<WeightedSum/>}/>
-//                         <Route path={'/auth'} element = {<Auth/>}/>
-//                         <Route path={'/register'} element = {<Register/>}/>
-//                         <Route path={'/method'} element = {<Method/>}/>
-//                     </Routes>
-//                 </div>
-//             </BrowserRouter>
-//         </div>
-//     );
-// }

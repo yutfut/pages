@@ -1,19 +1,14 @@
 import React, {useState, useCallback, useMemo, useRef, MouseEventHandler, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 import { useSearchParams } from "react-router-dom";
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import {ColDef} from 'ag-grid-community';
 
-import {
-    ColDef,
-    ColGroupDef,
-    Grid,
-    GridOptions,
-    GridReadyEvent,
-    ValueGetterParams
-} from 'ag-grid-community';
+import {UserDataI} from "./Navbar";
 
 export interface ParetoData {
     Id:         number;
@@ -26,6 +21,45 @@ export interface ParetoData {
 export type ParetoDataI = ParetoData[]|null
 
 export const Pareto: React.FC = () => {
+    const navigate = useNavigate();
+
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [name, setName] = useState(true);
+
+    useEffect(() => {
+        if (shouldRedirect) {
+            navigate("/method");
+        }
+    }, );
+
+    const [userData, setUserDataData] = useState<UserDataI>(null)
+
+    useEffect(() => {
+            if (userData) {
+                return
+            }
+            (async ()=> {
+
+                const response = await fetch(`https://study-ai.online/api/get_user`,{
+                    method:'GET',
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8"
+                    }
+                })
+                if(response.ok){
+                    console.log('success')
+                    const responseBody = await response.json();
+                    setUserDataData(responseBody)
+                } else{
+                    console.log('error')
+                }
+
+            }) ()
+        },
+    )
+
+    const [dataParetoId, setDataParetoId] = useState(0)
 
     const [paretoData, setParetoData] = useState<ParetoDataI>(null)
     const [searchParams] = useSearchParams();
@@ -43,16 +77,16 @@ export const Pareto: React.FC = () => {
     },[rowData])
 
     useEffect(() => {
-        if (paretoData) {
-            return
-        }
+            if (paretoData) {
+                return
+            }
             (async ()=> {
 
                 if (searchParams.get("id") === null) {
                     console.log("doesn't have params")
                 } else {
                     console.log(searchParams.get("id"))
-                    const response = await fetch(`http://127.0.0.1:8000/api/get_pareto?id=${searchParams.get("id")}`,{
+                    const response = await fetch(`https://study-ai.online/api/get_pareto?id=${searchParams.get("id")}`,{
                         method:'GET',
                         credentials: "include",
                         headers: {
@@ -60,9 +94,11 @@ export const Pareto: React.FC = () => {
                         }
                     })
                     if(response.ok){
-                        console.log('success')
+                        console.log('get success')
                         const responseBody = await response.json();
                         setParetoData(responseBody)
+                        setDataParetoId(responseBody.id)
+                        console.log("methodId: ", dataParetoId.valueOf())
                         console.log(responseBody)
                         if (responseBody.var1 && responseBody.var2 && responseBody.var3 && responseBody.name) {
                             setInputOne(responseBody.name)
@@ -71,30 +107,38 @@ export const Pareto: React.FC = () => {
                                     {"crits":"Критерий 1", "var1": responseBody.var1[0],"var2": responseBody.var1[1], "var3": responseBody.var1[2]},
                                     {"crits":"Критерий 2", "var1": responseBody.var2[0],"var2": responseBody.var2[1], "var3": responseBody.var2[2]},
                                     {"crits":"Критерий 3", "var1": responseBody.var3[0],"var2": responseBody.var3[1], "var3": responseBody.var3[2]}]
-                                console.log('test222',test)
-                                setRowData(test)
+                                console.log('test222',test);
+                                setRowData(test);
+                                return console.log(item, i);
                             })
                         }
                     } else{
-                        console.log('prosas')
+                        console.log('get error')
                     }
                 }
             }) ()
-        },[searchParams]
+        },//[searchParams]
     )
 
     let dataPareto: any[] = [];
 
-
     const handleSetPareto:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
         for (let i=0; i<3; i++) {
             dataPareto.push(Number(rowData[i].var1))
             dataPareto.push(Number(rowData[i].var2))
             dataPareto.push(Number(rowData[i].var3))
         }
         console.log(dataPareto)
-        const response = await fetch('http://127.0.0.1:8000/api/set_pareto',{
+        const response = await fetch('https://study-ai.online/api/set_pareto',{
             method:'POST',
             credentials: "include",
             headers:{
@@ -108,43 +152,80 @@ export const Pareto: React.FC = () => {
             })
         })
         if(response.ok){
-            console.log('success')
+            console.log('set success')
             const responseBody = await response.json();
             console.log(responseBody)
+            setShouldRedirect(true)
         } else{
-            console.log('prosas')
+            console.log('set error')
         }
     }
 
     const handleDeletePareto:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
-        let id = 0;
-        paretoData?.map((item: ParetoData, i:number)=>{
-            console.log(item.Id)
-            id = item.Id
-        })
-        const response = await fetch('http://127.0.0.1:8000/api/delete_pareto',{
+        console.log("methodId: ", dataParetoId)
+        const response = await fetch('https://study-ai.online/api/delete_pareto',{
             method:'POST',
             credentials: "include",
             headers:{
                 "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
-                "id": id,
+                "id": dataParetoId,
             })
         })
         if(response.ok){
-            console.log('success')
+            console.log('delete success')
+            setShouldRedirect(true)
+        } else{
+            console.log('delete error')
+        }
+    }
+
+    const handleUpdatePareto:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
+        for (let i=0; i<3; i++) {
+            dataPareto.push(Number(rowData[i].var1))
+            dataPareto.push(Number(rowData[i].var2))
+            dataPareto.push(Number(rowData[i].var3))
+        }
+        console.log(dataPareto)
+        console.log("methodId: ", dataParetoId)
+        const response = await fetch('https://study-ai.online/api/update_pareto',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataParetoId,
+                "name": inputOne,
+                "var1": [dataPareto[0],dataPareto[1],dataPareto[2]],
+                "var2": [dataPareto[3],dataPareto[4],dataPareto[5]],
+                "var3": [dataPareto[6],dataPareto[7],dataPareto[8]]
+            })
+        })
+        if(response.ok){
+            console.log('update success')
             const responseBody = await response.json();
             console.log(responseBody)
+            setShouldRedirect(true)
         } else{
-            console.log('prosas')
+            console.log('update error')
         }
     }
 
     let critsVars: Array<Array<number>> = [[3, 2, 1], [1, 2, 3], [3, 2, 3]];
 
-    const [critsVarsCols, setCritsVarsCols] = useState<ColDef[]>([
+    const [critsVarsCols] = useState<ColDef[]>([
         { field: 'Crits', headerName: '' },
         { field: 'Var1', headerName: 'Вариант 1', editable: false},
         { field: 'Var2', headerName: 'Вариант 2', editable: false},
@@ -152,10 +233,12 @@ export const Pareto: React.FC = () => {
     ]);
 
     const critsVarsRows = [
-        { crits: 'Критерий 1', var1: critsVars[0][0], var2: critsVars[1][0], var3: critsVars[2][0]},
+        { crits: "Критерий 1", var1: critsVars[0][0], var2: critsVars[1][0], var3: critsVars[2][0]},
         { crits: 'Критерий 2', var1: critsVars[0][1], var2: critsVars[1][1], var3: critsVars[2][1]},
         { crits: 'Критерий 3', var1: critsVars[0][2], var2: critsVars[1][2], var3: critsVars[2][2]},
     ];
+
+    console.log(critsVarsRows)
 
 
     const gridRef = useRef<AgGridReact>(null);
@@ -169,7 +252,7 @@ export const Pareto: React.FC = () => {
     //         {"crits":"Критерий 3", "var1": 0,"var2": 0, "var3": 0}]
     // );
 
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    const [columnDefs] = useState<ColDef[]>([
         { field: 'crits', headerName: "Критерии", editable: false },
         { field: 'var1', headerName: "Вариант 1", editable: true  },
         { field: 'var2', headerName: "Вариант 2", editable: true  },
@@ -199,6 +282,8 @@ export const Pareto: React.FC = () => {
     const onBtExport = useCallback(() => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
+
+    console.log(onBtExport)
 
     //количество отображаемых шагов
     const [range, setRange] = useState('1');
@@ -246,6 +331,14 @@ export const Pareto: React.FC = () => {
                     </div>
                 </div>
 
+                {
+                    !name && (
+                        <div>
+                            <h5 style={{color: "red"}}>Дайте название методу</h5>
+                        </div>
+                    )
+                }
+
                 <div className="alert alert-dark Che" style={{display: "flex"}}>
                     <div>
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
@@ -257,145 +350,147 @@ export const Pareto: React.FC = () => {
                                id="customRange"/>
                         <strong>{range}</strong>
                     </div>
+                    {
+                        userData && (
+                            <div className="input-group mb-3 p-1" style={{marginLeft: "auto", width: "900px"}}>
+                                {
+                                    paretoData && (
+                                        <button onClick={handleDeletePareto} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>
+                                    )
+                                }
 
-                    <div className="input-group mb-3 p-1" style={{marginLeft: "auto", width: "900px"}}>
-                        {/*{*/}
-                        {/*    paretoData && (*/}
-                        {/*        <button onClick={handleDeletePareto} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>*/}
-                        {/*    )*/}
-                        {/*}*/}
-                        <button onClick={handleDeletePareto} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>
-                        <span className="input-group-text">Название: </span>
-                        {/*aria-label="Amount (to the nearest dollar)"*/}
-                        <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
-                        {
-                            paretoData && (
-                                <button type="button" className="btn btn-primary" id="button-addon2">Обновить</button>
-                            )
-                        }
-                        <button onClick={handleSetPareto} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
-                    </div>
+                                <span className="input-group-text">Название: </span>
+                                <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+
+                                {
+                                    paretoData && (
+                                        <button onClick={handleUpdatePareto} type="button" className="btn btn-primary" id="button-addon2">Обновить</button>
+                                    )
+                                }
+
+                                <button onClick={handleSetPareto} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                            </div>
+                        )
+                    }
                 </div>
 
-            <div className="show" >
-                <h3>Значения критериев для вариантов:</h3>
-            </div>
-
-            <div style={{height: "196px"}}>
-                <div style={containerStyle}>
-
-                    <div style={gridStyle} className="ag-theme-alpine">
-                        <AgGridReact
-                            ref={gridRef}
-                            onCellValueChanged={(val)=>{
-                                setRowData((old)=>{
-                                    return old.map(el=>{
-                                        if(val?.data && el.crits === val?.data?.crits){
-                                            return val.data
-                                        }
-                                        return el
-                                    })
-                                })
-                            }}
-                            rowData={rowData}
-                            columnDefs={columnDefs}
-                            defaultColDef={defaultColDef}
-                        />
-                    </div>
+                <div className="show" >
+                    <h3>Значения критериев для вариантов:</h3>
                 </div>
-            </div>
 
-
-            <div className={(range >= "2") ? " show" : " collapse"}>
-                <h3>Матрица сравнения вариантов:</h3>
                 <div style={{height: "196px"}}>
                     <div style={containerStyle}>
                         <div style={gridStyle} className="ag-theme-alpine">
                             <AgGridReact
                                 ref={gridRef}
-                                rowData={createRows(compareVars(getRows()), "Вариант")}
-                                columnDefs={critsVarsCols}
+                                // onCellValueChanged={(val)=>{
+                                //     setRowData((old)=>{
+                                //         return old.map(el=>{
+                                //             if(val?.data && el.crits === val?.data?.crits){
+                                //                 // return val.data
+                                //                 return el
+                                //             }
+                                //             return el
+                                //         })
+                                //     })
+                                // }}
+                                rowData={rowData}
+                                columnDefs={columnDefs}
                                 defaultColDef={defaultColDef}
                             />
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div className={(range >= "3") ? " show" : " collapse"} >
-               <h3>Вывод об оптимальности вариантов:</h3>
-                <div>
-                    {paretoCheckPrint(paretoCheck(compareVars(getRows())))[0]}
-                </div>
-                <div>
-                    {paretoCheckPrint(paretoCheck(compareVars(getRows())))[1]}
-                </div>
-                <div>
-                    {paretoCheckPrint(paretoCheck(compareVars(getRows())))[2]}
-                </div>
 
 
-            </div>
-                {/*<button className="btn btn-primary" onClick={onBtExport}>*/}
-                {/*    Export to Excel*/}
-                {/*</button>*/}
+                <div className={(range >= "2") ? " show" : " collapse"}>
+                    <h3>Матрица сравнения вариантов:</h3>
+                    <div style={{height: "196px"}}>
+                        <div style={containerStyle}>
+                            <div style={gridStyle} className="ag-theme-alpine">
+                                <AgGridReact
+                                    ref={gridRef}
+                                    rowData={createRows(compareVars(getRows()), "Вариант")}
+                                    columnDefs={critsVarsCols}
+                                    defaultColDef={defaultColDef}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className={(range >= "3") ? " show" : " collapse"} >
+                    <h3>Вывод об оптимальности вариантов:</h3>
+                    <div>
+                        {paretoCheckPrint(paretoCheck(compareVars(getRows())))[0]}
+                    </div>
+                    <div>
+                        {paretoCheckPrint(paretoCheck(compareVars(getRows())))[1]}
+                    </div>
+                    <div>
+                        {paretoCheckPrint(paretoCheck(compareVars(getRows())))[2]}
+                    </div>
+
+
+                </div>
+                <button className="btn btn-primary" onClick={onBtExport}>
+                    Export to Excel
+                </button>
                 <div className="p-4"></div>
             </div>
-            {/*</div>*/}
         </div>
     )
 }
 
 
 
-function rowsToMatrix(rows: any){
-    let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+// function rowsToMatrix(rows: any){
+//     let matrix: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
+//
+//     matrix[0][0] = rows[0].Var1;
+//     matrix[0][1] = rows[1].Var1;
+//     matrix[0][2] = rows[2].Var1;
+//
+//     matrix[1][0] = rows[0].Var2;
+//     matrix[1][1] = rows[1].Var2;
+//     matrix[1][2] = rows[2].Var2;
+//
+//     matrix[2][0] = rows[0].Var3;
+//     matrix[2][1] = rows[1].Var3;
+//     matrix[2][2] = rows[2].Var3;
+//
+//     return matrix;
+// }
 
-    matrix[0][0] = rows[0].Var1;
-    matrix[0][1] = rows[1].Var1;
-    matrix[0][2] = rows[2].Var1;
+// function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
+// {
+//     let printedMatrix: string = "";
+//
+//     for (let i = 0; i < matrix.length; i++){
+//         printedMatrix = printedMatrix + "\n | ";
+//         for (let j = 0; j < matrix[i].length; j++){
+//             printedMatrix = printedMatrix + matrix[i][j] + " ";
+//         }
+//     }
+//
+//     return printedMatrix;
+// }
 
-    matrix[1][0] = rows[0].Var2;
-    matrix[1][1] = rows[1].Var2;
-    matrix[1][2] = rows[2].Var2;
-
-    matrix[2][0] = rows[0].Var3;
-    matrix[2][1] = rows[1].Var3;
-    matrix[2][2] = rows[2].Var3;
-
-    return matrix;
-}
-
-function printmatrix(matrix: Array<Array<number>>) //приводим всю матрицу в строку
-{
-    let printedMatrix: string = "";
-
-    for (let i = 0; i < matrix.length; i++){
-        printedMatrix = printedMatrix + "\n | ";
-        for (let j = 0; j < matrix[i].length; j++){
-            printedMatrix = printedMatrix + matrix[i][j] + " ";
-        }
-    }
-
-    return printedMatrix;
-}
-
-function printBoolArray(boolArray: Array<Boolean>) //приводим в строку
-{
-    let printArray: String = "";
-    for (let i = 0; i < 3; i++)
-    {
-        if (boolArray[i]) {
-            printArray = printArray + "1 ";
-        }
-        else
-        {
-            printArray = printArray + "0 ";
-        }
-    }
-    return printArray;
-}
-
+// function printBoolArray(boolArray: Array<Boolean>) //приводим в строку
+// {
+//     let printArray: String = "";
+//     for (let i = 0; i < 3; i++)
+//     {
+//         if (boolArray[i]) {
+//             printArray = printArray + "1 ";
+//         }
+//         else
+//         {
+//             printArray = printArray + "0 ";
+//         }
+//     }
+//     return printArray;
+// }
 
 function compareVars (matrix: Array<Array<number>>) {
 
@@ -405,7 +500,7 @@ function compareVars (matrix: Array<Array<number>>) {
     {
         for(let k = 0; k < 3; k++) //перебираем варианты, с которыми сравниваем
         {
-            if (i == k) //если сравниваем вариант с самим собой
+            if (i === k) //если сравниваем вариант с самим собой
             {
                 varsVars[i][k] = 0; //то там ноль
             }
@@ -424,7 +519,6 @@ function compareVars (matrix: Array<Array<number>>) {
     }
     return varsVars
 }
-
 
 function paretoCheck (matrix: Array<Array<number>>)
 {
@@ -464,10 +558,12 @@ function paretoCheckPrint (result: Array<boolean>)
 }
 
 function createRows(matrix: Array<Array<number>>, rowName: String){
+
     const newRows = [
         { Crits: rowName + ' 1', Var1: matrix[0][0], Var2: matrix[1][0], Var3: matrix[2][0]},
         { Crits: rowName + ' 2', Var1: matrix[0][1], Var2: matrix[1][1], Var3: matrix[2][1]},
         { Crits: rowName + ' 3', Var1: matrix[0][2], Var2: matrix[1][2], Var3: matrix[2][2]},
     ];
+
     return newRows;
 }
