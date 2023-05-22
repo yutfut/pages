@@ -1,10 +1,10 @@
 import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Hub} from "./Hub";
+import { useNavigate } from "react-router-dom";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
-import {ParetoData, ParetoDataI} from "./Pareto";
 import {useSearchParams} from "react-router-dom";
+import {UserDataI} from "./Navbar";
 
 export interface PairComparisonCriteriaData {
     Id:         number;
@@ -24,6 +24,45 @@ export interface PairComparisonCriteriaData {
 export type PairComparisonCriteriaDataI = PairComparisonCriteriaData[]|null
 
 export const PairComparisonCriterias: React.FC = () => {
+    const navigate = useNavigate();
+
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [name, setName] = useState(true);
+
+    useEffect(() => {
+        if (shouldRedirect) {
+            navigate("/method");
+        }
+    }, );
+
+    const [userData, setUserDataData] = useState<UserDataI>(null)
+
+    useEffect(() => {
+            if (userData) {
+                return
+            }
+            (async ()=> {
+
+                const response = await fetch(`https://study-ai.online/api/get_user`,{
+                    method:'GET',
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8"
+                    }
+                })
+                if(response.ok){
+                    console.log('success')
+                    const responseBody = await response.json();
+                    setUserDataData(responseBody)
+                } else{
+                    console.log('error')
+                }
+
+            }) ()
+        },
+    )
+
+    const [dataPairComparisonCriteriaId, setDataPairComparisonCriteriaId] = useState(0)
 
     const [PairComparisonCriteriaData, setPairComparisonCriteriaData] = useState<PairComparisonCriteriaDataI>(null)
     const [searchParams] = useSearchParams();
@@ -54,7 +93,7 @@ export const PairComparisonCriterias: React.FC = () => {
                     console.log("doesn't have params")
                 } else {
                     console.log(searchParams.get("id"))
-                    const response = await fetch(`http://127.0.0.1:8000/api/get_pair_comparison_criteria?id=${searchParams.get("id")}`,{
+                    const response = await fetch(`https://study-ai.online/api/get_pair_comparison_criteria?id=${searchParams.get("id")}`,{
                         method:'GET',
                         credentials: "include",
                         headers: {
@@ -64,6 +103,7 @@ export const PairComparisonCriterias: React.FC = () => {
                     if(response.ok){
                         console.log('success')
                         const responseBody = await response.json();
+                        setDataPairComparisonCriteriaId(responseBody.id)
                         setPairComparisonCriteriaData(responseBody)
                         console.log(responseBody)
                         if (
@@ -207,17 +247,24 @@ export const PairComparisonCriterias: React.FC = () => {
                             setRowData(test)
                         }
                     } else{
-                        console.log('prosas')
+                        console.log('error')
                     }
                 }
             }) ()
-        },[searchParams]
+        },//[searchParams]
     )
 
     let dataPairComparisonCriteria: any[] = [];
 
     const handleSetPairComparisonCriteria:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
 
         for (let i = 0; i < 10; i++) {
             dataPairComparisonCriteria.push(Number(rowData[i].crit1))
@@ -234,7 +281,7 @@ export const PairComparisonCriterias: React.FC = () => {
 
         console.log(dataPairComparisonCriteria)
 
-        const response = await fetch('http://127.0.0.1:8000/api/set_pair_comparison_criteria',{
+        const response = await fetch('https://study-ai.online/api/set_pair_comparison_criteria',{
             method:'POST',
             credentials: "include",
             headers:{
@@ -368,22 +415,212 @@ export const PairComparisonCriterias: React.FC = () => {
             console.log('success')
             const responseBody = await response.json();
             console.log(responseBody)
+            setShouldRedirect(true)
         } else{
-            console.log('prosas')
+            console.log('error')
+        }
+    }
+
+    const handleDeletePairComparisonCriteria:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+        console.log("methodId: ", dataPairComparisonCriteriaId)
+        const response = await fetch('https://study-ai.online/api/delete_pair_comparison_criteria',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataPairComparisonCriteriaId,
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
+        }
+    }
+
+    const handleUpdatePairComparisonCriteria:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
+        for (let i = 0; i < 10; i++) {
+            dataPairComparisonCriteria.push(Number(rowData[i].crit1))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit2))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit3))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit4))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit5))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit6))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit7))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit8))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit9))
+            dataPairComparisonCriteria.push(Number(rowData[i].crit10))
+        }
+
+        console.log(dataPairComparisonCriteria)
+
+        const response = await fetch('https://study-ai.online/api/update_pair_comparison_criteria',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataPairComparisonCriteriaId,
+                "name": inputOne,
+                "var1": [
+                    dataPairComparisonCriteria[0],
+                    dataPairComparisonCriteria[1],
+                    dataPairComparisonCriteria[2],
+                    dataPairComparisonCriteria[3],
+                    dataPairComparisonCriteria[4],
+                    dataPairComparisonCriteria[5],
+                    dataPairComparisonCriteria[6],
+                    dataPairComparisonCriteria[7],
+                    dataPairComparisonCriteria[8],
+                    dataPairComparisonCriteria[9]
+                ],
+                "var2": [
+                    dataPairComparisonCriteria[10],
+                    dataPairComparisonCriteria[11],
+                    dataPairComparisonCriteria[12],
+                    dataPairComparisonCriteria[13],
+                    dataPairComparisonCriteria[14],
+                    dataPairComparisonCriteria[15],
+                    dataPairComparisonCriteria[16],
+                    dataPairComparisonCriteria[17],
+                    dataPairComparisonCriteria[18],
+                    dataPairComparisonCriteria[19]
+                ],
+                "var3": [
+                    dataPairComparisonCriteria[20],
+                    dataPairComparisonCriteria[21],
+                    dataPairComparisonCriteria[22],
+                    dataPairComparisonCriteria[23],
+                    dataPairComparisonCriteria[24],
+                    dataPairComparisonCriteria[25],
+                    dataPairComparisonCriteria[26],
+                    dataPairComparisonCriteria[27],
+                    dataPairComparisonCriteria[28],
+                    dataPairComparisonCriteria[29]
+                ],
+                "var4": [
+                    dataPairComparisonCriteria[30],
+                    dataPairComparisonCriteria[31],
+                    dataPairComparisonCriteria[32],
+                    dataPairComparisonCriteria[33],
+                    dataPairComparisonCriteria[34],
+                    dataPairComparisonCriteria[35],
+                    dataPairComparisonCriteria[36],
+                    dataPairComparisonCriteria[37],
+                    dataPairComparisonCriteria[38],
+                    dataPairComparisonCriteria[39]
+                ],
+                "var5": [
+                    dataPairComparisonCriteria[40],
+                    dataPairComparisonCriteria[41],
+                    dataPairComparisonCriteria[42],
+                    dataPairComparisonCriteria[43],
+                    dataPairComparisonCriteria[44],
+                    dataPairComparisonCriteria[45],
+                    dataPairComparisonCriteria[46],
+                    dataPairComparisonCriteria[47],
+                    dataPairComparisonCriteria[48],
+                    dataPairComparisonCriteria[49]
+                ],
+                "var6": [
+                    dataPairComparisonCriteria[50],
+                    dataPairComparisonCriteria[51],
+                    dataPairComparisonCriteria[52],
+                    dataPairComparisonCriteria[53],
+                    dataPairComparisonCriteria[54],
+                    dataPairComparisonCriteria[55],
+                    dataPairComparisonCriteria[56],
+                    dataPairComparisonCriteria[57],
+                    dataPairComparisonCriteria[58],
+                    dataPairComparisonCriteria[59]
+                ],
+                "var7": [
+                    dataPairComparisonCriteria[60],
+                    dataPairComparisonCriteria[61],
+                    dataPairComparisonCriteria[62],
+                    dataPairComparisonCriteria[63],
+                    dataPairComparisonCriteria[64],
+                    dataPairComparisonCriteria[65],
+                    dataPairComparisonCriteria[66],
+                    dataPairComparisonCriteria[67],
+                    dataPairComparisonCriteria[68],
+                    dataPairComparisonCriteria[69]
+                ],
+                "var8": [
+                    dataPairComparisonCriteria[70],
+                    dataPairComparisonCriteria[71],
+                    dataPairComparisonCriteria[72],
+                    dataPairComparisonCriteria[73],
+                    dataPairComparisonCriteria[74],
+                    dataPairComparisonCriteria[75],
+                    dataPairComparisonCriteria[76],
+                    dataPairComparisonCriteria[77],
+                    dataPairComparisonCriteria[78],
+                    dataPairComparisonCriteria[79]
+                ],
+                "var9": [
+                    dataPairComparisonCriteria[80],
+                    dataPairComparisonCriteria[81],
+                    dataPairComparisonCriteria[82],
+                    dataPairComparisonCriteria[83],
+                    dataPairComparisonCriteria[84],
+                    dataPairComparisonCriteria[85],
+                    dataPairComparisonCriteria[86],
+                    dataPairComparisonCriteria[87],
+                    dataPairComparisonCriteria[88],
+                    dataPairComparisonCriteria[89]
+                ],
+                "var10": [
+                    dataPairComparisonCriteria[90],
+                    dataPairComparisonCriteria[91],
+                    dataPairComparisonCriteria[92],
+                    dataPairComparisonCriteria[93],
+                    dataPairComparisonCriteria[94],
+                    dataPairComparisonCriteria[95],
+                    dataPairComparisonCriteria[96],
+                    dataPairComparisonCriteria[97],
+                    dataPairComparisonCriteria[98],
+                    dataPairComparisonCriteria[99]
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
         }
     }
 
     const [range, setRange] = useState('1');
 
     const gridRef = useRef<AgGridReact>(null);
-    const containerStyle = useMemo(() => ({ width: '128%', height: '98%' }), []);
-    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
+    const containerStyle = useMemo(() => ({ width: '98%', height: '100%' }), []);
+    const gridStyle = useMemo(() => ({ height: '98%', width: '100%' }), []);
 
     const onBtExport = useCallback(() => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
 
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    console.log(onBtExport)
+
+    const [columnDefs] = useState<ColDef[]>([
         { field: 'crit1', headerName: "Критерий 1" },
         { field: 'crit2', headerName: "Критерий 2" },
         { field: 'crit3', headerName: "Критерий 3" },
@@ -403,7 +640,7 @@ export const PairComparisonCriterias: React.FC = () => {
         };
     }, []);
 
-    let criteriasNum: number = 10;
+    // let criteriasNum: number = 10;
 
     function criteriasComparison()
     {
@@ -473,7 +710,7 @@ export const PairComparisonCriterias: React.FC = () => {
             'crit8': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[7],
             'crit9': countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[8],
             'crit10':countFinalPoints(countCriteriasPoints(criteriasComparison()),getPointWeight(countSumPoints(countCriteriasPoints(criteriasComparison()))))[9]}
-];
+    ];
     const [selected, setSelected] = useState(null);
 
     const toggle = (i: any) =>
@@ -520,6 +757,14 @@ export const PairComparisonCriterias: React.FC = () => {
                     </div>
                 </div>
 
+                {
+                    !name && (
+                        <div>
+                            <h5 style={{color: "red"}}>Дайте название методу</h5>
+                        </div>
+                    )
+                }
+
                 <div className="alert alert-dark Che row">
                     <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
@@ -535,12 +780,28 @@ export const PairComparisonCriterias: React.FC = () => {
                                id="customRange"/>
                         <strong>{range}</strong>
                     </div>
+                    {
+                        userData && (
+                            <div className="input-group mb-3 p-1" style={{marginLeft: "auto", width: "900px"}}>
+                                {
+                                    PairComparisonCriteriaData && (
+                                        <button onClick={handleDeletePairComparisonCriteria} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>
+                                    )
+                                }
 
-                    <div className="input-group mb-3 col p-1">
-                        <span className="input-group-text">Название: </span>
-                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
-                        <button onClick={handleSetPairComparisonCriteria} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
-                    </div>
+                                <span className="input-group-text">Название: </span>
+                                <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+
+                                {
+                                    PairComparisonCriteriaData && (
+                                        <button onClick={handleUpdatePairComparisonCriteria} type="button" className="btn btn-primary" id="button-addon2">Обновить</button>
+                                    )
+                                }
+
+                                <button onClick={handleSetPairComparisonCriteria} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                            </div>
+                        )
+                    }
                 </div>
 
                 <h3>таблица с матрицей сравнения</h3>

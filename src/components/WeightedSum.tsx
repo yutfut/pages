@@ -1,8 +1,10 @@
 import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
 import {useSearchParams} from "react-router-dom";
+import {UserDataI} from "./Navbar";
 
 export interface WeightedSumData {
     Id:         number;
@@ -17,6 +19,45 @@ export interface WeightedSumData {
 export type WeightedSumDataI = WeightedSumData[]|null
 
 export const WeightedSum: React.FC = () => {
+    const navigate = useNavigate();
+
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [name, setName] = useState(true);
+
+    useEffect(() => {
+        if (shouldRedirect) {
+            navigate("/method");
+        }
+    }, );
+
+    const [userData, setUserDataData] = useState<UserDataI>(null)
+
+    useEffect(() => {
+            if (userData) {
+                return
+            }
+            (async ()=> {
+
+                const response = await fetch(`https://study-ai.online/api/get_user`,{
+                    method:'GET',
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8"
+                    }
+                })
+                if(response.ok){
+                    console.log('success')
+                    const responseBody = await response.json();
+                    setUserDataData(responseBody)
+                } else{
+                    console.log('error')
+                }
+
+            }) ()
+        },
+    )
+
+    const [dataWeightedSumId, setDataWeightedSumId] = useState(0)
 
     const [weightedSumData, setWeightedSumData] = useState<WeightedSumDataI>(null)
     const [searchParams] = useSearchParams();
@@ -48,7 +89,7 @@ export const WeightedSum: React.FC = () => {
                     console.log("doesn't have params")
                 } else {
                     console.log(searchParams.get("id"))
-                    const response = await fetch(`http://127.0.0.1:8000/api/get_weighted_sum?id=${searchParams.get("id")}`,{
+                    const response = await fetch(`https://study-ai.online/api/get_weighted_sum?id=${searchParams.get("id")}`,{
                         method:'GET',
                         credentials: "include",
                         headers: {
@@ -58,6 +99,7 @@ export const WeightedSum: React.FC = () => {
                     if(response.ok){
                         console.log('success')
                         const responseBody = await response.json();
+                        setDataWeightedSumId(responseBody.id)
                         setWeightedSumData(responseBody)
                         console.log(responseBody)
 
@@ -89,11 +131,11 @@ export const WeightedSum: React.FC = () => {
                         }
 
                     } else{
-                        console.log('prosas')
+                        console.log('error')
                     }
                 }
             }) ()
-        },[searchParams]
+        },//[searchParams]
     )
 
     let dataWeightedSumVar1: any[] = [];
@@ -104,6 +146,13 @@ export const WeightedSum: React.FC = () => {
 
     const handlerSetWeightedSum:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
 
         for (let i = 0; i < 10; i++) {
             dataWeightedSumVar1.push(String(rowData[i].crits))
@@ -119,7 +168,7 @@ export const WeightedSum: React.FC = () => {
         console.log(dataWeightedSumVar4)
         console.log(dataWeightedSumVar5)
 
-        const response = await fetch('http://127.0.0.1:8000/api/set_weighted_sum',{
+        const response = await fetch('https://study-ai.online/api/set_weighted_sum',{
             method:'POST',
             credentials: "include",
             headers:{
@@ -193,8 +242,135 @@ export const WeightedSum: React.FC = () => {
             console.log('success')
             const responseBody = await response.json();
             console.log(responseBody)
+            setShouldRedirect(true)
         } else{
-            console.log('prosas')
+            console.log('error')
+        }
+    }
+
+    const handleDeleteWeightedSum:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+        console.log("methodId: ", dataWeightedSumId)
+        const response = await fetch('https://study-ai.online/api/delete_weighted_sum',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataWeightedSumId,
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
+        }
+    }
+
+    const handleUpdateWeightedSum:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
+        for (let i = 0; i < 10; i++) {
+            dataWeightedSumVar1.push(String(rowData[i].crits))
+            dataWeightedSumVar2.push(Number(rowData[i].weights))
+            dataWeightedSumVar3.push(Number(rowData[i].var1))
+            dataWeightedSumVar4.push(Number(rowData[i].var2))
+            dataWeightedSumVar5.push(Number(rowData[i].var3))
+        }
+
+        console.log(dataWeightedSumVar1)
+        console.log(dataWeightedSumVar2)
+        console.log(dataWeightedSumVar3)
+        console.log(dataWeightedSumVar4)
+        console.log(dataWeightedSumVar5)
+
+        const response = await fetch('https://study-ai.online/api/update_weighted_sum',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataWeightedSumId,
+                "name": inputOne,
+                "var1": [
+                    dataWeightedSumVar1[0],
+                    dataWeightedSumVar1[1],
+                    dataWeightedSumVar1[2],
+                    dataWeightedSumVar1[3],
+                    dataWeightedSumVar1[4],
+                    dataWeightedSumVar1[5],
+                    dataWeightedSumVar1[6],
+                    dataWeightedSumVar1[7],
+                    dataWeightedSumVar1[8],
+                    dataWeightedSumVar1[9],
+                ],
+                "var2": [
+                    dataWeightedSumVar2[0],
+                    dataWeightedSumVar2[1],
+                    dataWeightedSumVar2[2],
+                    dataWeightedSumVar2[3],
+                    dataWeightedSumVar2[4],
+                    dataWeightedSumVar2[5],
+                    dataWeightedSumVar2[6],
+                    dataWeightedSumVar2[7],
+                    dataWeightedSumVar2[8],
+                    dataWeightedSumVar2[9],
+                ],
+                "var3": [
+                    dataWeightedSumVar3[0],
+                    dataWeightedSumVar3[1],
+                    dataWeightedSumVar3[2],
+                    dataWeightedSumVar3[3],
+                    dataWeightedSumVar3[4],
+                    dataWeightedSumVar3[5],
+                    dataWeightedSumVar3[6],
+                    dataWeightedSumVar3[7],
+                    dataWeightedSumVar3[8],
+                    dataWeightedSumVar3[9],
+                ],
+                "var4": [
+                    dataWeightedSumVar4[0],
+                    dataWeightedSumVar4[1],
+                    dataWeightedSumVar4[2],
+                    dataWeightedSumVar4[3],
+                    dataWeightedSumVar4[4],
+                    dataWeightedSumVar4[5],
+                    dataWeightedSumVar4[6],
+                    dataWeightedSumVar4[7],
+                    dataWeightedSumVar4[8],
+                    dataWeightedSumVar4[9],
+                ],
+                "var5": [
+                    dataWeightedSumVar5[0],
+                    dataWeightedSumVar5[1],
+                    dataWeightedSumVar5[2],
+                    dataWeightedSumVar5[3],
+                    dataWeightedSumVar5[4],
+                    dataWeightedSumVar5[5],
+                    dataWeightedSumVar5[6],
+                    dataWeightedSumVar5[7],
+                    dataWeightedSumVar5[8],
+                    dataWeightedSumVar5[9],
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
         }
     }
 
@@ -208,8 +384,9 @@ export const WeightedSum: React.FC = () => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
 
+    console.log(onBtExport)
 
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    const [columnDefs] = useState<ColDef[]>([
         { field: 'crits', headerName: "Критерий" },
         { field: 'weights', headerName: "Вес критерия" },
         { field: 'var1', headerName: "Вариант 1" },
@@ -225,6 +402,7 @@ export const WeightedSum: React.FC = () => {
     }, []);
 
     let criteriasNum: number = 10;
+    console.log(criteriasNum)
 
     function criteriasWeight() {
 
@@ -334,6 +512,14 @@ export const WeightedSum: React.FC = () => {
                     </div>
                 </div>
 
+                {
+                    !name && (
+                        <div>
+                            <h5 style={{color: "red"}}>Дайте название методу</h5>
+                        </div>
+                    )
+                }
+
                 <div className="alert alert-dark Che row">
                     <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
@@ -345,12 +531,28 @@ export const WeightedSum: React.FC = () => {
                                id="customRange"/>
                         <strong>{range}</strong>
                     </div>
+                    {
+                        userData && (
+                            <div className="input-group mb-3 p-1" style={{marginLeft: "auto", width: "900px"}}>
+                                {
+                                    weightedSumData && (
+                                        <button onClick={handleDeleteWeightedSum} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>
+                                    )
+                                }
 
-                    <div className="input-group mb-3 col p-1">
-                        <span className="input-group-text">Название: </span>
-                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
-                        <button onClick={handlerSetWeightedSum} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
-                    </div>
+                                <span className="input-group-text">Название: </span>
+                                <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+
+                                {
+                                    weightedSumData && (
+                                        <button onClick={handleUpdateWeightedSum} type="button" className="btn btn-primary" id="button-addon2">Обновить</button>
+                                    )
+                                }
+
+                                <button onClick={handlerSetWeightedSum} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                            </div>
+                        )
+                    }
                 </div>
 
                 <h3>Таблица для ввода значений критериев</h3>
@@ -392,16 +594,14 @@ function NormingCrits (matrix: Array<Array<number>>){
     for (let i = 0; i < matrix.length; i++)
     {
         maxPoint = 0;
-        for (let j = 0; j < matrix[i].length; j++)
-        {
+        for (let j = 0; j < matrix[i].length; j++) {
             if (matrix[i][j] > maxPoint)
             {
                 maxPoint = matrix[i][j];
             }
         }
 
-        for (let j = 0; j < matrix[i].length; j++)
-        {
+        for (let j = 0; j < matrix[i].length; j++) {
             matrix[i][j] = matrix[i][j]/maxPoint;
         }
     }
@@ -412,11 +612,8 @@ function NormingCrits (matrix: Array<Array<number>>){
 function countWeight (matrix: Array<Array<number>>, criteriasWeight: Array<number>)
 {
     let totalPoints: Array<number> = [0,0,0]
-
-    for (let i = 0; i < matrix.length; i++)
-    {
-        for (let j = 0; j < matrix[i].length; j++)
-        {
+    for (let i = 0; i < matrix.length; i++) {
+        for (let j = 0; j < matrix[i].length; j++) {
             totalPoints[j] = totalPoints[j] + criteriasWeight[i]*matrix[i][j];
         }
     }
@@ -426,12 +623,10 @@ function countWeight (matrix: Array<Array<number>>, criteriasWeight: Array<numbe
 
 function findBestOption(pointArray: Array<number>) {
     let bestOption: number = 0;
-
     for (let i = 0; i < pointArray.length; i++) {
         if (pointArray[i] > pointArray[bestOption]) {
             bestOption = i;
         }
     }
-
     return ("Лучший вариант: " + (bestOption + 1));
 }

@@ -1,10 +1,10 @@
 import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Hub} from "./Hub";
+import { useNavigate } from "react-router-dom";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
-import {ParetoData, ParetoDataI} from "./Pareto";
 import {useSearchParams} from "react-router-dom";
+import {UserDataI} from "./Navbar";
 
 export interface PointScoreData {
     Id:         number;
@@ -15,6 +15,45 @@ export interface PointScoreData {
 export type PointScoreDataI = PointScoreData[]|null
 
 export const PointScore: React.FC = () => {
+    const navigate = useNavigate();
+
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [name, setName] = useState(true);
+
+    useEffect(() => {
+        if (shouldRedirect) {
+            navigate("/method");
+        }
+    }, );
+
+    const [userData, setUserDataData] = useState<UserDataI>(null)
+
+    useEffect(() => {
+            if (userData) {
+                return
+            }
+            (async ()=> {
+
+                const response = await fetch(`https://study-ai.online/api/get_user`,{
+                    method:'GET',
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8"
+                    }
+                })
+                if(response.ok){
+                    console.log('success')
+                    const responseBody = await response.json();
+                    setUserDataData(responseBody)
+                } else{
+                    console.log('error')
+                }
+
+            }) ()
+        },
+    )
+
+    const [dataPointScoreId, setDataPointScoreId] = useState(0)
 
     const [pointScoreData, setPointScoreData] = useState<PointScoreDataI>(null)
     const [searchParams] = useSearchParams();
@@ -22,9 +61,20 @@ export const PointScore: React.FC = () => {
     const [inputOne, setInputOne] = useState('');
 
     const [rowData, setRowData] = useState<any[]>(
-        [   {"crit1": 100, "crit2": 75,"crit3": 75,
-            "crit4": 75,"crit5": 75,"crit6": 50,"crit7": 100,
-            "crit8": 100,"crit9": 50,"crit10": 50} ]
+        [
+            {
+                "crit1": 100,
+                "crit2": 75,
+                "crit3": 75,
+                "crit4": 75,
+                "crit5": 75,
+                "crit6": 50,
+                "crit7": 100,
+                "crit8": 100,
+                "crit9": 50,
+                "crit10": 50,
+            }
+        ]
     );
 
     useEffect(() => {
@@ -37,7 +87,7 @@ export const PointScore: React.FC = () => {
                     console.log("doesn't have params")
                 } else {
                     console.log(searchParams.get("id"))
-                    const response = await fetch(`http://127.0.0.1:8000/api/get_point_score?id=${searchParams.get("id")}`,{
+                    const response = await fetch(`https://study-ai.online/api/get_point_score?id=${searchParams.get("id")}`,{
                         method:'GET',
                         credentials: "include",
                         headers: {
@@ -45,8 +95,9 @@ export const PointScore: React.FC = () => {
                         }
                     })
                     if(response.ok){
-                        console.log('success')
+                        console.log('get success')
                         const responseBody = await response.json();
+                        setDataPointScoreId(responseBody.id)
                         setPointScoreData(responseBody)
                         console.log(responseBody)
                         if (responseBody.name && responseBody.var1) {
@@ -62,20 +113,19 @@ export const PointScore: React.FC = () => {
                                     "crit7": responseBody.var1[6],
                                     "crit8": responseBody.var1[7],
                                     "crit9": responseBody.var1[8],
-                                    "crit10": responseBody.var1[9]
+                                    "crit10": responseBody.var1[9],
                                 }
                             ]
                             console.log('test',test)
                             setRowData(test)
-
                         }
 
                     } else{
-                        console.log('prosas')
+                        console.log('get error')
                     }
                 }
             }) ()
-        },[searchParams]
+        },//[searchParams]
     )
 
     let dataPointScore: any[] = [];
@@ -83,6 +133,89 @@ export const PointScore: React.FC = () => {
 
     const handleSetPointScore:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
+        dataPointScore.push(Number(rowData[0].crit1))
+        dataPointScore.push(Number(rowData[0].crit2))
+        dataPointScore.push(Number(rowData[0].crit3))
+        dataPointScore.push(Number(rowData[0].crit4))
+        dataPointScore.push(Number(rowData[0].crit5))
+        dataPointScore.push(Number(rowData[0].crit6))
+        dataPointScore.push(Number(rowData[0].crit7))
+        dataPointScore.push(Number(rowData[0].crit8))
+        dataPointScore.push(Number(rowData[0].crit9))
+        dataPointScore.push(Number(rowData[0].crit10))
+
+        console.log("dataPointScore: ", dataPointScore)
+
+        const response = await fetch('https://study-ai.online/api/set_point_score',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "name": inputOne,
+                "var1": [
+                    dataPointScore[0],
+                    dataPointScore[1],
+                    dataPointScore[2],
+                    dataPointScore[3],
+                    dataPointScore[4],
+                    dataPointScore[5],
+                    dataPointScore[6],
+                    dataPointScore[7],
+                    dataPointScore[8],
+                    dataPointScore[9],
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('set success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+            setShouldRedirect(true)
+        } else{
+            console.log('set error')
+        }
+    }
+
+    const handleDeletePointScore:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+        console.log("methodId: ", dataPointScoreId)
+        const response = await fetch('https://study-ai.online/api/delete_point_score',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataPointScoreId,
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
+        }
+    }
+
+    const handleUpdatePointScore:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
 
         dataPointScore.push(Number(rowData[0].crit1))
         dataPointScore.push(Number(rowData[0].crit2))
@@ -97,13 +230,14 @@ export const PointScore: React.FC = () => {
 
         console.log(dataPointScore)
 
-        const response = await fetch('http://127.0.0.1:8000/api/set_point_score',{
+        const response = await fetch('https://study-ai.online/api/update_point_score',{
             method:'POST',
             credentials: "include",
             headers:{
                 "Content-Type": "application/json; charset=UTF-8"
             },
             body: JSON.stringify({
+                "id": dataPointScoreId,
                 "name": inputOne,
                 "var1": [
                     dataPointScore[0],
@@ -123,8 +257,9 @@ export const PointScore: React.FC = () => {
             console.log('success')
             const responseBody = await response.json();
             console.log(responseBody)
+            setShouldRedirect(true)
         } else{
-            console.log('prosas')
+            console.log('error')
         }
     }
 
@@ -140,7 +275,9 @@ export const PointScore: React.FC = () => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
 
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    console.log(onBtExport)
+
+    const [columnDefs] = useState<ColDef[]>([
         { field: 'crit1', headerName: "Критерий 1" },
         { field: 'crit2', headerName: "Критерий 2" },
         { field: 'crit3', headerName: "Критерий 3" },
@@ -154,6 +291,7 @@ export const PointScore: React.FC = () => {
     ]);
 
     let criteriasNum: number = 10;
+    console.log(criteriasNum)
 
     function criteriasPoints() {
         let criteriasPoints: Array<number> = [100, 75, 75, 75, 75, 50, 100, 100, 50, 50];
@@ -250,6 +388,14 @@ export const PointScore: React.FC = () => {
                     </div>
                 </div>
 
+                {
+                    !name && (
+                        <div>
+                            <h5 style={{color: "red"}}>Дайте название методу</h5>
+                        </div>
+                    )
+                }
+
                 <div className="alert alert-dark Che row">
                     <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
@@ -261,12 +407,28 @@ export const PointScore: React.FC = () => {
                                id="customRange"/>
                         <strong>{range}</strong>
                     </div>
+                    {
+                        userData && (
+                            <div className="input-group mb-3 p-1" style={{marginLeft: "auto", width: "900px"}}>
+                                {
+                                    pointScoreData && (
+                                        <button onClick={handleDeletePointScore} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>
+                                    )
+                                }
 
-                    <div className="input-group mb-3 col p-1">
-                        <span className="input-group-text">Название: </span>
-                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
-                        <button onClick={handleSetPointScore} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
-                    </div>
+                                <span className="input-group-text">Название: </span>
+                                <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+
+                                {
+                                    pointScoreData && (
+                                        <button onClick={handleUpdatePointScore} type="button" className="btn btn-primary" id="button-addon2">Обновить</button>
+                                    )
+                                }
+
+                                <button onClick={handleSetPointScore} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                            </div>
+                        )
+                    }
                 </div>
 
                 <h3>таблица для ввода значений критериев</h3>
@@ -332,4 +494,3 @@ function countFinalPoints(critPoints: Array<number>)
     }
     return  criteriasFinalPoints;
 }
-

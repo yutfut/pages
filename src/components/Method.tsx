@@ -17,7 +17,7 @@ export const Method: React.FC = () => {
     useEffect(() => {
             (async ()=> {
 
-                const response = await fetch('http://127.0.0.1:8000/api/get_all',{
+                const response = await fetch('https://study-ai.online/api/get_all',{
                     method:'GET',
                     credentials: "include",
                     headers: {
@@ -30,24 +30,24 @@ export const Method: React.FC = () => {
                     setData(responseBody)
                     console.log(responseBody)
                 } else{
-                    console.log('prosas')
+                    console.log('error')
                 }
             }) ()
 
         }
-    ,[]
+        ,[]
     )
 
     if (!data) {
-        return <div>posos</div>
+        return <div><h1>Методов пока нет</h1></div>
     }
 
     return (
         <div>
             {
                 data.map((item, i)=>{
-                    const url = "http://127.0.0.1:3000/" + item.Name + "?id=" + item.Id;
-                // , justifyContent: "space-between"
+                    const url = "https://study-ai.online/" + item.Name + "?id=" + item.Id;
+                    // , justifyContent: "space-between"
                     return <div key={i} style={{width: "90%",display: "flex", margin: "10px", marginRight: "50px"}}>
                         <p style={{width: "20px", marginLeft: "20px", marginRight: "20px"}}>{i+1}</p>
                         {/*<p style={{width: "200px", marginLeft: "auto", marginRight: "auto"}}>{item.Id}</p>*/}

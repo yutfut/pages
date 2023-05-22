@@ -17,7 +17,7 @@ export const Navbar = () => {
             }
             (async ()=> {
 
-                const response = await fetch(`http://127.0.0.1:8000/api/get_user`,{
+                const response = await fetch(`https://study-ai.online/api/get_user`,{
                     method:'GET',
                     credentials: "include",
                     headers: {
@@ -29,7 +29,7 @@ export const Navbar = () => {
                     const responseBody = await response.json();
                     setUserDataData(responseBody)
                 } else{
-                    console.log('prosas')
+                    console.log('error')
                 }
 
             }) ()
@@ -38,8 +38,9 @@ export const Navbar = () => {
 
     const Logout:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
-        const response = await fetch('http://127.0.0.1:8000/api/logout',{
+        const response = await fetch('https://study-ai.online/api/logout',{
             method:'GET',
+            credentials: "include",
             headers:{
                 "Content-Type": "application/json; charset=UTF-8"
             },
@@ -48,8 +49,9 @@ export const Navbar = () => {
             console.log('success')
             const responseBody = await response.json();
             console.log(responseBody)
+            window.location.href = "/";
         } else{
-            console.log('prosas')
+            console.log('error')
         }
     }
 
@@ -63,7 +65,7 @@ export const Navbar = () => {
                             <a className="nav-link " aria-current="page" href="/">Главная</a>
                         </li>
                         <li className="nav-item">
-                            <a className="nav-link " href={"/theory"}>Теория</a>
+                            <a className="nav-link " href={"/Theory"}>Теория</a>
                         </li>
                         {
                             userData && (
@@ -80,7 +82,7 @@ export const Navbar = () => {
                                         <a className="nav-link " href={"/auth"}>Войти</a>
                                     </li>
                                     <li className="nav-item">
-                                        <a className="nav-link " href={"/register"}>Зарегестрироваться</a>
+                                        <a className="nav-link " href={"/register"}>Зарегистрироваться</a>
                                     </li>
                                 </div>
 
@@ -103,26 +105,26 @@ export const Navbar = () => {
     )
 }
 
-    /*
+/*
 
-    <nav className={"navbar navbar-dark navbar-expand-lg bg-dark container-fluid"}>
+<nav className={"navbar navbar-dark navbar-expand-lg bg-dark container-fluid"}>
 
-    <div className="collapse navbar-collapse" id="navbarNav">
-    <ul className="navbar-nav">
-    <li className="nav-item">
-    <NavLink
+<div className="collapse navbar-collapse" id="navbarNav">
+<ul className="navbar-nav">
+<li className="nav-item">
+<NavLink
 className="nav-link" aria-current="page"
 to="/">Главная</NavLink>
 </li>
 <li className="nav-item">
-    <NavLink
-        className="nav-link"
-        to="/theory">Теория</NavLink>
+<NavLink
+    className="nav-link"
+    to="/theory">Теория</NavLink>
 </li>
 <li className="nav-item">
-    <NavLink
-        className="nav-link"
-        to="/about">О приложении</NavLink>
+<NavLink
+    className="nav-link"
+    to="/about">О приложении</NavLink>
 </li>
 </ul>
 </div>

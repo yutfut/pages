@@ -1,10 +1,10 @@
 import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
-import {Hub} from "./Hub";
+import { useNavigate } from "react-router-dom";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
-import {ParetoData, ParetoDataI} from "./Pareto";
 import {useSearchParams} from "react-router-dom";
+import {UserDataI} from "./Navbar";
 
 export interface NansonData {
     Id:         number;
@@ -18,6 +18,45 @@ export interface NansonData {
 export type NansonDataI = NansonData[]|null
 
 export const Nanson: React.FC = () => {
+    const navigate = useNavigate();
+
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [name, setName] = useState(true);
+
+    useEffect(() => {
+        if (shouldRedirect) {
+            navigate("/method");
+        }
+    }, );
+
+    const [userData, setUserDataData] = useState<UserDataI>(null)
+
+    useEffect(() => {
+            if (userData) {
+                return
+            }
+            (async ()=> {
+
+                const response = await fetch(`https://study-ai.online/api/get_user`,{
+                    method:'GET',
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8"
+                    }
+                })
+                if(response.ok){
+                    console.log('success')
+                    const responseBody = await response.json();
+                    setUserDataData(responseBody)
+                } else{
+                    console.log('error')
+                }
+
+            }) ()
+        },
+    )
+
+    const [dataNansonId, setDataNansonId] = useState(0)
 
     const [nansonData, setNansonData] = useState<NansonDataI>(null)
     const [searchParams] = useSearchParams();
@@ -43,7 +82,7 @@ export const Nanson: React.FC = () => {
                     console.log("doesn't have params")
                 } else {
                     console.log(searchParams.get("id"))
-                    const response = await fetch(`http://127.0.0.1:8000/api/get_nanson?id=${searchParams.get("id")}`,{
+                    const response = await fetch(`https://study-ai.online/api/get_nanson?id=${searchParams.get("id")}`,{
                         method:'GET',
                         credentials: "include",
                         headers: {
@@ -53,6 +92,7 @@ export const Nanson: React.FC = () => {
                     if(response.ok){
                         console.log('success')
                         const responseBody = await response.json();
+                        setDataNansonId(responseBody.id)
                         setNansonData(responseBody)
                         console.log(responseBody)
 
@@ -75,11 +115,11 @@ export const Nanson: React.FC = () => {
                             setRowData(test)
                         }
                     } else{
-                        console.log('prosas')
+                        console.log('error')
                     }
                 }
             }) ()
-        },[searchParams]
+        },//[searchParams]
     )
 
     let dataNanson: any[] = [];
@@ -87,13 +127,20 @@ export const Nanson: React.FC = () => {
     const handlerSetNanson:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
 
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
         for (let i = 0; i < 6; i++) {
             dataNanson.push(Number(rowData[i].count))
         }
 
         console.log(dataNanson)
 
-        const response = await fetch('http://127.0.0.1:8000/api/set_nanson',{
+        const response = await fetch('https://study-ai.online/api/set_nanson',{
             method:'POST',
             credentials: "include",
             headers:{
@@ -115,8 +162,75 @@ export const Nanson: React.FC = () => {
             console.log('success')
             const responseBody = await response.json();
             console.log(responseBody)
+            setShouldRedirect(true)
         } else{
-            console.log('prosas')
+            console.log('error')
+        }
+    }
+
+    const handleDeleteNanson:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+        console.log("methodId: ", dataNansonId)
+        const response = await fetch('https://study-ai.online/api/delete_nanson',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataNansonId,
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
+        }
+    }
+
+    const handleUpdateNanson:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
+        for (let i = 0; i < 6; i++) {
+            dataNanson.push(Number(rowData[i].count))
+        }
+
+        console.log(dataNanson)
+
+        const response = await fetch('https://study-ai.online/api/update_nanson',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataNansonId,
+                "name": inputOne,
+                "var1": [
+                    dataNanson[0],
+                    dataNanson[1],
+                    dataNanson[2],
+                    dataNanson[3],
+                    dataNanson[4],
+                    dataNanson[5],
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
         }
     }
 
@@ -130,17 +244,19 @@ export const Nanson: React.FC = () => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
 
-    const [variants, setVariants] = useState([1, 1, 1]);
+    console.log(onBtExport)
+
+    // const [variants, setVariants] = useState([1, 1, 1]);
 
 
-    const [columnDefsStepTwo, setColumnDefsStepTwo] = useState<ColDef[]>([
+    const [columnDefsStepTwo] = useState<ColDef[]>([
         { field: 'varName', headerName: "Вариант"},
         { field: 'comparison1', headerName: "Вариант 1" },
         { field: 'comparison2', headerName: "Вариант 2" },
         { field: 'comparison3', headerName: "Вариант 3" }
     ]);
 
-    const [rowDataStepTwo, setRowDataStepTwo] = useState<any[]>(
+    const [rowDataStepTwo] = useState<any[]>(
         [
             {   "varName": "Вариант 1",
                 "comparison1": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[0][0],
@@ -154,7 +270,7 @@ export const Nanson: React.FC = () => {
                 "comparison1": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[2][0],
                 "comparison2": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[2][1],
                 "comparison3": reduceMatrix(nansonPairComparison(expsVars(), vars), findWorstOption(countNansonPoints(expsVars(), vars)))[2][2]},
-            ]
+        ]
     );
 
     function expsVars() {
@@ -165,7 +281,7 @@ export const Nanson: React.FC = () => {
         return expsVars
     }
 
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    const [columnDefs] = useState<ColDef[]>([
         { field: 'count', headerName: "Кол-во экспертов", editable: true, width: 240 },
         { field: 'place1', headerName: "1 место" },
         { field: 'place2', headerName: "2 место" },
@@ -179,8 +295,8 @@ export const Nanson: React.FC = () => {
 
     const rows = [
         {'vars': 'Вариант 1', 'var1': nansonPairComparison(expsVars(), vars)[0][0],
-         'var2': nansonPairComparison(expsVars(), vars)[0][1],
-         'var3': nansonPairComparison(expsVars(), vars)[0][2]},
+            'var2': nansonPairComparison(expsVars(), vars)[0][1],
+            'var3': nansonPairComparison(expsVars(), vars)[0][2]},
         {'vars': 'Вариант 2', 'var1': nansonPairComparison(expsVars(), vars)[1][0],
             'var2': nansonPairComparison(expsVars(), vars)[1][1],
             'var3': nansonPairComparison(expsVars(), vars)[1][2]},
@@ -275,6 +391,14 @@ export const Nanson: React.FC = () => {
                     </div>
                 </div>
 
+                {
+                    !name && (
+                        <div>
+                            <h5 style={{color: "red"}}>Дайте название методу</h5>
+                        </div>
+                    )
+                }
+
                 <div className="alert alert-dark Che row">
                     <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
@@ -290,12 +414,28 @@ export const Nanson: React.FC = () => {
                                id="customRange"/>
                         <strong>{range}</strong>
                     </div>
+                    {
+                        userData && (
+                            <div className="input-group mb-3 p-1" style={{marginLeft: "auto", width: "900px"}}>
+                                {
+                                    nansonData && (
+                                        <button onClick={handleDeleteNanson} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>
+                                    )
+                                }
 
-                    <div className="input-group mb-3 col p-1">
-                        <span className="input-group-text">Название: </span>
-                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
-                        <button onClick={handlerSetNanson} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
-                    </div>
+                                <span className="input-group-text">Название: </span>
+                                <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+
+                                {
+                                    nansonData && (
+                                        <button onClick={handleUpdateNanson} type="button" className="btn btn-primary" id="button-addon2">Обновить</button>
+                                    )
+                                }
+
+                                <button onClick={handlerSetNanson} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                            </div>
+                        )
+                    }
                 </div>
 
                 <h3>Таблица с мнениями экспертов для трёх вариантов</h3>
@@ -358,13 +498,13 @@ export const Nanson: React.FC = () => {
                     </div>
 
                     <div className={(range >= "8") ? "accordion-body show" : "accordion-body collapse"}>
-                            <h3>Вывод лучшего варианта</h3>
-                            {"Победивший вариант - "}
-                            {findLastOption
-                            (   findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars),
-                                    findWorstOption(countNansonPoints(expsVars(), vars))))),
-                                findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars))))  )
-                                + 1}
+                        <h3>Вывод лучшего варианта</h3>
+                        {"Победивший вариант - "}
+                        {findLastOption
+                        (   findWorstOption(countMatrixPoints(reduceMatrix(nansonPairComparison(expsVars(), vars),
+                            findWorstOption(countNansonPoints(expsVars(), vars))))),
+                            findWorstOption(countMatrixPoints((nansonPairComparison(expsVars(), vars))))  )
+                        + 1}
                     </div>
                 </div>
             </div>
@@ -412,7 +552,7 @@ function findWorstOption(pointArray: Array<number>)
     let worstOption: number = 0;
 
     for (let i = 0; i < pointArray.length; i++) {
-        if (pointArray[i] < pointArray[worstOption] && pointArray[i] != 0) {
+        if (pointArray[i] < pointArray[worstOption] && pointArray[i] !== 0) {
             worstOption = i;
         }
     }
@@ -421,17 +561,17 @@ function findWorstOption(pointArray: Array<number>)
 }
 
 
-function reduceMatrixWithSplice(matrix: Array<Array<number>>, unwantedOption: number)
-{
-    let newMatrix: Array<Array<number>> = matrix;
-    newMatrix.splice(unwantedOption, 1)
-
-    for (let i = 0; i < matrix.length; i++) {
-        newMatrix[i].splice(unwantedOption, 1)
-    }
-
-    return newMatrix
-}
+// function reduceMatrixWithSplice(matrix: Array<Array<number>>, unwantedOption: number)
+// {
+//     let newMatrix: Array<Array<number>> = matrix;
+//     newMatrix.splice(unwantedOption, 1)
+//
+//     for (let i = 0; i < matrix.length; i++) {
+//         newMatrix[i].splice(unwantedOption, 1)
+//     }
+//
+//     return newMatrix
+// }
 
 function reduceMatrix(matrix: Array<Array<number>>, unwantedOption: number)
 {
