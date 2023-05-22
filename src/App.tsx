@@ -18,7 +18,7 @@ import {Register} from "./components/Register"
 function App() {
     return (
         <div className="App">
-            <HashRouter basename={"#"}>
+            <BrowserRouter>
                 <Navbar/>
                 <div style={{marginLeft: "50px", marginTop: "20px"}}>
                     <Routes>
@@ -36,7 +36,7 @@ function App() {
                         <Route path={'/method'} element = {<Method/>}/>
                     </Routes>
                 </div>
-            </HashRouter>
+            </BrowserRouter>
         </div>
     );
 }
