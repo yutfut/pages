@@ -4,9 +4,11 @@ export const Auth: React.FC = () => {
     const [inputOne, setInputOne] = useState('');
     const [inputTwo, setInputTwo] = useState('');
 
+    const [che, setChe] = useState(false);
+
     const Login:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
-        const response = await fetch('http://127.0.0.1:8000/api/login',{
+        const response = await fetch('https://study-ai.online/api/login',{
             method:'POST',
             credentials: 'include',
             headers:{
@@ -21,60 +23,29 @@ export const Auth: React.FC = () => {
             console.log('success')
             const responseBody = await response.json();
             console.log(responseBody)
+            window.location.href = "/";
         } else{
-            console.log('prosas')
+            console.log('error')
+            setChe(true)
         }
     }
 
-    // const Register:MouseEventHandler<HTMLButtonElement> = async (event)=>{
-    //     event.preventDefault();
-    //     const response = await fetch('http://127.0.0.1:8000/api/register',{
-    //         method:'POST',
-    //         credentials: 'include',
-    //         headers:{
-    //             "Content-Type": "application/json; charset=UTF-8"
-    //         },
-    //         body: JSON.stringify({
-    //             "username": inputOne,
-    //             "password": inputTwo
-    //         })
-    //     })
-    //     if(response.ok){
-    //         console.log('success')
-    //         const responseBody = await response.json();
-    //         console.log(responseBody)
-    //     } else{
-    //         console.log('prosas')
-    //     }
-    //
-    // }
-
-    // const Logout:MouseEventHandler<HTMLButtonElement> = async (event)=>{
-    //     event.preventDefault();
-    //     const response = await fetch('http://127.0.0.1:8000/api/logout',{
-    //         method:'GET',
-    //         headers:{
-    //             "Content-Type": "application/json; charset=UTF-8"
-    //         },
-    //     })
-    //     if(response.ok){
-    //         console.log('success')
-    //         const responseBody = await response.json();
-    //         console.log(responseBody)
-    //     } else{
-    //         console.log('prosas')
-    //     }
-    // }
-
     return(
         <div className="Base">
+            {
+                che && (
+                    <div>
+                        <h5 style={{color: "red"}}>Ошибка авторизации</h5>
+                        <h5 style={{color: "red"}}>Попробуйте снова</h5>
+                    </div>
+                )
+            }
             <div className="mb-3">
                 <input id="username" value={inputOne} type="text" name="message" placeholder="username" onChange={(event) => setInputOne(event.target.value)}/>
             </div>
             <div className="mb-3">
                 <input id="password" type="text" name="message" placeholder="password" value={inputTwo} onChange={(event) => setInputTwo(event.target.value)}/>
             </div>
-
             <div className="mb-3">
                 <button onClick={Login} type="button" className="btn btn-primary" id="button-addon2">Войти</button>
             </div>
