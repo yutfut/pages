@@ -1,6 +1,6 @@
 import React from 'react';
 import {Navbar} from "./components/Navbar";
-import {Route, Routes, BrowserRouter, HashRouter} from "react-router-dom";
+import {Route, Routes, BrowserRouter} from "react-router-dom";
 
 import {Theory} from "./pages/Theory";
 import {Home} from "./pages/Home";
@@ -14,12 +14,13 @@ import {PairComparisonCriterias} from "./components/PairComparisonCriterias";
 import {Auth} from "./components/Auth";
 import {Method} from "./components/Method"
 import {Register} from "./components/Register"
+import NotFound from "./components/NotFound"
 
 function App() {
     return (
         <div className="App">
+            <Navbar/>
             <BrowserRouter>
-                <Navbar/>
                 <div style={{marginLeft: "50px", marginTop: "20px"}}>
                     <Routes>
                         <Route path={'/'} element = {<Home/>}/>
@@ -34,11 +35,12 @@ function App() {
                         <Route path={'/auth'} element = {<Auth/>}/>
                         <Route path={'/register'} element = {<Register/>}/>
                         <Route path={'/method'} element = {<Method/>}/>
+                        <Route path={'*'} element={<NotFound />}/>
                     </Routes>
                 </div>
             </BrowserRouter>
+
         </div>
     );
 }
 export default App;
-
