@@ -18,22 +18,22 @@ import {Register} from "./components/Register"
 function App() {
     return (
         <div className="App">
-            <HashRouter>
+            <HashRouter basename={"#"}>
                 <Navbar/>
                 <div style={{marginLeft: "50px", marginTop: "20px"}}>
                     <Routes>
-                        <Route path={'/pages/'} element = {<Home/>}/>
-                        <Route path={'/pages/theory'} element = {<Theory/>}/>
-                        <Route path={'/pages/pareto'} element = {<Pareto/>}/>
-                        <Route path={'/pages/baseCriteria'} element = {<BaseCriteria/>}/>
-                        <Route path={'/pages/pointScore'} element = {<PointScore/>}/>
-                        <Route path={'/pages/pairComparisonCriteria'} element = {<PairComparisonCriterias/>}/>
-                        <Route path={'/pages/borda'} element = {<Borda/>}/>
-                        <Route path={'/pages/nanson'} element = {<Nanson/>}/>
-                        <Route path={'/pages/weightedSum'} element = {<WeightedSum/>}/>
-                        <Route path={'/pages/auth'} element = {<Auth/>}/>
-                        <Route path={'/pages/register'} element = {<Register/>}/>
-                        <Route path={'/pages/method'} element = {<Method/>}/>
+                        <Route path={'/'} element = {<Home/>}/>
+                        <Route path={'/theory'} element = {<Theory/>}/>
+                        <Route path={'/pareto'} element = {<Pareto/>}/>
+                        <Route path={'/baseCriteria'} element = {<BaseCriteria/>}/>
+                        <Route path={'/pointScore'} element = {<PointScore/>}/>
+                        <Route path={'/pairComparisonCriteria'} element = {<PairComparisonCriterias/>}/>
+                        <Route path={'/borda'} element = {<Borda/>}/>
+                        <Route path={'/nanson'} element = {<Nanson/>}/>
+                        <Route path={'/weightedSum'} element = {<WeightedSum/>}/>
+                        <Route path={'/auth'} element = {<Auth/>}/>
+                        <Route path={'/register'} element = {<Register/>}/>
+                        <Route path={'/method'} element = {<Method/>}/>
                     </Routes>
                 </div>
             </HashRouter>
