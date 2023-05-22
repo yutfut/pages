@@ -1,9 +1,10 @@
 import React, {MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState} from "react";
+import { useNavigate } from "react-router-dom";
 import {AgGridReact} from "ag-grid-react";
 import {ColDef} from "ag-grid-community";
 import DataGrid from "react-data-grid";
 import {useSearchParams} from "react-router-dom";
-import {ParetoDataI} from "./Pareto";
+import {UserDataI} from "./Navbar";
 
 export interface BordaData {
     Id:         number;
@@ -17,6 +18,45 @@ export interface BordaData {
 export type BordaDataI = BordaData[]|null
 
 export const Borda: React.FC = () => {
+    const navigate = useNavigate();
+
+    const [shouldRedirect, setShouldRedirect] = useState(false);
+    const [name, setName] = useState(true);
+
+    useEffect(() => {
+        if (shouldRedirect) {
+            navigate("/method");
+        }
+    }, );
+
+    const [userData, setUserDataData] = useState<UserDataI>(null)
+
+    useEffect(() => {
+            if (userData) {
+                return
+            }
+            (async ()=> {
+
+                const response = await fetch(`https://study-ai.online/api/get_user`,{
+                    method:'GET',
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json; charset=UTF-8"
+                    }
+                })
+                if(response.ok){
+                    console.log('success')
+                    const responseBody = await response.json();
+                    setUserDataData(responseBody)
+                } else{
+                    console.log('error')
+                }
+
+            }) ()
+        },
+    )
+
+    const [dataBordaId, setDataBordaId] = useState(0)
 
     const [bordaData, setBordaData] = useState<BordaDataI>(null)
     const [searchParams] = useSearchParams();
@@ -42,7 +82,7 @@ export const Borda: React.FC = () => {
                     console.log("doesn't have params")
                 } else {
                     console.log(searchParams.get("id"))
-                    const response = await fetch(`http://127.0.0.1:8000/api/get_borda?id=${searchParams.get("id")}`,{
+                    const response = await fetch(`https://study-ai.online/api/get_borda?id=${searchParams.get("id")}`,{
                         method:'GET',
                         credentials: "include",
                         headers: {
@@ -52,6 +92,7 @@ export const Borda: React.FC = () => {
                     if(response.ok){
                         console.log('success')
                         const responseBody = await response.json();
+                        setDataBordaId(responseBody.id)
                         setBordaData(responseBody)
                         console.log(responseBody)
 
@@ -74,11 +115,11 @@ export const Borda: React.FC = () => {
                             setRowData(test)
                         }
                     } else{
-                        console.log('prosas')
+                        console.log('error')
                     }
                 }
             }) ()
-        },[searchParams]
+        },//[searchParams]
     )
 
     let dataBorda: any[] = [];
@@ -86,13 +127,20 @@ export const Borda: React.FC = () => {
     const handlerSetBorda:MouseEventHandler<HTMLButtonElement> = async (event)=>{
         event.preventDefault();
 
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
         for (let i = 0; i < 6; i++) {
             dataBorda.push(Number(rowData[i].count))
         }
 
         console.log(dataBorda)
 
-        const response = await fetch('http://127.0.0.1:8000/api/set_nanson',{
+        const response = await fetch('https://study-ai.online/api/set_borda',{
             method:'POST',
             credentials: "include",
             headers:{
@@ -114,8 +162,75 @@ export const Borda: React.FC = () => {
             console.log('success')
             const responseBody = await response.json();
             console.log(responseBody)
+            setShouldRedirect(true)
         } else{
-            console.log('prosas')
+            console.log('error')
+        }
+    }
+
+    const handleDeleteBorda:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+        console.log("methodId: ", dataBordaId)
+        const response = await fetch('https://study-ai.online/api/delete_borda',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataBordaId,
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
+        }
+    }
+
+    const handleUpdateBorda:MouseEventHandler<HTMLButtonElement> = async (event)=>{
+        event.preventDefault();
+
+        if (inputOne==="") {
+            setName(false)
+            return
+        } else {
+            setName(true)
+        }
+
+        for (let i = 0; i < 6; i++) {
+            dataBorda.push(Number(rowData[i].count))
+        }
+
+        console.log(dataBorda)
+
+        const response = await fetch('https://study-ai.online/api/update_borda',{
+            method:'POST',
+            credentials: "include",
+            headers:{
+                "Content-Type": "application/json; charset=UTF-8"
+            },
+            body: JSON.stringify({
+                "id": dataBordaId,
+                "name": inputOne,
+                "var1": [
+                    dataBorda[0],
+                    dataBorda[1],
+                    dataBorda[2],
+                    dataBorda[3],
+                    dataBorda[4],
+                    dataBorda[5],
+                ],
+            })
+        })
+        if(response.ok){
+            console.log('success')
+            const responseBody = await response.json();
+            console.log(responseBody)
+            setShouldRedirect(true)
+        } else{
+            console.log('error')
         }
     }
 
@@ -129,7 +244,9 @@ export const Borda: React.FC = () => {
         gridRef.current!.api.exportDataAsCsv();
     }, []);
 
-    const [columnDefs, setColumnDefs] = useState<ColDef[]>([
+    console.log(onBtExport)
+
+    const [columnDefs] = useState<ColDef[]>([
         { field: 'count', headerName: "Кол-во экспертов", editable: true, width: 240 },
         { field: 'place1', headerName: "1 место" },
         { field: 'place2', headerName: "2 место" },
@@ -142,7 +259,7 @@ export const Borda: React.FC = () => {
         };
     }, []);
 
-    let variants: number = 3; //количество вариантов
+    //let variants: number = 3; //количество вариантов
 
 
     let vars: Array<Array<number>> = [[3, 2, 1], [3, 1, 2],[2, 3, 1], [1, 3, 2], [2,1,3], [1,2,3]]; //все возможные варианты расстановки мест
@@ -151,7 +268,7 @@ export const Borda: React.FC = () => {
         { key: 'crit1', name: "Вариант 1" },
         { key: 'crit2', name: "Вариант 2" },
         { key: 'crit3', name: "Вариант 3" },
-];
+    ];
 
     const rows = [
         { 'crit1': countBordaPoints(expsVars(), vars)[0],
@@ -171,7 +288,7 @@ export const Borda: React.FC = () => {
 
             expsVars[i]= rowData[i].count;
         }
-            return expsVars;
+        return expsVars;
     }
 
     const [selected, setSelected] = useState(null);
@@ -218,6 +335,14 @@ export const Borda: React.FC = () => {
                     </div>
                 </div>
 
+                {
+                    !name && (
+                        <div>
+                            <h5 style={{color: "red"}}>Дайте название методу</h5>
+                        </div>
+                    )
+                }
+
                 <div className="alert alert-dark Che row">
                     <div className="col">
                         <label htmlFor="customRange" className="form-label p-1" >Показать шаги:</label>
@@ -233,12 +358,33 @@ export const Borda: React.FC = () => {
                                id="customRange"/>
                         <strong>{range}</strong>
                     </div>
+                    {
+                        userData && (
+                            <div className="input-group mb-3 p-1" style={{marginLeft: "auto", width: "900px"}}>
+                                {
+                                    bordaData && (
+                                        <button onClick={handleDeleteBorda} type="button" className="btn btn-primary" id="button-addon2">Удалить</button>
+                                    )
+                                }
 
-                    <div className="input-group mb-3 col p-1">
-                        <span className="input-group-text">Название: </span>
-                        <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
-                        <button onClick={handlerSetBorda} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
-                    </div>
+                                <span className="input-group-text">Название: </span>
+                                <input  value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>
+
+                                {
+                                    bordaData && (
+                                        <button onClick={handleUpdateBorda} type="button" className="btn btn-primary" id="button-addon2">Обновить</button>
+                                    )
+                                }
+
+                                <button onClick={handlerSetBorda} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>
+                            </div>
+                        )
+                    }
+                    {/*<div className="input-group mb-3 col p-1">*/}
+                    {/*    <span className="input-group-text">Название: </span>*/}
+                    {/*    <input value={inputOne} type="text" className="form-control" onChange={(event) => setInputOne(event.target.value)}/>*/}
+                    {/*    <button onClick={handlerSetBorda} type="button" className="btn btn-primary" id="button-addon2">Сохранить</button>*/}
+                    {/*</div>*/}
                 </div>
 
                 <h3>Таблица для подсчёта мнений экспертов</h3>
@@ -256,7 +402,7 @@ export const Borda: React.FC = () => {
                 </div>
 
                 <div className="p-3"></div>
-                    <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
+                <div className={(range >= "2") ? "accordion-body show" : "accordion-body collapse"}>
                     <h3>Таблица со значение подсчётов Yj (баллов для каждого варианта)</h3>
                     <DataGrid columns={columns} rows={rows}/>
                 </div>
@@ -271,21 +417,21 @@ export const Borda: React.FC = () => {
 }
 
 
-function bordaPairComparison (vars: Array<Array<number>>, expsVars: Array<number>)
-{
-    let pairComparison: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-
-    for (let k = 0; k < 6; k++) {
-        for (let i = 0; i < 3; i++) {
-            for (let j = 0; j < 3; j++) {
-                if (vars[k][i] > vars[k][j]) {
-                    pairComparison[i][j] = pairComparison[i][j] + expsVars[k];
-                }
-            }
-        }
-    }
-    return pairComparison;
-}
+// function bordaPairComparison (vars: Array<Array<number>>, expsVars: Array<number>)
+// {
+//     let pairComparison: Array<Array<number>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+//
+//     for (let k = 0; k < 6; k++) {
+//         for (let i = 0; i < 3; i++) {
+//             for (let j = 0; j < 3; j++) {
+//                 if (vars[k][i] > vars[k][j]) {
+//                     pairComparison[i][j] = pairComparison[i][j] + expsVars[k];
+//                 }
+//             }
+//         }
+//     }
+//     return pairComparison;
+// }
 
 
 function countBordaPoints (expsVars: Array<number>, vars: Array<Array<number>>)
